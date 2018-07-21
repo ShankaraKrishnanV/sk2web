@@ -1,0 +1,290 @@
+﻿@model Brain_IQ.Models.Question.QuestionModels
+@{
+    ViewBag.Title = "View Subjects";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+    //Layout = null;
+}
+
+<head>
+    <title>Tree view | UI</title>
+    <link type="text/css" rel="stylesheet" href="~/Content/global/vendors/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/assets/vendors/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/global/css/core.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/assets/css/system.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/assets/css/system-responsive.css">
+
+</head>
+
+
+<div class="col-md-12">
+    <div class="heading-box">Standard, Section & Chapter structure</div>
+    <div>
+        <ul id="myTab4" class="nav nav-tabs nav-justified">
+            <li class="active"><a href="#home6" data-toggle="tab"><strong>Vertical view</strong></a></li>
+            <li><a href="#profile6" data-toggle="tab"><strong>Update Chapters</strong></a></li>
+            <div id="myTabContent4" class="tab-content">
+                <div id="home6" class="tab-pane fade in active">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="caption"><strong>Vertical view of Standard, Section & Chapter structure</strong></div>
+                        </div>
+                        <div class="panel-body">
+                            <div>
+                                <ul id="demoBasic" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="profile6" class="tab-pane fade">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="caption"><strong>Select Standard list and mark the chapter as complete</strong></div>
+                        </div>
+                        <div class="panel-body" style="cursor:pointer;">
+                            <div class="col-md-4">
+                                <ol id="ulStandardList"></ol>
+                            </div>
+                            <div class="col-md-4">
+                                <ul id="ulSubjectList" class="list-icon">
+                                    <li id="liSubjectAlert" style="display:none;">No Subject found</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <ul id="ulChapterList" class="list-icon">
+                                    <li id="liChapterAlert" style="display:none;">No Chapter found</li>
+                                </ul>
+                            </div>
+                            <br /><br>
+                            <div id="divUser" class="col-md-12" style="display:none; padding-left: 40px;padding-top: 20px;">
+                                <div class="col-md-12">
+                                    <label style="color:red">NOTE: The marked user, <b> @Session["LoginUserName"] </b> will be maintain in the database for security purpose.</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </ul>
+    </div>
+</div>
+
+
+
+
+<script src="~/Content/global/js/jquery-1.10.2.min.js"></script>
+<!--LOADING SCRIPTS FOR PAGE-->
+<script src="~/Content/assets/vendors/zTree_v3/js/jquery.ztree.all-3.5.js"></script>
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    var DataLoadType = 0;
+    $(document).ready(function () {
+        DataLoadType = 0;
+        BindTree();
+
+    });
+
+
+
+    function BindTree() {
+
+        var _dataURL = "/Subjects/viewsubjectsList/";
+        $.ajax({
+            type: 'POST',
+            url: _dataURL,
+            data: "",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                var ui_treeview = function () {
+
+                    //BEGIN BASIC
+                    var settingBasic = {
+                        data: {
+                            key: {
+                                title: "title"
+                            },
+                            simpleData: {
+                                enable: true
+                            }
+                        }
+                    };
+
+
+                    var BindMaster = '';
+                    var PREVStandaradID = '0';
+                    var PREVSubjectID = '0';
+                    var MasterSTDList = '';
+                    var MasterSUBList = ''; var iSUBRow = 0;
+                    var MasterCHAPList = '';
+                    for (var iTree = 0; iTree < data.length; iTree++) {
+
+                        var _LOCALID = data[iTree]._LOCALID;
+                        if (_LOCALID == 0) {
+                            var StandardId = data[iTree].StandardId;
+                            var StandardName = data[iTree].StandardName;
+                            var Description = data[iTree].Description;
+                            var Subject = data[iTree].Subject;
+                            var Active = data[iTree].Active;
+                            if (Active == 1) {
+                                var MyObj = '{"id" : "' + StandardId + '","pId" : "0", "name": "' + StandardName + '", "title": "", "open": "false"},';
+                            }
+                            else {
+                                var MyObj = '{"id" : "' + StandardId + '","pId" : "0", "name": "' + StandardName + ' (Deactivated)", "title": "", "open": "false"},';
+                            }
+                            var liList = '<li id="liSTD_' + StandardId + '" onclick="enableSUB(' + StandardId + ');" style="padding:5px; border: 1px solid;">' + StandardName + '</li>';
+                            MasterSTDList = MasterSTDList + liList;
+                        }
+                        else if (_LOCALID == 1) {
+
+                            var SubjectId = data[iTree].SubjectId;
+                            var StandardId = data[iTree].StandardId;
+                            var Subject = data[iTree].Subject;
+                            var Description = data[iTree].Description;
+                            if (PREVStandaradID == StandardId) {
+                                iSUBRow = iSUBRow + 1;
+                            }
+                            else {
+                                iSUBRow = 1;
+                            }
+
+                            var MyObj = '{"id" : "' + '00' + SubjectId + '","pId" : "' + StandardId + '", "name": "' + Subject + '", "title": ""},';
+                            var liSUBList = '<li id="liCHAP_' + SubjectId + '" class=SUB_' + StandardId + ' onclick="enableCHAP(' + SubjectId + ')" style="display:none; padding:5px; border: 1px solid;">' + StandardId + '.' + iSUBRow + ' ' + Subject + '</li>';
+                            MasterSUBList = MasterSUBList + liSUBList;
+                            PREVStandaradID = StandardId;
+                        }
+                        else if (_LOCALID == 2) {
+                            var ChapterId = data[iTree].ChapterId;
+                            var SubjectId = data[iTree].SubjectId;
+                            var ChapterName = data[iTree].ChapterName;
+                            var Description = data[iTree].Description;
+                            var Active = data[iTree].Active;
+                            var ChapterCovered = data[iTree].ChapterCovered;
+                            var FirstName = data[iTree].FirstName;
+                            var ModifiedOn = data[iTree].MarkedOn;
+                            var MarkedTime = data[iTree].MarkedTime;
+
+                            if (ChapterCovered == 1) {
+
+                                var MyObj = '{"id" : "' + '11' + ChapterId + '","pId" : "' + '00' + SubjectId + '", "name": "' + ChapterName + ' - (Completed, Marked by ' + FirstName + ' on ' + ModifiedOn + ' ' + MarkedTime + ')", "title": ""},';
+                                var chk = '<input id="chkChapter_' + ChapterId + '" type="checkbox" onclick="markascomplete(' + ChapterId + ');" checked style="padding-left: 5px; padding-top: 5px;padding-bottom: 5px;width: 16px;height: 16px;" />';
+                            }
+                            else {
+                                var MyObj = '{"id" : "' + '11' + ChapterId + '","pId" : "' + '00' + SubjectId + '", "name": "' + ChapterName + '", "title": ""},';
+                                var chk = '<input id="chkChapter_' + ChapterId + '" type="checkbox" onclick="markascomplete(' + ChapterId + ');" style="padding-left: 5px; padding-top: 5px;padding-bottom: 5px;width: 16px;height: 16px;" />';
+                            }
+
+                            var liSUBList = '<li class=CHAP_' + SubjectId + ' style="display:none;">' + chk + '<span id="CHNAME_' + ChapterId + '">' + ChapterName + '</span></li>';
+                            MasterCHAPList = MasterCHAPList + liSUBList;
+                        }
+                        BindMaster = BindMaster + MyObj;
+
+                    }
+                    BindMaster = BindMaster.substring(0, BindMaster.length - 1);
+                    if (DataLoadType == 0) {
+                        $("#ulStandardList").append(MasterSTDList);
+                        $("#ulSubjectList").append(MasterSUBList);
+                        $("#ulChapterList").append(MasterCHAPList);
+                    }
+                    // Create tree structure
+                    var obj = $.parseJSON('[' + BindMaster + ']');
+                    var zNodesBasic = obj;
+
+
+                    var handleZTree = function () {
+                        $.fn.zTree.init($("#demoBasic"), settingBasic, zNodesBasic);
+                    }
+                    return {
+                        init: function () {
+                            handleZTree();
+                        }
+                    }
+                }(jQuery);
+                ui_treeview.init();
+            },
+            error: function (data) {
+                alert('Failed');
+                return false;
+            }
+        });
+    }
+
+    function enableSUB(_STD) {
+        $("#liSubjectAlert").css("display", "none");
+        $("#ulSubjectList li").css("display", "none");
+        $("#ulStandardList li").css("background-color", "white");
+        $(".SUB_" + _STD).css("display", "block");
+        $("#liSTD_" + _STD).css("background-color", "greenyellow");
+        $("#ulChapterList li").css("display", "none");
+        $("#divUser").css("display", "none");
+
+        if ($(".SUB_" + _STD).html() == undefined) {
+            $("#liSubjectAlert").css("display", "block");
+
+        }
+        return false;
+    }
+
+    function enableCHAP(_CHAP) {
+        $("#liChapterAlert").css("display", "none");
+        $("#ulChapterList li").css("display", "none");
+        $("#ulSubjectList li").css("background-color", "white");
+        //$("#liCHAP_" + _CHAP).css("background-color", "white");
+        $(".CHAP_" + _CHAP).css("display", "block");
+        $("#liCHAP_" + _CHAP).css("background-color", "greenyellow");
+        $("#divUser").css("display", "block");
+
+        if ($(".CHAP_" + _CHAP).html() == undefined) {
+            $("#liChapterAlert").css("display", "block");
+        }
+        return false;
+    }
+
+    function markascomplete(_CHAPID) {
+        if ($("#chkChapter_" + _CHAPID).is(":checked")) {
+            if (confirm("Hi @Session["LoginUserName"], Do you want to mark the " + $("#CHNAME_" + _CHAPID).text() + " chapter as complete?")) {
+                $("#chkChapter_" + _CHAPID).attr("checked", true);
+                MarkComplete(_CHAPID, 1);
+            }
+            else {
+                $("#chkChapter_" + _CHAPID).attr("checked", false);
+
+            }
+        }
+        else {
+            $("#chkChapter_" + _CHAPID).attr("checked", false);
+            MarkComplete(_CHAPID, 0);
+        }
+    }
+
+    // Mark chapter as complete
+    function MarkComplete(_CHAPID, _Status) {
+        var _dataURL = "/Student/MarkAsComplete/";
+        $.ajax({
+            type: 'POST',
+            url: _dataURL,
+            data: "{'ChapterID':" + _CHAPID + ",'StatusIS':" + _Status + "}",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                DataLoadType = 1;
+                BindTree();
+            },
+            error: function (data) {
+                return false;
+            }
+
+        });
+    }
+
+</script>
+<!--CORE JAVASCRIPT-->
+
+<script>
+    jQuery(document).ready(function () {
+        "use strict";
+        JQueryResponsive.init();
+        Layout.init();
+    });
+</script>

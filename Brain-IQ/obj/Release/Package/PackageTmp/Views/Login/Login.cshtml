@@ -1,0 +1,235 @@
+﻿@model BrainIQ.Models.Home
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+
+<link href="~/Content/DevCSS/ui-Brain.css" rel="stylesheet" />
+<link href="~/Content/DevCSS/ui-layout.css" rel="stylesheet" />
+<link href="~/Content/DevCSS/ui-theme.css" rel="stylesheet" />
+<link href="~/Content/DevCSS/Common.css" rel="stylesheet" />
+<div id="body" class="help-page">
+    <script>
+        /* Shankar - To enable/disable the module */
+        function enableModule() {
+            if (document.getElementById("divlogin").style.display == "block") {
+                document.getElementById("divlogin").style.display = "none";
+                document.getElementById("divStudent").style.display = "block";
+                $("#divLoginForm").removeClass("active");
+                $("#divMathsForStudent").addClass("active");
+            }
+            else {
+                document.getElementById("divlogin").style.display = "block";
+                document.getElementById("divStudent").style.display = "none";
+                $("#divLoginForm").addClass("active");
+                $("#divMathsForStudent").removeClass("active");
+            }
+        }
+
+    </script>
+    <div class="contentSec">
+        <div class="content">
+            <div class="rows">
+                <div>
+                    <ul class="nav nav-tabs">
+                        <li id="divLoginForm" class="active"><a onclick="enableModule()">Login</a><span></span></li>
+                        <li id="divMathsForStudent"><a onclick="enableModule()">Maths for Student</a><span></span></li>
+                    </ul>
+                </div>
+                <div id="divlogin" class="tab-content" style="display: block;">
+                    <div class="logOuter login">
+                        <div class="rows">
+                            <div class="clm6">
+                                <div class="logLeft">
+                                    <h1>Congrats</h1>
+                                    <p>
+                                        Your account is been activated.<br>
+                                        Login now to explore the all<br>
+                                        new experience of Digital Exam
+                                    </p>
+                                    <div class="infoBox bgGreen">
+                                        <span>Join Brain IQ</span>
+
+                                        @Html.ActionLink("Sign Up", "Home", "Index", new { @class = "btn btnGreen" })
+                                    </div>
+                                </div>
+                            </div>
+                            @using (Html.BeginForm("GetLogin", "Login", FormMethod.Post))
+                                {
+                                <div class="clm6">
+                                    <div class="logRight">
+
+                                        <h2> Sign in</h2>
+
+                                        <div class="formSec">
+                                            <ul>
+                                                <li>
+                                                    @Html.EditorFor(model => model.UserName, new
+                                                   {
+                                                       htmlAttributes = new { @placeholder = "User Name", @class = "login-textbox" }
+                                                   })
+                                                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+
+                                                </li>
+                                                <li>
+                                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @placeholder = "Password", @class = "login-textbox" } })
+                                                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="btnHolder mT0">
+                                            <input type="submit" class="btn btnBlue" value="Submit" />
+
+                                            <div class="staySign">
+
+
+                                            </div>
+                                        </div>
+                                        <div class="clear">
+                                            <ul class="forgetLink">
+                                                <li><a href="javascript:;">Forget Password?</a></li>
+                                                <li><a href="javascript:;" class="">Trouble Logging in</a></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                }
+                        </div>
+                    </div>
+                </div>
+
+                <div id="divStudent" class="tab-content" style="display: none;">
+                    <div class="gridView">
+                        <div class="rows">
+                            <div class="clm4">
+                                <div class="recList">
+                                    <h4>LKG</h4>
+                                    <p>Basic Maths</p>
+                                    <div class="detail">
+                                        <div class="avgSec">
+                                            <strong>10%</strong>
+                                            <p>Coming Soon</p>
+                                        </div>
+                                        <div class="subSec">
+                                            <p>Total Question count:</p>
+                                            <strong>150</strong>
+                                        </div>
+                                        <div class="blsSec">
+                                            <p>Exam question count</p>
+                                            <strong>25</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clm4">
+                                <div class="recList">
+                                    <h4>1 Class</h4>
+                                    <p>Basic Maths</p>
+                                    <div class="detail">
+                                        <div class="avgSec">
+                                            <strong>30%</strong>
+                                            <p>Coming Soon</p>
+                                        </div>
+                                        <div class="subSec">
+                                            <p>Total Question count:</p>
+                                            <strong>170</strong>
+                                        </div>
+                                        <div class="blsSec">
+                                            <p>Exam question count</p>
+                                            <strong>20</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clm4">
+                                <div class="recList">
+                                    <h4>2 Class</h4>
+                                    <p>Basic Maths</p>
+                                    <div class="detail">
+                                        <div class="avgSec">
+                                            <strong>1%</strong>
+                                            <p>Coming Soon</p>
+                                        </div>
+                                        <div class="subSec">
+                                            <p>Total Question count:</p>
+                                            <strong>0</strong>
+                                        </div>
+                                        <div class="blsSec">
+                                            <p>Exam question count</p>
+                                            <strong>30</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rows">
+                            <div class="clm4">
+                                <div class="recList">
+                                    <h4>3 Class</h4>
+                                    <p>Basic Maths</p>
+                                    <div class="detail">
+                                        <div class="avgSec">
+                                            <strong>0%</strong>
+                                            <p>Coming Soon</p>
+                                        </div>
+                                        <div class="subSec">
+                                            <p>Total Question count:</p>
+                                            <strong>0</strong>
+                                        </div>
+                                        <div class="blsSec">
+                                            <p>Exam question count</p>
+                                            <strong>25</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clm4">
+                                <div class="recList">
+                                    <h4>LKG</h4>
+                                    <p>Basic Maths</p>
+                                    <div class="detail">
+                                        <div class="avgSec">
+                                            <strong>10%</strong>
+                                            <p>Coming Soon</p>
+                                        </div>
+                                        <div class="subSec">
+                                            <p>Total Question count:</p>
+                                            <strong>150</strong>
+                                        </div>
+                                        <div class="blsSec">
+                                            <p>Exam question count</p>
+                                            <strong>25</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clm4">
+                                <div class="recList">
+                                    <h4>4 Class</h4>
+                                    <p>Basic Maths</p>
+                                    <div class="detail">
+                                        <div class="avgSec">
+                                            <strong>0%</strong>
+                                            <p>Coming Soon</p>
+                                        </div>
+                                        <div class="subSec">
+                                            <p>Total Question count:</p>
+                                            <strong>0</strong>
+                                        </div>
+                                        <div class="blsSec">
+                                            <p>Exam question count</p>
+                                            <strong>25</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

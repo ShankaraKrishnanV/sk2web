@@ -1,0 +1,1018 @@
+﻿
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+<script src="~/Content/Bootstrap/jquery.form.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("input[type='image']").click(function () {
+            $("input[id='my_file']").click();
+        });
+    });
+</script>
+<script type="text/javascript">
+
+    (function () {
+
+        $("#liDashboard").removeClass("active");
+        $("#liCalender").removeClass("active");
+        $("#liProfile").addClass("active");
+        $("#ContentTitle").text("Profile");
+
+        var bar = $('.progress-bar');
+        var percent = $('.progress-bar');
+        var status = $('#status');
+
+        $('form').ajaxForm({
+
+            beforeSend: function () {
+              
+                status.empty();
+                var percentVal = '0%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            uploadProgress: function (event, position, total, percentComplete) {
+                
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            success: function (data) {
+              
+                var ObjToGenerate = data.split('|');
+                $("#imgUserProfilePicture").attr("src", "");
+                $("#imgUserProfilePicture").attr("src", ObjToGenerate[1]);
+                location.href = "/Staff/Profile/";
+                
+                var percentVal = '100%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+
+
+            },
+            complete: function (xhr) {
+                status.html(xhr.responseText);
+            }
+        });
+
+    })();
+
+
+
+    function fnassignAbout() {
+        var Aboutus = $("#pAboutus").text();
+        $("#txtupdateAbout").val(Aboutus);
+        return false;
+    }
+
+    function fnassignBasicInfo() {
+        var Gender = $("#lblGender").text();
+        var Email = $("#lblEmail").text().trim().toLowerCase();
+        var Address = $("#lblAddress").text();
+        var State = $("#lblState").text();
+        var Country = $("#lblCountry").text();
+        var PCode = $("#lblPostalCode").text();
+        if (Gender == "Male") {
+            $("#dpGender").val(0);
+        }
+        else {
+            $("#dpGender").val(1);
+        }
+
+        $("#txtEmail").val(Email);
+        $("#txtState").val(State);
+        $("#txtCountry").val(Country);
+        $("#txtPcode").val(PCode);
+        $("#txtAddress").val(Address);
+        return false;
+    }
+
+    function fnassignContactInfo() {
+        var Phone = $("#lblPhone").text();
+        var Fax = $("#lblFax").text();
+        $("#txtPhone").val(Phone);
+        $("#txtFax").val(Fax);
+        return false;
+    }
+
+    function fnEditContactInfo() {
+        var _dataURL = "/Registration/UpdateContactInfo/";
+        $.ajax({
+            type: 'POST',
+            url: _dataURL,
+            data: "{'ContactNo':'" + $("#txtPhone").val() + "', 'Fax':'" + $("#txtFax").val() + "'}",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == true) {
+                    $("#lblPhone").text($("#txtPhone").val());
+                    $("#lblFax").text($("#txtFax").val());
+                    $("#btnCloseContactInfo").trigger("click");
+                }
+                return false;
+            },
+            error: function (data) {
+                alert('Failed');
+                return false;
+            }
+        });
+    }
+
+    function fnEditAboutYourself() {
+        var _dataURL = "/Registration/UpdateAboutYourself/";
+        $.ajax({
+            type: 'POST',
+            url: _dataURL,
+            data: "{'About':'" + $("#txtupdateAbout").val() + "'}",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == true) {
+                    $("#pAboutus").text($("#txtupdateAbout").val());
+                    $("#btnCloseEditAtribute").trigger("click");
+                }
+                return false;
+            },
+            error: function (data) {
+                alert('Failed');
+                return false;
+            }
+        });
+    }
+
+    function fnEditBasicInfo() {
+        var registration = new Object();
+        if ($("#dpGender").val() == 0)
+            registration.Gender = "Male";
+        else
+            registration.Gender = "Female";
+        registration.Address = $("#txtAddress").val();
+        registration.State = $("#txtState").val();
+        registration.Country = $("#txtCountry").val();
+        registration.PostalCode = $("#txtPcode").val();
+
+        var _row = JSON.stringify({ registrationModels: registration });
+        var _dataURL = "/Registration/UpdateBasicInfo/";
+        $.ajax({
+            type: 'POST',
+            url: _dataURL,
+            data: _row,
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "true") {
+                    if ($("#dpGender").val() == 0) {
+                        $("#lblGender").text("Male");
+                    }
+                    else {
+                        $("#lblGender").text("Female");
+                    }
+                    $("#lblAddress").text(registration.Address);
+                    $("#lblState").text(registration.State);
+                    $("#lblCountry").text(registration.Country);
+                    $("#lblPostalCode").text(registration.PostalCode);
+
+                    $("#btnCloseBasicInfo").trigger("click");
+                }
+                return false;
+            },
+            error: function (data) {
+                alert('Failed');
+                return false;
+            }
+        });
+    }
+
+</script>
+
+@foreach (var iList in ViewBag.getUserList)
+{
+    <div class="page-profile">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="profile-left-side col-md-3">
+                                <div class="user-img text-center">
+                                    @if (!string.IsNullOrEmpty(Convert.ToString(iList.Location)))
+                                    {
+                                        <input id="imgUserProfilePicture" type="image" src="@iList.Location" width="190" style="border-radius: 0;" />
+                                    }
+                                    else
+                                    {
+                                        <input id="imgUserProfilePicture" type="image" src="~/Images/Unknown/Notexist.jpg" width="190" style="border-radius: 0;" />
+                                    }
+                                </div>
+                                @using (Html.BeginForm("ProfileUpload", "FileUpload"))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="file" name="files" id="my_file" style="display: none;" />
+                                        <div class="user-img text-center">
+                                            <input id="btnSubmitProfile" type="submit" style="width: 190px;margin-top: 2px;" class="btn btn-default" value="Upload" />
+                                        </div>
+                                }
+
+                                <div class="social-icon-group">
+                                    <ul class="social-icons list-unstyled list-inline text-center mbl mtl">
+                                        <li>
+                                            <a href="https://www.facebook.com/" data-hover="tooltip"
+                                               data-original-title="facebook" class="facebook">
+                                                <i class="fa fa-facebook"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://plus.google.com/collections/featured" data-hover="tooltip"
+                                               data-original-title="google Plus" class="googleplus">
+                                                <i class="fa fa-google-plus"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://twitter.com/login" data-hover="tooltip"
+                                               data-original-title="twitter" class="twitter">
+                                                <i class="fa fa-twitter"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="text-center">
+                                    <a href="@Url.Action("sendmail", "mail", new { id = 1 })" class="btn btn-default">
+                                        <i class="fa fa-envelope"></i>&nbsp;
+                                        Send an email
+                                    </a>
+                                </div>
+
+                            </div>
+                            <div class="profile-right-side col-md-9">
+                                <div class="row">
+                                    <div id="divProfileContent" class="col-xs-12">
+                                        <h3 style="color: #222"
+                                            class="mbs mlx plm">
+                                            @iList.FirstName @iList.LastName
+                                        </h3>
+                                        <p id="pAboutus" class="mlx plm">@iList.About</p>
+                                        <div class="article-footer" style="padding-left: 12px; cursor:pointer">
+                                            <a onclick="fnassignAbout();" type="button"
+                                               data-target="#modal-about"
+                                               data-toggle="modal">Edit</a>
+                                        </div>
+                                        <div class="row">
+                                            <div class="tabbable-line col-md-12">
+                                                <ul class="row nav nav-tabs responsive mtxl">
+                                                    <li class="active">
+                                                        <a href="#tab-about"
+                                                           data-toggle="tab"
+                                                           style="padding-top: 8px">
+                                                            <strong>
+                                                                <i class="fa fa-info"></i>&nbsp;
+                                                                About
+                                                            </strong>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#tab-activity" data-toggle="tab"
+                                                           style="padding-top: 8px">
+                                                            <strong>
+                                                                <i class="fa fa-bolt"></i>&nbsp;
+                                                                Meetings
+                                                            </strong>
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div id="tab-about"
+                                                         class="tab-pane fade in active">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="article article-danger">
+                                                                    <div class="article-head">
+                                                                        <h4 class="article-title">
+                                                                            Basic Information
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="article-body">
+                                                                        <div class="st-section">
+                                                                            <table>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="tr-head">
+                                                                                            Gender
+                                                                                        </td>
+                                                                                        <td id="lblGender">@iList.Gender</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="tr-head">
+                                                                                            Email
+                                                                                        </td>
+                                                                                        <td id="lblEmail" style="text-transform:lowercase">@iList.EmailId</td>
+
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="tr-head"></td>
+                                                                                        <td><span style="color:green; font-size:12px;">(Auto generated email)</span></td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="tr-head">
+                                                                                            Address
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <label id="lblAddress">@iList.Address</label>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="tr-head">
+                                                                                            State
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <label id="lblState">@iList.State</label>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="tr-head">
+                                                                                            Country
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <label id="lblCountry">@iList.Country</label>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="tr-head">
+                                                                                            PostalCode
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <label id="lblPostalCode">@iList.PostalCode</label>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td id="Status" class="tr-head">
+                                                                                            Status
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @if (@iList.Active == true)
+                                                                                            {
+                                                                                                <span class="label label-success">Active</span>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <span class="label label-success">Deactive</span>
+                                                                                            }
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="tr-head">
+                                                                                            Rating
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <i class="fa fa-star text-warning fa-fw"></i><i class="fa fa-star text-warning fa-fw"></i><i class="fa fa-star text-warning fa-fw"></i><i class="fa fa-star text-warning fa-fw"></i><i class="fa fa-star fa-fw"></i>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="tr-head">
+                                                                                            Join
+                                                                                        </td>
+                                                                                        <td>@iList.CreatedOn</td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="article-footer" style="cursor:pointer;">
+                                                                        <a onclick="fnassignBasicInfo();" type="button"
+                                                                           data-target="#modal-basic"
+                                                                           data-toggle="modal">Edit</a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="article article-info" style="display:none;">
+                                                                    <div class="article-head">
+                                                                        <h4 class="article-title">
+                                                                            Education
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="article-body">
+                                                                        <div class="st-section">
+                                                                            <h5 class="st-title">
+                                                                                The
+                                                                                University of
+                                                                                Melbourne
+                                                                            </h5>
+                                                                            <p class="st-description">
+                                                                                2012 - 2014
+                                                                            </p>
+                                                                            <p class="st-description">
+                                                                                Oldest Victorian
+                                                                                university
+                                                                                (established 1855)
+                                                                                offering a vast
+                                                                                range of
+                                                                                coursework
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="st-section">
+                                                                            <h5 class="st-title">
+                                                                                The
+                                                                                University of
+                                                                                Sydney
+                                                                            </h5>
+                                                                            <p class="st-description">
+                                                                                2014
+                                                                            </p>
+                                                                            <p class="st-description">
+                                                                                Australia's leading
+                                                                                higher education and
+                                                                                research
+                                                                                University.
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="article-footer">
+                                                                        <a type="button"
+                                                                           data-target="#modal-default"
+                                                                           data-toggle="modal">Edit</a>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="article article-danger">
+                                                                    <div class="article-head">
+                                                                        <h4 class="article-title">
+                                                                            Contact Information
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="article-body">
+                                                                        <div class="st-section">
+                                                                            <h5 class="ci-title st-title">
+                                                                                Home
+                                                                            </h5>
+                                                                            <p class="st-description">
+                                                                                <table>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td class="tr-head">
+                                                                                                Phone
+                                                                                            </td>
+                                                                                            <td id="lblPhone">@iList.PhoneNumber</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td class="tr-head">
+                                                                                                Fax
+                                                                                            </td>
+                                                                                            <td id="lblFax">@iList.Fax</td>
+                                                                                        </tr>
+
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </p>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="article-footer" style="cursor:pointer;">
+                                                                        <a onclick="fnassignContactInfo();" type="button"
+                                                                           data-target="#modal-contact"
+                                                                           data-toggle="modal">Edit</a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="article article-success" style="display:none;">
+                                                                    <div class="article-head">
+                                                                        <h4 class="article-title">
+                                                                            Work
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div class="article-body">
+                                                                        <div class="st-section">
+                                                                            <h5 class="st-title">
+                                                                                Occupation
+                                                                            </h5>
+                                                                            <p class="st-description">
+                                                                                What do you do?
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="st-section">
+                                                                            <h5 class="st-title">
+                                                                                Skills
+                                                                            </h5>
+                                                                            <p class="st-description">
+                                                                                What are your best
+                                                                                skils?
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="st-section">
+                                                                            <h5 class="st-title">
+                                                                                Employment
+                                                                            </h5>
+                                                                            <p class="st-description">
+                                                                                Where have you
+                                                                                worked?
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="article-footer">
+                                                                        <a type="button"
+                                                                           data-target="#modal-default"
+                                                                           data-toggle="modal">Edit</a>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="tab-activity" class="tab-pane fade">
+                                                        <ul class="list-activity list-unstyled">
+                                                            <li class="post-list clearfix">
+                                                                <div class="avatar">
+                                                                    <img src="../../../s3.amazonaws.com/uifaces/faces/twitter/mlane/48.jpg"
+                                                                         class="img-circle" />
+                                                                </div>
+                                                                <div class="post-body">
+                                                                    <div class="desc">
+                                                                        <strong class="post-user mrs">
+                                                                            Diane
+                                                                            Harris
+                                                                        </strong>
+                                                                        <small class="text-muted">
+                                                                            posted a new note
+                                                                        </small>
+                                                                        &nbsp; - &nbsp;
+                                                                        <small class="text-muted">
+                                                                            1
+                                                                            days ago at 6:18am
+                                                                        </small>
+                                                                    </div>
+                                                                    <div class="post-content">
+                                                                        <a class="post-title">
+                                                                            <img src="assets/images/icon-html5.png"
+                                                                                 class="mrs" /><strong>
+                                                                                HTML5
+                                                                                Weekly: A Free, Weekly Email
+                                                                                Newsletter
+                                                                            </strong>
+                                                                        </a>
+                                                                        <div class="summary mts cleafix">
+                                                                            <div class="img-wrapper">
+                                                                                <img src="assets/images/06.jpg"
+                                                                                     class="mrs" />
+                                                                            </div>
+                                                                            <p>
+                                                                                Lorem ipsum dolor sit
+                                                                                amet, consectetur
+                                                                                adipisicing. Lorem
+                                                                                ipsum dolor
+                                                                                sit amet,consectetur
+                                                                                adipisicing elit.
+                                                                                Laudantium, quo.
+                                                                                Lorem
+                                                                                it amet,consectetur
+                                                                                adipisicing elit.
+                                                                                Laudantium, quo.
+                                                                                Lorem
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="clearfix"></div>
+                                                                    </div>
+                                                                    <div class="action-post mtl">
+                                                                        <a>
+                                                                            <i class="fa fa-heart-o mrx"></i>Like
+                                                                        </a>&nbsp;
+                                                                        - &nbsp;<a>
+                                                                            <i class="fa fa-comments-o mrx"></i>Comments
+                                                                        </a>&nbsp;
+                                                                        - &nbsp;<a>
+                                                                            <i class="fa fa-share-square-o mrx"></i>Share
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="post-list clearfix">
+                                                                <div class="avatar">
+                                                                    <img src="../../../s3.amazonaws.com/uifaces/faces/twitter/adellecharles/48.jpg"
+                                                                         class="img-circle" />
+                                                                </div>
+                                                                <div class="post-body">
+                                                                    <div class="desc">
+                                                                        <strong class="post-user mrs">
+                                                                            Ava
+                                                                            Martin
+                                                                        </strong>
+                                                                        <small class="text-muted">
+                                                                            posted a new note
+                                                                        </small>
+                                                                        &nbsp; - &nbsp;
+                                                                        <small class="text-muted">
+                                                                            1
+                                                                            days ago at 6:18am
+                                                                        </small>
+                                                                    </div>
+                                                                    <div class="post-content">
+                                                                        <a class="post-title">
+                                                                            <img src="assets/images/icon-angular.png"
+                                                                                 class="mrs" /><strong>
+                                                                                AngularJS
+                                                                                Stories for Web
+                                                                                Architects
+                                                                            </strong>
+                                                                        </a>
+                                                                        <div class="summary mts cleafix">
+                                                                            <div class="img-wrapper">
+                                                                                <img src="assets/images/02-sm.jpg"
+                                                                                     class="mrs" />
+                                                                            </div>
+                                                                            <p>
+                                                                                Lorem ipsum dolor sit
+                                                                                amet, consectetur
+                                                                                adipisicing. Lorem
+                                                                                ipsum dolor
+                                                                                sit amet,consectetur
+                                                                                adipisicing elit.
+                                                                                Laudantium, quo.
+                                                                                Lorem
+                                                                                it amet,consectetur
+                                                                                adipisicing elit.
+                                                                                Laudantium, quo.
+                                                                                Lorem
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="clearfix"></div>
+                                                                    </div>
+                                                                    <div class="action-post mtl">
+                                                                        <a>
+                                                                            <i class="fa fa-heart-o mrx"></i>Like
+                                                                        </a>&nbsp;
+                                                                        - &nbsp;<a>
+                                                                            <i class="fa fa-comments-o mrx"></i>Comments
+                                                                        </a>&nbsp;
+                                                                        - &nbsp;<a>
+                                                                            <i class="fa fa-share-square-o mrx"></i>Share
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="post-list clearfix">
+                                                                <div class="avatar">
+                                                                    <img src="../../../s3.amazonaws.com/uifaces/faces/twitter/kurafire/48.jpg"
+                                                                         class="img-circle" />
+                                                                </div>
+                                                                <div class="post-body">
+                                                                    <div class="desc">
+                                                                        <strong class="post-user mrs">
+                                                                            Charlotte
+                                                                            Robinson
+                                                                        </strong>
+                                                                        <small class="text-muted">
+                                                                            upload new photos
+                                                                        </small>
+                                                                        &nbsp; - &nbsp;
+                                                                        <small class="text-muted">
+                                                                            1
+                                                                            week ago at 9:18am
+                                                                        </small>
+                                                                    </div>
+                                                                    <div class="post-content">
+                                                                        <div class="img-upload-wrap">
+                                                                            <img src="assets/images/04-sm.jpg"
+                                                                                 class="img-responsive mts" /><img src="assets/images/05-sm.jpg"
+                                                                                                                   class="img-responsive mts" /><img src="assets/images/07-sm.jpg"
+                                                                                                                                                     class="img-responsive mts" /><img src="assets/images/09-sm.jpg"
+                                                                                                                                                                                       class="img-responsive mts" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="post-list clearfix">
+                                                                <div class="avatar">
+                                                                    <img src="../../../s3.amazonaws.com/uifaces/faces/twitter/chadengle/48.jpg"
+                                                                         class="img-circle" />
+                                                                </div>
+                                                                <div class="post-body">
+                                                                    <div class="desc">
+                                                                        <strong class="post-user mrs">
+                                                                            Sophia
+                                                                            Lee
+                                                                        </strong>
+                                                                        <small class="text-muted">
+                                                                            upload new photos
+                                                                        </small>
+                                                                        &nbsp; - &nbsp;
+                                                                        <small class="text-muted">
+                                                                            1
+                                                                            week ago at 9:18am
+                                                                        </small>
+                                                                    </div>
+                                                                    <div class="post-content">
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <span class="task-item">
+                                                                                    Admin Template<small class="pull-right text-muted">
+                                                                                        80%
+                                                                                    </small>
+                                                                                </span>
+                                                                                <div class="progress">
+                                                                                    <div role="progressbar"
+                                                                                         aria-valuenow="80"
+                                                                                         aria-valuemin="0"
+                                                                                         aria-valuemax="100"
+                                                                                         style="width: 80%;"
+                                                                                         class="progress-bar progress-bar-orange">
+                                                                                        <span class="sr-only">80% Complete (success)</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <span class="task-item">
+                                                                                    Wordpress Themes<small class="pull-right text-muted">
+                                                                                        40%
+                                                                                    </small>
+                                                                                </span>
+                                                                                <div class="progress">
+                                                                                    <div role="progressbar"
+                                                                                         aria-valuenow="40"
+                                                                                         aria-valuemin="0"
+                                                                                         aria-valuemax="100"
+                                                                                         style="width: 40%;"
+                                                                                         class="progress-bar progress-bar-success">
+                                                                                        <span class="sr-only">40% Complete (success)</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <span class="task-item">
+                                                                                    Landing Page<small class="pull-right text-muted">
+                                                                                        67%
+                                                                                    </small>
+                                                                                </span>
+                                                                                <div class="progress">
+                                                                                    <div role="progressbar"
+                                                                                         aria-valuenow="67"
+                                                                                         aria-valuemin="0"
+                                                                                         aria-valuemax="100"
+                                                                                         style="width: 67%;"
+                                                                                         class="progress-bar progress-bar-warning">
+                                                                                        <span class="sr-only">67% Complete (success)</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="post-list clearfix">
+                                                                <div class="avatar">
+                                                                    <img src="../../../s3.amazonaws.com/uifaces/faces/twitter/oliveirasimoes/48.jpg"
+                                                                         class="img-circle" />
+                                                                </div>
+                                                                <div class="post-body">
+                                                                    <div class="desc">
+                                                                        <strong class="post-user mrs">
+                                                                            Diane
+                                                                            Harris
+                                                                        </strong>
+                                                                        <small class="text-muted">
+                                                                            posted a new note
+                                                                        </small>
+                                                                        &nbsp; - &nbsp;
+                                                                        <small class="text-muted">
+                                                                            1
+                                                                            days ago at 6:18am
+                                                                        </small>
+                                                                    </div>
+                                                                    <div class="post-content">
+                                                                        <a class="post-title">
+                                                                            <img src="assets/images/icon-html5.png"
+                                                                                 class="mrs" /><strong>
+                                                                                HTML5
+                                                                                Weekly: A Free, Weekly Email
+                                                                                Newsletter
+                                                                            </strong>
+                                                                        </a>
+                                                                        <div class="summary mts cleafix">
+                                                                            <div class="img-wrapper">
+                                                                                <img src="assets/images/04-sm.jpg"
+                                                                                     class="mrs" />
+                                                                            </div>
+                                                                            <p>
+                                                                                Lorem ipsum dolor sit
+                                                                                amet, consectetur
+                                                                                adipisicing. Lorem
+                                                                                ipsum dolor
+                                                                                sit amet,consectetur
+                                                                                adipisicing elit.
+                                                                                Laudantium, quo.
+                                                                                Lorem
+                                                                                it amet,consectetur
+                                                                                adipisicing elit.
+                                                                                Laudantium, quo.
+                                                                                Lorem
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="clearfix"></div>
+                                                                    </div>
+                                                                    <div class="action-post mtl">
+                                                                        <a>
+                                                                            <i class="fa fa-heart-o mrx"></i>Like
+                                                                        </a>&nbsp;
+                                                                        - &nbsp;<a>
+                                                                            <i class="fa fa-comments-o mrx"></i>Comments
+                                                                        </a>&nbsp;
+                                                                        - &nbsp;<a>
+                                                                            <i class="fa fa-share-square-o mrx"></i>Share
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="post-list clearfix">
+                                                                <div class="avatar">
+                                                                    <img src="../../../s3.amazonaws.com/uifaces/faces/twitter/claudioguglieri/48.jpg"
+                                                                         class="img-circle" />
+                                                                </div>
+                                                                <div class="post-body">
+                                                                    <div class="desc">
+                                                                        <strong class="post-user mrs">
+                                                                            Diane
+                                                                            Harris
+                                                                        </strong>
+                                                                        <small class="text-muted">
+                                                                            posted a new note
+                                                                        </small>
+                                                                        &nbsp; - &nbsp;
+                                                                        <small class="text-muted">
+                                                                            1
+                                                                            days ago at 6:18am
+                                                                        </small>
+                                                                    </div>
+                                                                    <div class="post-content">
+                                                                        <a class="post-title">
+                                                                            <img src="assets/images/icon-html5.png"
+                                                                                 class="mrs" /><strong>
+                                                                                HTML5
+                                                                                Weekly: A Free, Weekly Email
+                                                                                Newsletter
+                                                                            </strong>
+                                                                        </a>
+                                                                        <div class="summary mts cleafix">
+                                                                            <div class="img-wrapper">
+                                                                                <img src="assets/images/05-sm.jpg"
+                                                                                     class="mrs" />
+                                                                            </div>
+                                                                            <p>
+                                                                                Lorem ipsum dolor sit
+                                                                                amet, consectetur
+                                                                                adipisicing. Lorem
+                                                                                ipsum dolor
+                                                                                sit amet,consectetur
+                                                                                adipisicing elit.
+                                                                                Laudantium, quo.
+                                                                                Lorem
+                                                                                it amet,consectetur
+                                                                                adipisicing elit.
+                                                                                Laudantium, quo.
+                                                                                Lorem
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="clearfix"></div>
+                                                                    </div>
+                                                                    <div class="action-post mtl">
+                                                                        <a>
+                                                                            <i class="fa fa-heart-o mrx"></i>Like
+                                                                        </a>&nbsp;
+                                                                        - &nbsp;<a>
+                                                                            <i class="fa fa-comments-o mrx"></i>Comments
+                                                                        </a>&nbsp;
+                                                                        - &nbsp;<a>
+                                                                            <i class="fa fa-share-square-o mrx"></i>Share
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Basic informations -->
+            <div id="modal-basic" tabindex="-1" role="dialog" aria-labelledby="modal-default-label"
+                 aria-hidden="true" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <button type="button" data-dismiss="modal" aria-hidden="true"
+                                    class="close">
+                                &times;
+                            </button>
+                            <h4 id="modal-default-label" class="modal-title text-center">
+                                Edit Basic informations
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mbm"><label><strong>Gender</strong></label></div>
+                                    <div class="mbm"><label><strong>Email</strong></label></div>
+                                    <div class="mbm"><label><strong>Address</strong></label></div>
+
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mbm">
+                                        <select id="dpGender" class="form-control">
+                                            <option value="0">Male</option>
+                                            <option value="1">Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="mbm"><input type="text" id="txtEmail" placeholder="Email" class="form-control" readonly /></div>
+                                    <div class="mbm">
+                                        <input type="text" id="txtAddress" placeholder="Address" class="form-control" />
+                                        <input type="text" id="txtState" placeholder="State" class="form-control" />
+                                        <input type="text" id="txtCountry" placeholder="Country" class="form-control" />
+                                        <input type="text" id="txtPcode" placeholder="Pincode" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input id="btnCloseBasicInfo" type="button" data-dismiss="modal" class="btn btn-default" value="Close" />
+                            <input type="button" class="btn btn-primary" onclick="fnEditBasicInfo();" value="Save changes" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Contact informations -->
+            <div id="modal-contact" tabindex="-1" role="dialog" aria-labelledby="modal-default-label"
+                 aria-hidden="true" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <button type="button" data-dismiss="modal" aria-hidden="true"
+                                    class="close">
+                                &times;
+                            </button>
+                            <h4 id="modal-default-label" class="modal-title text-center">
+                                Edit Contact Details
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mbm"><label><strong>Phone</strong></label></div>
+                                    <div class="mbm"><label><strong>Fax</strong></label></div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mbm">
+                                        <input type="text" id="txtPhone" placeholder="Phone" class="form-control" />
+                                    </div>
+                                    <div class="mbm"><input type="text" id="txtFax" placeholder="Fax" class="form-control" /></div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input id="btnCloseContactInfo" type="button" data-dismiss="modal" class="btn btn-default" value="Close" />
+                            <input type="button" class="btn btn-primary" onclick="fnEditContactInfo();" value="Save changes" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit About yourself -->
+            <div id="modal-about" tabindex="-1" role="dialog" aria-labelledby="modal-default-label"
+                 aria-hidden="true" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <button type="button" data-dismiss="modal" aria-hidden="true"
+                                    class="close">
+                                &times;
+                            </button>
+                            <h4 id="modal-default-label" class="modal-title text-center">
+                                Edit About you
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="st-title">Update your informations:</div>
+                            <p class="st-description"><textarea id="txtupdateAbout" style="width: 569px;height: 84px; color: black;"></textarea></p>
+                        </div>
+                        <div class="modal-footer">
+                            <input id="btnCloseEditAtribute" type="button" data-dismiss="modal" class="btn btn-default" value="Close" />
+                            <input type="button" class="btn btn-primary" onclick="fnEditAboutYourself();" value="Save changes" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+

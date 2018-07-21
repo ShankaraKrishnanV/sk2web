@@ -1,0 +1,131 @@
+﻿
+@{
+    ViewBag.Title = "Chapter";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        var table = $("#tblChapterList").DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf',
+            ],
+            "iDisplayLength": 10
+        });
+        $("#liExam").addClass("active");
+        $("#ContentTitle").text("Write Exam");
+        $("#tblChapterList").css("visibility", "visible");
+    });
+</script>
+
+<table id="tblChapterList" class="display tblHeader" cellspacing="0" width="100%" style="visibility:hidden;">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Chapter</th>
+            <th>Time</th>
+            <th>Exam</th>
+            <th>Result</th>
+            <th>Review</th>
+
+            <th>Retake Exam</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>No</th>
+            <th>Chapter</th>
+            <th>Time</th>
+            <th>Exam</th>
+            <th>Result</th>
+            <th>Review</th>
+
+            <th>Retake Exam</th>
+        </tr>
+    </tfoot>
+    @{ int iNumber = 1; }
+    @foreach (var ChapterList in ViewBag.getChapter)
+    {
+
+        <tr>
+            <td>@iNumber</td>
+            <td>@ChapterList.ExamName</td>
+            <td>@ChapterList.ExamTime mintues</td>
+
+            @if (ChapterList.Marks == 0)
+            {
+                if (ChapterList.MarkedChapterId == 0)
+                {
+                    if (string.IsNullOrEmpty(Convert.ToString(ChapterList.Date)))
+                    {
+                        <td>
+                            <a id="write_@ChapterList.ChapterId" href="@Url.Action("exam", "subjects", new { examId = @ChapterList.ExamID, STime = @ChapterList.ExamTime })">
+
+                                <input type='submit' class="btn btn-default btn-3d btn-circle" value='Start Exam' />
+                            </a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>Completed</td>
+                    }
+                }
+                else
+                {
+                    <td>Completed</td>
+                }
+            }
+            else
+            {
+                <td>Completed</td>
+            }
+
+            @if (ChapterList.Marks != 000 || ChapterList.TimeFinished != "")
+            {
+                <td>@ChapterList.Marks / @ChapterList.TotalQuestions</td>
+            }
+            else
+            {
+                if (ChapterList.MarkedChapterId != 0)
+                {
+                    <td>@ChapterList.Marks / @ChapterList.TotalQuestions</td>
+                }
+                else
+                {
+                    <td></td>
+                }
+            }
+
+            @if (ChapterList.Marks != 000 || ChapterList.TimeFinished != "")
+            {
+                <td><a href="@Url.Action("reviews", "subjects", new { ChapterId = @ChapterList.ExamID })">Review <span class="glyphicon glyphicon-eye-open"></span></a></td>
+            }
+            else
+            {
+                <td></td>
+            }
+
+
+            @if (ChapterList.Marks != 000 || ChapterList.TimeFinished != "")
+            {
+                <td><a id="write_@ChapterList.ChapterId" href="@Url.Action("exam", "Subjects", new { examId = @ChapterList.ExamID, STime = @ChapterList.ExamTime })">Try again</a></td>
+            }
+            else
+            {
+                <td></td>
+            }
+
+        </tr>
+        iNumber = iNumber + 1;
+    }
+
+    @*@foreach (var AnsweredList in ViewBag.getAnsweredQuestions)
+        {
+            //@:$("#write_1").attr('display', none);
+        }*@
+
+</table>
+
+<a href="@Url.Action("Index", "Subjects", new { area = ""})" class="btn btn-success">Back</a>

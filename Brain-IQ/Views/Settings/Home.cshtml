@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ContentTitle").text("Record Management");
+    });
+</script>
+
+
+<div class="col-md-12">
+    <div class="list-group">
+        <a href="@Url.Action("standard","settings")" class="list-group-item"><span class="glyphicon glyphicon-hand-right"> </span>  Standard List</a>
+        <a href="@Url.Action("selectstd","settings")" class="list-group-item"><span class="glyphicon glyphicon-hand-right"> </span>  Subject List</a>
+        <a href="@Url.Action("chapter","settings")" class="list-group-item"><span class="glyphicon glyphicon-hand-right"> </span>  Chapter List</a>
+        <a href="@Url.Action("student","settings")" class="list-group-item"><span class="glyphicon glyphicon-hand-right"> </span>  Student List</a>
+    </div>
+</div>
+

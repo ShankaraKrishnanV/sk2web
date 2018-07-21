@@ -1,0 +1,312 @@
+﻿
+@{
+    ViewBag.Title = "Post Invitations";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<style>
+    .page-profile .summary img, .timeline .summary img {
+        height: 250px;
+    }
+</style>
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+<script src="~/Content/Bootstrap/jquery.form.js"></script>
+
+<script type="text/javascript">
+    (function () {
+
+        var bar = $('.progress-bar');
+        var percent = $('.progress-bar');
+        var status = $('#status');
+
+        $('form').ajaxForm({
+
+            beforeSend: function () {
+
+                status.empty();
+                var percentVal = '0%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            uploadProgress: function (event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            success: function (data) {
+
+                var ObjToGenerate = data.split('|');
+
+                $("#srcUploadedImage").css("display", "block");
+                $("#srcUploadedImage").attr("src", "");
+                $("#srcUploadedImage").attr("src", ObjToGenerate[1]);
+
+
+                var percentVal = '100%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            complete: function (xhr) {
+                status.html(xhr.responseText);
+            }
+        });
+
+    })();
+
+    //function ClearControl()
+    //{
+    //    $("#txtTitle").val('');
+    //    $("#txtImageupload").val('')
+    //    $("#txtDescription").val('');
+    //    $("#txtTitle").val('');
+    //    $("#txtTitle").val('');
+    //    $("#txtTitle").val('');
+    //    $("#txtTitle").val('');
+    //    $("#txtTitle").val('');
+    //    $("#txtTitle").val('');
+
+    //}
+
+    function clearError() {
+        $("#createerror").text('');
+        $("#createerror").css("display", "none");
+        return false;
+    }
+
+    function PostEnable() {
+        if ($("#lidemoPost").css("display") == "none") {
+            $("#liUploadedImage").hide('slow');
+            $("#lidemoPost").show('slow');
+        }
+        else {
+            $("#lidemoPost").hide('slow');
+            $("#liUploadedImage").show('slow');
+        }
+        return false;
+    }
+
+    function ValidatePOST() {
+        $("#createerror").text('');
+        $("#createerror").css("display", "block");
+        var Title = $("#txtTitle").val();
+        var Imageupload = $("#srcUploadedImage").attr("src");
+        var Description = $("#txtDescription").val();
+        if (Imageupload == null || Imageupload == "null")
+        {
+            Imageupload == "";
+        }
+        var PostStatus = ""; var PostName = "";
+        var IsAgree = "";
+        if ($("#chkSchool").is(":checked")) {
+            PostStatus = 1; // only School
+            PostName = "School";
+        }
+        else if ($("#chkOnlyStaff").is(":checked")) {
+            PostStatus = 2; // only Staff
+            PostName = "Staff";
+        }
+        else if ($("#chkOnlyStudent").is(":checked")) {
+            PostStatus = 3; // only Student
+            PostName = "Student";
+        }
+
+        if ($("#chkAgreeCondition").is(":checked")) {
+            IsAgree = 1;
+        }
+       
+        if (Title != "") {
+            if (Description != "") {
+                if (PostStatus != "") {
+                    if (IsAgree) {
+                        var serviceURL = "/Mail/SaveInvitations/";
+                        
+                        $.ajax({
+                            type: "POST",
+                            url: serviceURL,
+                            data: "{'ITitle':'" + Title + "', 'IImage':'" + Imageupload + "','Description':'" + Description + "','Privacy':'" + PostStatus + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: SaveInvitation,
+                            error: Showerror
+                        });
+
+                        function SaveInvitation(data, status) {
+                            if (data == true) {
+                                alert("Status Posted");
+                                location.href = "/mail/postinvitations/"
+                            }
+                            else {
+                                alert("ERROR - Status failed to Post");
+                            }
+                        }
+
+                        function Showerror() {
+                            alert("ERROR - Status failed Posted");
+                        }
+
+
+                    }
+                    else {
+                        $("#createerror").text("Agree the status to post for " + PostName);
+                    }
+                }
+                else {
+                    $("#createerror").text("Privacy field is required!");
+                }
+            }
+            else {
+                $("#createerror").text("Description field is required!");
+            }
+        }
+        else {
+            $("#createerror").text("Title field is required!");
+        }
+    }
+
+   
+</script>
+
+<div class="panel-body">
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group col-md-12">
+                <label class="control-label">
+                    Title &nbsp;
+                    <span class="require">*</span>
+                </label>
+                <input id="txtTitle" type="text" onfocus="clearError();" placeholder="title" class="form-control" />
+            </div>
+            <div class="form-group">
+
+                @using (Html.BeginForm("UploadStatusImage", "FileUpload"))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="col-md-9">
+                        <label for="file">Upload Image:</label>
+                        <div class="form-group col-md-10">
+                            <input type="file" name="files" id="txtImageupload" style="width: 75%;" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="file" style="visibility:hidden;">sdf</label>
+                        <input type="submit" value="Upload" class="btn btn-info" />
+                    </div>
+                }
+
+            </div>
+            <div class="clearfix">
+
+            </div><br />
+            <div class="form-group col-md-12">
+                <label class="control-label">
+                    Description &nbsp;
+                    <span class="require">*</span>
+                </label>
+                <textarea id="txtDescription" onfocus="clearError();" style="height: 194px;" type="text" placeholder="description" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-12">
+                    Set privacy &nbsp;
+                    <span class="require">*</span>
+                </label>
+
+                <div class="col-md-4">
+                    <label>
+                        <input id="chkSchool" onclick="clearError();" type="radio" name="selectName" />&nbsp;
+                        School
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <label>
+                        <input id="chkOnlyStaff" onclick="clearError();" type="radio" name="selectName" />&nbsp;
+                        Only Staff
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <label>
+                        <input id="chkOnlyStudent" onclick="clearError();" type="radio" name="selectName" />&nbsp;
+                        Only Students
+                    </label>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <ul class="timeline clearfix">
+                <li id="lidemoPost" class="post-list" style="list-style-type:none; display:none;">
+                    <div class="timeline-badge">
+                        <a href="#" data-hover="tooltip" data-placement="top"
+                           data-original-title="11 hours ago"></a>
+                    </div>
+                    <div class="timeline-panel">
+                        <div class="avatar">
+                            <img src="~/Content/assets/images/48.jpg"
+                                 class="img-circle" />
+                        </div>
+                        <div class="post-body">
+                            <div class="desc">
+                                <strong class="post-user mrs">SK Krish</strong>
+                                <small class="text-muted">posted a new note</small>
+                                &nbsp; - &nbsp;
+                                <small class="text-muted">1 days ago at 6:18am</small>
+                            </div>
+                            <div class="post-content">
+                                <a href="#" class="post-title">
+                                    <img src="~/Content/assets/images/icon-vine.png"
+                                         class="mrs" /><strong>
+                                        INVITATION: This is sample Title
+                                    </strong>
+                                </a>
+                                <div class="summary mts cleafix">
+                                    <div class="img-wrapper">
+                                        <img src="~/Content/assets/images/06.jpg"
+                                             class="mrs" />
+                                    </div>
+                                    <p>
+                                        Description detail will be maintain here.
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing. Lorem ipsum
+                                        dolorsit amet,consectetur adipisicing elit. Laudantium, quo. Lorem
+                                        it amet,consectetur adipisicing elit. Laudantium, quo. Lorem
+                                    </p>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            @*<div class="action-post mtl">
+                                    <a href="#"><i class="fa fa-heart-o mrx"></i>Like</a>&nbsp;
+                                    - &nbsp;<a href="#"><i class="fa fa-comments-o mrx"></i>Comments</a>&nbsp;
+                                    - &nbsp;<a href="#"><i class="fa fa-share-square-o mrx"></i>Share</a>
+                                </div>*@
+                        </div>
+                    </div>
+                </li>
+                <li id="liUploadedImage" style="list-style-type:none;">
+                    <img id="srcUploadedImage" src="" style="width: 470px;     height: 374px; padding-top: 25px; display:none;" />
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr style="border-color:lightgray" />
+    <div class="form-group">
+        <div class="col-md-5">
+            <label>
+                <input id="chkAgreeCondition" type="checkbox" />&nbsp;
+                I agree to post the status
+            </label>
+            <p style="color:black; font-size:13px;padding-left: 30px;">Your status will be display on profile like <a onclick="PostEnable();" style="cursor:pointer; text-decoration:underline;">this</a> format.</p>
+        </div>
+        <div class="col-md-5">
+            <label class="alert-danger">
+                <strong id="createerror" style="padding:0px 10px 0px 10px; display:none;"></strong>
+            </label>
+        </div>
+        <div class="col-md-2">
+            <button onclick="ValidatePOST();" type="button" class="btn btn-success btn-block">Submit </button>
+        </div>
+    </div>
+
+
+</div>
+

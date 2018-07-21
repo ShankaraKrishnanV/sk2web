@@ -1,0 +1,870 @@
+﻿<html lang="en">
+<!-- Mirrored from next-themes.com/mtek/code/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Apr 2017 06:13:34 GMT -->
+<head>
+    <title>BrainIQ | @ViewBag.Title</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="~/Content/assets/images/Favicon.ico">
+    <link rel="apple-touch-icon" href="~/Content/assets/images/Favicon.ico">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Content/assets/images/Favicon.ico">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/Content/assets/images/Favicon.ico">
+    <link type="text/css" rel="stylesheet"
+          href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700">
+
+    <!-- Fancy checkbox-->
+    <link href="~/Content/FancyCheckbox/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/FancyCheckbox/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/FancyCheckbox/build.css" rel="stylesheet" />
+
+    <link type="text/css" rel="stylesheet" href="~/Content/global/vendors/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/global/vendors/simple-line-icons/simple-line-icons.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/global/vendors/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/global/vendors/animate.css/animate.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/global/vendors/iCheck/skins/all.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/assets/vendors/bootstrap-switch/css/bootstrap-switch.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/assets/vendors/google-code-prettify/prettify.css">
+
+    <link type="text/css" rel="stylesheet" href="~/Content/assets/vendors/jquery-jvectormap/jquery-jvectormap-2.0.1.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/assets/vendors/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/global/css/core.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/assets/css/system.css">
+    <link type="text/css" rel="stylesheet" href="~/Content/assets/css/system-responsive.css">
+
+    <!--DataTable-->
+    <link href="~/Scripts/Dev/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <!--Download buttons-->
+    <link href="~/Scripts/Dev/css/Download buttons/buttons.dataTables.min.css" rel="stylesheet" />
+    <style>
+        .nav li {
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body id="bodyUpdateClass" class="font-source-sans-pro">
+    <!--Modal Default-->
+    <div id="source-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" class="close">&times;</button>
+                    <h4 id="modal-default-label" class="modal-title">View Code</h4>
+                </div>
+                <div class="modal-body">
+                    <pre class="prettyprint linenums"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fluid">
+        <!--BEGIN TEMPLATE SETTING-->
+        <div class="hidden-xs hidden-sm">
+            <div id="template-setting">
+                <div class="content-template-setting">
+                    <button id="save-setting" class="btn btn-success btn-sm pull-right">Save Change</button>
+                    <div class="mbm clearfix"></div>
+                    <h5 class="pull-left">Header theme</h5>
+                    <div class="pull-right">
+                        <div id="setting-header-dark" data-on="info" data-off="default" data-on-label="Dark"
+                             data-off-label="Light" class="make-switch switch-small">
+                            <input type="checkbox" class="switch" />
+                        </div>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                    <h5>Sidebar Colors</h5>
+                    <ul class="sidebar-color list-unstyled list-inline">
+                        <li data-style="grey" class="grey-blue active"></li>
+                        <li data-style="default" class="grey"></li>
+                        <li data-style="blue" class="blue"></li>
+                        <li data-style="green" class="green"></li>
+                        <li data-style="orange" class="orange"></li>
+                        <li data-style="white" class="white"></li>
+                    </ul>
+                    <div class="mbm clearfix"></div>
+                    <h5 class="pull-left">Font</h5>
+                    <div class="pull-right">
+                        <select id="font-select" class="mts">
+                            <option value="source-sans-pro">Source Sans Pro</option>
+                            <option value="open-sans">Open Sans</option>
+                            <option value="roboto">Roboto</option>
+                            <option value="lato">Lato</option>
+                            <option value="lora">Lora</option>
+                            <option value="helvetica">Helvetica Neue</option>
+                        </select>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                    <hr />
+                    <h5 class="pull-left">Header Fixed</h5>
+                    <div class="pull-right">
+                        <div id="setting-header-fixed" data-on="success" data-off="default"
+                             class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                    <h5 class="pull-left">Sidebar Collapsed</h5>
+                    <div class="pull-right">
+                        <div id="setting-sidebar-collapsed" data-on="success" data-off="default"
+                             class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                    <h5 class="pull-left">Sidebar Show/Hide</h5>
+                    <div class="pull-right">
+                        <div id="setting-sidebar-hide" data-on="success" data-off="default"
+                             class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                    <h5 class="pull-left">Sidebar Fixed</h5>
+                    <div class="pull-right">
+                        <div id="setting-sidebar-fixed" data-on="success" data-off="default"
+                             class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                    <h5 class="pull-left">
+                        Toggle Button<i data-hover="tooltip" data-placement="top"
+                                        title="Switch it then click toogle button on topbar"
+                                        class="fa fa-info-circle mls"></i>
+                    </h5>
+                    <div class="pull-right">
+                        <div id="setting-toggle-status" data-on="success" data-off="default" data-on-label="Hide"
+                             data-off-label="Mini" class="make-switch switch-small">
+                            <input type="checkbox" class="switch" />
+                        </div>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                    <hr />
+                    <h5 class="pull-left">Logo mode</h5>
+                    <div class="pull-right">
+                        <div id="setting-logo-status" data-on="success" data-off="default" data-on-label="Aside"
+                             data-off-label="Top" class="make-switch switch-small">
+                            <input type="checkbox" class="switch" />
+                        </div>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                    <h5 class="pull-left">Layout Boxed</h5>
+                    <div class="pull-right">
+                        <div id="setting-layout-boxed" data-on="success" data-off="default"
+                             class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                    <h5 class="pull-left">Menu Horizontal</h5>
+                    <div class="pull-right">
+                        <div id="setting-horizontal-menu" data-on="success" data-off="default"
+                             class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                    </div>
+                    <div class="mbm clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <!--END TEMPLATE SETTING--><!--BEGIN TOPBAR-->
+        <div class="page-header-topbar">
+            <nav id="topbar" role="navigation" class="navbar navbar-default container pln prn">
+                <div class="container-fluid pln prn">
+                    <div id="topbar-menu" class="navbar-collapse pln prn">
+                        <ul class="nav navbar-nav logo-wrapper">
+                            <li class="btn-menu-toggle">
+                                <div id="menu-toggle" class="show-collapsed"><i class="fa fa-bars"></i></div>
+                            </li>
+                            <li class="pull-left">
+                                <a id="logo" href="@Url.Action("Dashboard","Staff")" class="pan">
+                                    <img src="~/Content/assets/images/logo3.png" style="width: 185px;padding-top: 10px;height: 50px;padding-left: 10px;padding-right: 10px;" />
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-left topbar-nav">
+                            <li class="dropdown">
+                                <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                                    <i class="icon-calendar"></i><span class="badge badge-primary">1</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-task dropdown-topbar">
+                                    <li><p>You have 1 new tasks</p></li>
+                                    <li>
+                                        <div class="dropdown-slimscroll">
+                                            <ul>
+                                                <li class="unread">
+                                                    <a href="#" target="_blank">
+                                                        Lorem ipsum dolor sit
+                                                        amet<span class="label label-success pull-right">Html</span><br /><span class="text-muted small">4 mins ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" target="_blank">
+                                                        Consectetur adipiscing<span class="label label-info pull-right">CSS</span><br /><span class="text-muted small">12 mins ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" target="_blank">
+                                                        Tempor incididunt ut<span class="label label-warning pull-right">Javascript</span><br /><span class="text-muted small">15 mins ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" target="_blank">
+                                                        Ut enim ad minim<span class="label label-default pull-right">Fix Bug</span><br /><span class="text-muted small">18 mins ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" target="_blank">
+                                                        Sed ut perspiciatis unde omnis<span class="label label-success pull-right">Html</span><br /><span class="text-muted small">2 days ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" target="_blank">
+                                                        Sed quia non numquam<span class="label label-info pull-right">CSS</span><br /><span class="text-muted small">2 days ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" target="_blank">
+                                                        Lorem ipsum dolor sit<span class="label label-default pull-right">Fix Bug</span><br /><span class="text-muted small">5 days ago</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="last">
+                                        <a href="http://www.next-themes.com/mtek/code/extra-user-list.html" class="text-right">See all alerts</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                                    <i class="icon-bell"></i><span id="spanNotificationCount" data-pulsate="{parent:true,onClick:'stop',border:false,speed:800,reach: 20,delay:5000}"
+                                                                   class="badge badge-success">2</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-alerts" style="width:325px;">
+                                    <li><p>You have 2 new notifications</p></li>
+                                    <li>
+                                        <div class="dropdown-slimscroll">
+                                            <ul id="ulBindNotifications">
+                                                <li class="unread">
+                                                    <a href="http://www.next-themes.com/mtek/code/extra-user-list.html" target="_blank">
+                                                        <span class="label label-info"><i class="fa fa-comment"></i></span>New
+                                                        Comment<span class="pull-right text-muted small">4 mins ago</span>
+                                                    </a>
+                                                </li>
+                                                <li class="unread">
+                                                    <a href="http://www.next-themes.com/mtek/code/extra-user-list.html" target="_blank">
+                                                        <span class="label label-success"><i class="fa fa-twitter"></i></span>3
+                                                        New Followers<span class="pull-right text-muted small">12 mins ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="http://www.next-themes.com/mtek/code/extra-user-list.html" target="_blank">
+                                                        <span class="label label-warning"><i class="fa fa-envelope"></i></span>Message
+                                                        Sent<span class="pull-right text-muted small">15 mins ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="http://www.next-themes.com/mtek/code/extra-user-list.html" target="_blank">
+                                                        <span class="label label-success"><i class="fa fa-tasks"></i></span>New
+                                                        Task<span class="pull-right text-muted small">18 mins ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="http://www.next-themes.com/mtek/code/extra-user-list.html" target="_blank">
+                                                        <span class="label label-danger"><i class="fa fa-upload"></i></span>Server
+                                                        Rebooted<span class="pull-right text-muted small">19 mins ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="http://www.next-themes.com/mtek/code/extra-user-list.html" target="_blank">
+                                                        <span class="label label-success"><i class="fa fa-tasks"></i></span>New
+                                                        Task<span class="pull-right text-muted small">2 days ago</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="http://www.next-themes.com/mtek/code/extra-user-list.html" target="_blank">
+                                                        <span class="label label-warning"><i class="fa fa-envelope"></i></span>Message
+                                                        Sent<span class="pull-right text-muted small">5 days ago</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="last">
+                                        <a href="http://www.next-themes.com/mtek/code/extra-user-list.html" class="text-right">See all alerts</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="hidden-sm hidden-xs">
+                                <div id="note-app-wrapper">
+                                    <div class="note-app-tools">
+                                        <i data-hover="tooltip" title="New" class="icon-note"></i><i data-hover="tooltip" title="Import" class="fa fa-sign-in"></i><i data-hover="tooltip" title="Save" class="fa fa-save"></i><i data-hover="tooltip"
+                                                                                                                                                                                                                                  class="icon-close"></i><input id="note-app-file" type="file" style="display: none;" />
+                                    </div>
+                                    <div class="note-app-list"></div>
+                                    <div class="note-app-data">
+                                        <input type="text" placeholder="Enter note title..."
+                                               class="note-app-title" /><textarea placeholder="Enter note description here..."
+                                                                                  class="note-app-content"></textarea>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="hidden-sm hidden-xs">
+                                <!--<div id="note-app-toggle" class="btn btn-info btn-xs mlm">
+                                    <i class="icon-note mrs"></i>Add
+                                    note
+                                </div>-->
+                                <div id="note-app-wrapper">
+                                    <div class="note-app-tools">
+                                        <i data-hover="tooltip" title="New" class="icon-note"></i><i data-hover="tooltip" title="Import" class="fa fa-sign-in"></i><i data-hover="tooltip" title="Save" class="fa fa-save"></i><i data-hover="tooltip"
+                                                                                                                                                                                                                                  title="Close"
+                                                                                                                                                                                                                                  class="icon-close"></i><input id="note-app-file" type="file" style="display: none;" />
+                                    </div>
+                                    <div class="note-app-list"></div>
+                                    <div class="note-app-data">
+                                        <input type="text" placeholder="Enter note title..."
+                                               class="note-app-title" /><textarea placeholder="Enter note description here..."
+                                                                                  class="note-app-content"></textarea>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+
+                            <li class="dropdown">
+                                <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                                    <i class="icon-user"></i>&nbsp;<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user pull-right">
+                                    <li>
+                                        <div class="navbar-content">
+                                            <div class="row">
+
+                                                <div class="col-md-5 col-xs-5">
+                                                    <img id="imgProfilePicture" style="width:100px; height:100px;" src="" alt=""
+                                                         class="img-responsive img-circle" />
+                                                    <p class="text-center mtm">
+
+                                                    </p>
+                                                </div>
+
+
+                                                <div class="col-md-7 col-xs-5">
+                                                    <span id="lblLoginUserName" style="font-size: 16px;"></span>
+                                                    <p id="lblEmailID" class="text-muted small"></p>
+                                                    <div class="divider"></div>
+                                                    <a href="@Url.Action("Profile","Staff", new {area="" })">
+                                                        <button class="btn btn-default btn-sm">
+                                                            Edit Profile
+                                                        </button>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="navbar-footer">
+                                            <div class="navbar-footer-content">
+                                                <div class="row">
+                                                    <div class="col-md-6 col-xs-6">
+                                                        <a href="#">
+                                                            <button class="btn btn-default btn-sm">Change Password</button>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-6 col-xs-6">
+                                                        <a>
+                                                            @Html.ActionLink("Sign Out", "Index", "Home", new { area = "" }, new { @class = "btn btn-info btn-sm pull-right colorWhite" })
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="hidden-sm hidden-xs">
+                                <a href="#" class="btn-template-setting">
+                                    <i class="icon-settings"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!--END TOPBAR--><!--BEGIN HORIZONTAL MENU-->
+        <div class="page-horizontal-menu">
+            <div id="horizontal-menu" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="@Url.Action("Dashboard","Staff")">
+                            <i class="icon-home"></i><span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="page_profile.html">
+                            <i class="icon-user"></i><span class="menu-title">User Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="page_mail.html"><i class="icon-envelope"></i><span class="menu-title">Mail Box</span></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" data-hover="dropdown" class="dropdown-toggle">
+                            <i class="icon-screen-desktop"></i><span class="menu-title">Layouts</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="layout_full_width.html"><span class="submenu-title">Full width</span></a></li>
+                            <li><a href="layout_boxed.html"><span class="submenu-title">Boxed</span></a></li>
+                            <li class="hidden-sm">
+                                <a href="layout_sidebar_collapsed.html"><span class="submenu-title">Sidebar Collapsed</span></a>
+                            </li>
+                            <li class="hidden-sm">
+                                <a href="layout_sidebar_fixed.html"><span class="submenu-title">Sidebar fixed</span></a>
+                            </li>
+                            <li class="hidden-sm">
+                                <a href="layout_sidebar_collapsed_fixed.html"><span class="submenu-title">Sidebar collapsed & fixed</span></a>
+                            </li>
+                            <li>
+                                <a href="layout_horizontal_menu.html"><span class="submenu-title">Horizontal Menu</span></a>
+                            </li>
+                            <li><a href="layout_header_fixed.html"><span class="submenu-title">Header Fixed</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" data-hover="dropdown" class="dropdown-toggle">
+                            <i class="icon-magic-wand"></i><span class="menu-title">UI Elements</span><span class="badge badge-danger">3</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="ui_general.html">
+                                    <span class="submenu-title">General</span><span class="badge badge-success">10</span>
+                                </a>
+                            </li>
+                            <li><a href="ui_buttons.html"><span class="submenu-title">Buttons</span></a></li>
+                            <li><a href="ui_typography.html"><span class="submenu-title">Typography</span></a></li>
+                            <li>
+                                <a href="ui_tabs_accordions.html"><span class="submenu-title">Tabs & Accordions</span></a>
+                            </li>
+                            <li><a href="ui_modals.html"><span class="submenu-title">Modals</span></a></li>
+                            <li><a href="ui_treeview.html"><span class="submenu-title">Tree view</span></a></li>
+                            <li><a href="ui_icons.html"><span class="submenu-title">Icons</span></a></li>
+                            <li><a href="ui_panels.html"><span class="submenu-title">Panels</span></a></li>
+                            <li><a href="ui_nestable_list.html"><span class="submenu-title">Nestable List</span></a></li>
+                            <li><a href="ui_toastr.html"><span class="submenu-title">Toastr Notifications</span></a></li>
+                            <li><a href="ui_datepaginator.html"><span class="submenu-title">Date Paginator</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" data-hover="dropdown" class="dropdown-toggle">
+                            <i class="icon-note"></i><span class="menu-title">Forms</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="form_components.html">
+                                    <span class="submenu-title">Form Component</span><span class="label label-info">8</span>
+                                </a>
+                            </li>
+                            <li><a href="form_wizard.html"><span class="submenu-title">Form Wizard</span></a></li>
+                            <li><a href="form_validation.html"><span class="submenu-title">Form Validation</span></a></li>
+                            <li><a href="form_select.html"><span class="submenu-title">Dropdown & Select</span></a></li>
+                            <li><a href="form_picker.html"><span class="submenu-title">Picker</span></a></li>
+                            <li><a href="form_editor.html"><span class="submenu-title">Editor</span></a></li>
+                            <li>
+                                <a href="form_dropzone.html"><span class="submenu-title">Dropzone File Upload</span></a>
+                            </li>
+                            <li>
+                                <a href="form_multiple_file_upload.html">
+                                    <span class="submenu-title">Multiple File Upload</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" data-hover="dropdown" class="dropdown-toggle">
+                            <i class="icon-grid"></i><span class="menu-title">Tables</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="table_basic.html"><span class="submenu-title">Basic table</span></a></li>
+                            <li><a href="table_responsive.html"><span class="submenu-title">Responsive table</span></a></li>
+                            <li><a href="table_advanced.html"><span class="submenu-title">Advanced table</span></a></li>
+                            <li><a href="table_treegrid.html"><span class="submenu-title">Treegrid table</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" data-hover="dropdown" class="dropdown-toggle">
+                            <i class="icon-book-open"></i><span class="menu-title">Pages</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="page_gallery.html"><span class="submenu-title">Gallery</span></a></li>
+
+                            <li><a href="page_invoice.html"><span class="submenu-title">Invoice</span></a></li>
+                            <li><a href="page_pricing_table.html"><span class="submenu-title">Pricing Table</span></a></li>
+                            <li><a href="page_search.html"><span class="submenu-title">Search</span></a></li>
+                            <li><a href="page_signin.html"><span class="submenu-title">Sign in</span></a></li>
+                            <li><a href="page_signup.html"><span class="submenu-title">Sign up</span></a></li>
+                            <li><a href="page_lock_screen.html"><span class="submenu-title">Lock screen</span></a></li>
+                            <li><a href="page_404.html"><span class="submenu-title">Page 404</span></a></li>
+                            <li><a href="page_500.html"><span class="submenu-title">Page 500</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" data-hover="dropdown" class="dropdown-toggle">
+                            <i class="icon-bar-chart"></i><span class="menu-title">Chart</span><span class="badge badge-warning">8</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="charts_chartjs.html"><span class="submenu-title">ChartJs</span></a></li>
+                            <li><a href="charts_flot.html"><span class="submenu-title">Flot Charts</span></a></li>
+                            <li>
+                                <a href="charts_sparklines.html"><span class="submenu-title">Sparklines Charts</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--END HORIZONTAL MENU-->
+        <div id="wrapper">
+            <!--BEGIN PAGE WRAPPER-->
+            <div id="page-wrapper">
+                <!--BEGIN SIDEBAR MAIN-->
+                <div class="sidebar-main sidebar">
+                    <div class="sidebar-collapse sidebar-scroll">
+                        <ul id="sidebar-main" class="nav">
+
+                            <li class="sidebar-hide"><h4 class="sidebar-title-section">Main</h4></li>
+                            <li id="liDashboard" class="" onclick="activate('liDashboard')">
+                                <a href="@Url.Action("Dashboard","Staff")"><i class="icon-home"></i><span class="menu-title">Dashboard</span></a>
+                            </li>
+                            <li id="liProfile" onclick="activate('liProfile')">
+                                <a href="@Url.Action("Profile","Staff")">
+                                    <i class="icon-user"></i><span class="menu-title">Profile</span><span class="badge badge-success">80%</span>
+                                </a>
+                            </li>
+                            <li id="liInvitations" onclick="activate('liInvitations')">
+                                <a href="@Url.Action("invitations","mail")">
+                                    <i class="icon-heart"></i><span class="menu-title">Invitations</span><span class="badge badge-warning">2 events</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-hide"><h4 class="sidebar-title-section">All Components</h4></li>
+                            <li id="liStandard" onclick="activate('liStandard')">
+                                <a href="@Url.Action("standard","settings")">
+                                    <i class="icon-magic-wand"></i><span class="menu-title">Bank Exams</span></span>
+                                </a>
+
+                            </li>
+                            @*Removed module*@
+                            <li style="display:none;" id="liStudent" onclick="activate('liStudent')">
+                                <a href="#">
+                                    <i class="icon-magic-wand"></i><span class="menu-title">Students</span><span class="arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="@Url.Action("student","settings")">
+                                            <span class="submenu-title">Add / Update / Delete</span>@*<span class="badge badge-success">10</span>*@
+                                        </a>
+                                    </li>
+                                    <li><a href="ui_buttons.html"><span class="submenu-title">Search</span></a></li>
+                                </ul>
+                            </li>
+                            <li id="liSchedule" onclick="activate('liSchedule')">
+                                <a href="#">
+                                    <i class="icon-book-open"></i><span class="menu-title">Subjects</span><span class="arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    <li><a href="@Url.Action("selectstd", "settings")"><span class="submenu-title">Subject Actions</span></a></li>
+                                    <li><a href="@Url.Action("chapter", "settings")"><span class="submenu-title">Chapter Actions</span></a></li>
+                                    <!--<li><a href="@Url.Action("viewsubjects","subjects")"><span class="submenu-title">Mark as complete</span></a></li>-->
+                                    <li><a href="page_gallery.html" style="display:none;"><span class="submenu-title">Schedule</span></a></li>
+                                </ul>
+                            </li>
+                            <li id="liQuestion" onclick="activate('liQuestion')">
+                                <a href="#">
+                                    <i class="icon-screen-desktop"></i><span class="menu-title">Questions</span><span class="arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="@Url.Action("addquestion", "question", new { area = "", @Hide = "_Add" })"><span class="submenu-title">Add</span></a>
+                                    </li>
+                                    <li><a href="@Url.Action("addquestion", "question", new { area = "", @Hide = "_View" })"><span class="submenu-title">View</span></a></li>
+                                    <li class="hidden-sm">
+                                        <a href="@Url.Action("createquestionpaper", "question")">
+                                            <span class="submenu-title">Generate Exam paper</span>
+                                        </a>
+                                    </li>
+                                    <li class="hidden-sm">
+                                        <a href="@Url.Action("createquestionpaper", "question")">
+                                            <span class="submenu-title">View Exam paper</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li id="liExamination" onclick="activate('liExamination')">
+                                <a href="#">
+                                    <i class="icon-note"></i><span class="menu-title">Examination</span><span class="arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    <li><a href="form_wizard.html"><span class="submenu-title">Exam Results</span></a></li>
+                                    <li>
+                                        <a href="form_validation.html">
+                                            <span class="submenu-title">Top 10 Students</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li id="liChart" onclick="activate('liChart')" style="display:none;">
+                                <a href="#">
+                                    <i class="icon-bar-chart"></i><span class="menu-title">Charts</span><span class="arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    <li><a href="charts_chartjs.html"><span class="submenu-title">ChartJs</span></a></li>
+                                    <li><a href="charts_flot.html"><span class="submenu-title">Flot Charts</span></a></li>
+                                    <li>
+                                        <a href="charts_sparklines.html">
+                                            <span class="submenu-title">Sparklines Charts</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li id="liLeave" onclick="activate('liLeave')" style="display:none;">
+                                <a href="#">
+                                    <i class="icon-grid"></i><span class="menu-title">Leave</span><span class="arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    <li><a href="table_basic.html"><span class="submenu-title">Apply Leave</span></a></li>
+                                    <li>
+                                        <a href="table_advanced.html"><span class="submenu-title">Leave Status</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="table_responsive.html"><span class="submenu-title">Cancel Leave</span></a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            @if (Convert.ToInt32(Session["UserType"]) == 1)
+                            {
+                                <li id="liQuery" onclick="activate('liQuery')">
+                                    <a href="@Url.Action("postinvitations", "mail")">
+                                        <i class="icon-compass"></i><span class="menu-title">Send Invitations</span>
+                                    </a>
+                                    <!--<ul class="nav nav-second-level">
+                                        <li><a href="@Url.Action("sendmail", "mail", new { id = 1 })"><span class="submenu-title">Send Email</span></a></li>
+                                        <li><a href="@Url.Action("postinvitations", "mail")"><span class="submenu-title">Send Invitations</span></a></li>
+                                    </ul>-->
+                                </li>
+                                <li id="liSettings" onclick="activate('liSettings')">
+                                    <a href="#">
+                                        <i class="icon-compass"></i><span class="menu-title">Settings</span><span class="arrow"></span>
+                                    </a>
+                                    <ul class="nav nav-second-level">
+                                        <li><a href="@Url.Action("home", "settings")" style="display:none;"><span class="submenu-title">Updates</span></a></li>
+                                        <li><a href="@Url.Action("standard", "staff")"><span class="submenu-title">Create Leader</span></a></li>
+                                    </ul>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <!--END SIDEBAR MAIN--><!--BEGIN PAGE CONTENT-->
+                <div class="page-content">
+                    <!--BEGIN TITLE & BREADCRUMB PAGE-->
+                    <div class="page-title-breadcrumb">
+                        <div class="page-header pull-left">
+                            <div id="ContentTitle" class="page-title"></div>
+                        </div>
+                        <ol class="breadcrumb page-breadcrumb hidden-xs hidden">
+                            <li>
+                                <i class="fa fa-home"></i>&nbsp;<a href="index.html">Home</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;
+                            </li>
+                            <li class="hidden">
+                                <a href="#">Dashboard</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;
+                            </li>
+                            <li class="active">Dashboard</li>
+                        </ol>
+                        <ol class="breadcrumb charts-inline hidden-xs pull-right">
+                            <li>
+
+                            </li>
+                        </ol>
+                    </div>
+                    <!--END TITLE & BREADCRUMB PAGE-->
+                    <div class="box-content">
+                        <!--BEGIN CONTENT-->
+                        <div class="content">
+                            @RenderBody()
+                        </div>
+                        <!--END CONTENT-->
+                    </div>
+                </div>
+                <!--END PAGE CONTENT-->
+            </div>
+            <!--END PAGE WRAPPER-->
+        </div>
+        <!--BEGIN FOOTER-->
+        <div id="footer">
+            <div class="copyright">
+                Created by: Krishnaa SK
+                <div class="pull-left">©@DateTime.Now.Year - SK Technology</div>
+            </div>
+        </div>
+        <!--END FOOTER-->
+    </div>
+
+
+    <script src="~/Content/global/js/jquery-1.10.2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            BindAccountDetails();
+            BindNotifications();
+        });
+
+        function BindAccountDetails() {
+            var _dataURL = "/Registration/AccountDetails/";
+            $.ajax({
+                type: 'POST',
+                url: _dataURL,
+                data: "{}",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var Length = data.length;
+                    if (Length > 0) {
+                        var EmailID = data[0].EmailId;
+                        var Location = data[0].Location;
+                        var FirstName = data[0].FirstName;
+                        var LastName = data[0].LastName;
+                        if (Location == "" || Location == null) {
+                            Location = "../Content/assets/images/Default.png";
+                        }
+                        $("#lblEmailID").text(EmailID);
+                        $("#imgProfilePicture").attr("src", Location);
+                        $("#lblLoginUserName").text(FirstName + " " + LastName);
+                    }
+                },
+                error: function (data) {
+                    alert('Failed');
+                    return false;
+                }
+            });
+        }
+
+        function BindNotifications() {
+            $("#spanNotificationCount").text("3");
+            var list = '<li class="unread">' +
+                          '<a href="@Url.Action("sendmail","mail", new { id = 0 })">' +
+                             '<span class="label label-info"><i class="fa fa-comment"></i></span>Shankar' +
+                                 'Sent a message<span class="pull-right text-muted small">23 mins ago</span>' +
+                           '</a>' +
+                        '</li>';
+            $("#ulBindNotifications").append(list);
+        }
+    </script>
+
+    <script src="~/Content/global/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="~/Content/global/js/jquery-ui.js"></script>
+    <script src="~/Content/global/vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Content/global/vendors/bootstrap-hover-dropdown/bootstrap-hover-dropdown.js"></script>
+    <script src="~/Content/global/js/html5shiv.js"></script>
+    <script src="~/Content/global/js/respond.min.js"></script>
+    <script src="~/Content/global/vendors/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/Content/global/vendors/slimScroll/jquery.slimscroll.js"></script>
+    <script src="~/Content/global/vendors/iCheck/icheck.min.js"></script>
+    <script src="~/Content/global/vendors/iCheck/custom.min.js"></script>
+    <script src="~/Content/assets/vendors/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <script src="~/Content/assets/vendors/google-code-prettify/prettify.js"></script>
+    <script src="~/Content/assets/vendors/jquery-cookie/jquery.cookie.js"></script>
+    <script src="~/Content/assets/vendors/jquery.pulsate.js"></script>
+    <!--LOADING SCRIPTS FOR PAGE-->
+    <script src="~/Content/assets/vendors/jquery-jvectormap/jquery-jvectormap-2.0.1.min.js"></script>
+    <script src="~/Content/assets/vendors/jquery-jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="~/Content/assets/vendors/jquery-jvectormap/jquery-jvectormap-us-lcc-en.js"></script>
+    <script src="~/Content/assets/vendors/jquery-jvectormap/gdp-data.js"></script>
+    <script src="~/Content/assets/vendors/flot-chart/jquery.flot.js"></script>
+    <script src="~/Content/assets/vendors/flot-chart/jquery.flot.categories.js"></script>
+    <script src="~/Content/assets/vendors/flot-chart/jquery.flot.pie.js"></script>
+    <script src="~/Content/assets/vendors/flot-chart/jquery.flot.tooltip.js"></script>
+    <script src="~/Content/assets/vendors/flot-chart/jquery.flot.resize.js"></script>
+    <script src="~/Content/assets/vendors/flot-chart/jquery.flot.fillbetween.js"></script>
+    <script src="~/Content/assets/vendors/flot-chart/jquery.flot.stack.js"></script>
+    <script src="~/Content/assets/vendors/flot-chart/jquery.flot.spline.js"></script>
+    <script src="~/Content/assets/vendors/jquery-animateNumber/jquery.animateNumber.min.js"></script>
+    <script src="~/Content/assets/vendors/jquery.sparkline.min.js"></script>
+    <script src="~/Content/assets/vendors/skycons/skycons.js"></script>
+    <script src="~/Content/assets/js/index.js"></script>
+
+    <!--LOADING SCRIPTS FOR PAGE-->
+    <script src="~/Content/assets/vendors/zTree_v3/js/jquery.ztree.all-3.5.js"></script>
+
+
+
+    <!--CORE JAVASCRIPT-->
+    <script src="~/Content/global/js/core.js"></script>
+    <script src="~/Content/assets/js/system-layout.js"></script>
+    <script src="~/Content/assets/js/jquery-responsive.js"></script>
+
+
+    <script>
+        jQuery(document).ready(function () {
+            "use strict";
+            JQueryResponsive.init();
+            Layout.init();
+
+        });
+    </script>
+    <script>
+        jQuery(document).ready(function () {
+            index.init();
+
+
+        });
+
+        //function BindEmailList() {
+        //    alert('Yes');
+        //    var serviceURL = "/Staff/SendMailList/";
+        //    $.ajax({
+        //        type: "POST",
+        //        url: serviceURL,
+        //        data: "{'Type':'1'}",
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json",
+        //        success: successFunc,
+        //        error: errorFunc
+        //    });
+        //}
+
+
+        //function successFunc(data, status) {
+        //    alert(data.length);
+        //}
+
+        //function errorFunc() {
+        //    alert('ERROR - Unable to bind email notifications');
+        //}
+
+        function activate(_MID) {
+
+            $("#liDashboard").removeClass("active");
+            $("#liProfile").removeClass("active");
+            $("#liInvitations").removeClass("active");
+            $("#sidebar-main").children(0).removeClass("active")
+            $("#" + _MID).addClass("active");
+            return false;
+        }
+    </script>
+    <script>
+        jQuery(document).ready(function () {
+            ui_treeview.init();
+        });
+
+
+    </script>
+    @*<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>*@
+    <script src="~/Scripts/Dev/jquery.dataTables.min.js"></script>
+
+    <!--Download buttons-->
+
+    <script src="~/Scripts/Dev/DownloadButtonScript/dataTables.buttons.min.js"></script>
+    <script src="~/Scripts/Dev/DownloadButtonScript/buttons.flash.min.js"></script>
+    <script src="~/Scripts/Dev/DownloadButtonScript/jszip.min.js"></script>
+    <script src="~/Scripts/Dev/DownloadButtonScript/pdfmake.min.js"></script>
+    <script src="~/Scripts/Dev/DownloadButtonScript/vfs_fonts.js"></script>
+    <script src="~/Scripts/Dev/DownloadButtonScript/buttons.html5.min.js"></script>
+    <script src="~/Scripts/Dev/DownloadButtonScript/buttons.print.min.js"></script>
+
+
+</body>
+<!-- Mirrored from next-themes.com/mtek/code/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Apr 2017 06:16:36 GMT -->
+</html>

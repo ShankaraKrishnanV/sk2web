@@ -1,0 +1,150 @@
+﻿
+@{
+    ViewBag.Title = "leader";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ContentTitle").text("Students");
+    });
+
+    function fnVote() {
+        var _p = $("#dropdownOption").val();
+        var serviceURL = '/student/EnableVotingSection';
+        $.ajax({
+            type: "POST",
+            url: serviceURL,
+            data: "{'IsEnable':'" + _p + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: successVote,
+            error: errorVote
+        });
+    }
+
+    function successVote(data, status) {
+        alert('Settings updated');
+    }
+    function errorVote() {
+
+    }
+
+    function SaveLeaders() {
+        var AppendLeaderID = "";
+
+        for (var iLeader = 1; iLeader < $("#hdnTotalCount").val() ; iLeader++) {
+
+            if ($("#chk_" + iLeader).is(":checked")) {
+                var UserID = $("#hdnUID_" + iLeader).val();
+                AppendLeaderID = AppendLeaderID + UserID + ';';
+            }
+        }
+
+        if (AppendLeaderID != "") {
+            var serviceURL = '/student/EliminateStudents';
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{'UserIDList':'" + AppendLeaderID + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+        }
+        else {
+            alert("Select a leader");
+        }
+
+    }
+    function successFunc(data, status) {
+
+        alert('Updated Leaders');
+    }
+    function errorFunc() {
+
+    }
+</script>
+
+<div class="col-md-12">
+    @if (ViewBag.getStudentList.Count > 0)
+    {
+        int increment = 1;
+
+        foreach (var item in ViewBag.getStudentList)
+        {
+
+            <div class="form-group col-md-2" style="cursor:pointer;">
+                <a href="@Url.Action("leader", "staff")">
+                    @if (!string.IsNullOrEmpty(Convert.ToString(item.ProfilePicture)))
+                    {
+                        string checkvalue = item.ProfilePicture.ToString().Trim().Replace("http://localhost:17954", "");
+                        if (File.Exists(checkvalue))
+                        {
+                            <img src="@item.ProfilePicture" class="img-thumbnail" alt="@item.StandardID" style="width: 120px;height: 120px;border-radius: 0px;">
+                        }
+                        else
+                        {
+                            <img src="~/Images/Unknown/Notexist.jpg" class="img-thumbnail" alt="@item.StandardID" style="width: 120px;height: 120px;border-radius: 0px;">
+                        }
+                    }
+                    else
+                    {
+                        <img src="~/Images/Unknown/Notexist.jpg" class="img-thumbnail" alt="@item.StandardID" style="width: 120px;height: 120px;border-radius: 0px;">
+                    }
+                    @if (item.IsLeader)
+                    {
+                        <input type="checkbox" style="margin-right: 5px;margin-top: 5px;" id="chk_@increment" checked>
+                    }
+                    else
+                    {
+                        <input type="checkbox" style="margin-right: 5px;margin-top: 5px;" id="chk_@increment">
+                    }
+                    <label style="margin-top: 5px;"><strong>@item.FirstName @item.LastName</strong></label>
+                    <input type="hidden" id="hdnUID_@increment" value="@item.UID" />
+                </a>
+            </div>
+            increment = increment + 1;
+        }
+        <input type="hidden" id="hdnTotalCount" value="@increment" />
+        <div class="col-md-12" style="margin-top: 20px;">
+            <div class="col-md-1">
+                @Html.ActionLink("Back", "standard", "staff", new { @class = "btn btn-info" })
+            </div>
+            <div class="col-md-1">
+                <input type="button" class="btn btn-success" onclick="SaveLeaders();" value="Submit" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div>
+            <label> No students found. Please add <a href="@Url.Action("studentlist","settings", new { area="", stdid = Convert.ToInt32(Session["StandardID"]) })">New</a> students </label>
+        </div>
+        <div style="margin-top: 20px;">
+            @Html.ActionLink("Back", "standard", "staff", new { @class = "btn btn-info" })
+        </div>
+    }
+</div>
+
+
+<div class="col-md-12" style="margin-top: 20px;">
+    <label class="col-md-5"><strong>Do you want to enable this voting section to student? </strong></label>
+    @if (ViewBag.DisplayLeaderSection == true)
+    {
+        <select class="col-md-1 form-control" id="dropdownOption" style="width:8%" onchange="fnVote();">
+            <option value="1" selected>Yes</option>
+            <option value="0">No</option>
+        </select>
+    }
+    else
+    {
+        <select class="col-md-1 form-control" id="dropdownOption" style="width:8%" onchange="fnVote();">
+            <option value="1">Yes</option>
+            <option value="0" selected>No</option>
+        </select>
+    }
+</div>

@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "Result";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<h1 style="color:#160ab5">Congrazulations! You have completed the exam.</h1>
+<h3>Please review the exam</h3>
+<a class="btn btn-info" href="@Url.Action("review","subjects")">Review Answer</a>
+
+@Html.ActionLink("Take Exam", "index", "subjects", new { area = "" }, new { @class = "btn btn-default" })

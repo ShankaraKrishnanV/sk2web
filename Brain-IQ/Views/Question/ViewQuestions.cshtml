@@ -1,0 +1,138 @@
+﻿@model Brain_IQ.Models.Question.QuestionModels
+@{
+    ViewBag.Title = "View Questions";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .QuestionWidth {
+        width: 250px;
+        height: 200px;
+        margin: 3px 0px 0px 17px;
+    }
+
+    .OptionWidth {
+        width: 80px;
+        height: 80px;
+        margin: 15px 30px 0px 0px;
+    }
+
+    .navbar-brand {
+        float: left;
+        height: 50px;
+        padding: 10px 15px 0px 0px;
+        font-size: 18px;
+        /* line-height: 20px; */
+    }
+</style>
+<script src="~/Content/Bootstrap/jQuery/jquery-1.9.1.js"></script>
+<script src="~/Content/Bootstrap/jQuery/3.3.7/js/bootstrap.min.js"></script>
+<script src="~/Content/Bootstrap/jquery.form.js"></script>
+<div class="col-md-12">
+    <p><a href="@Url.Action("AddQuestion", "Question", new {  area = "", @Hide = Session["EnableView"].ToString().Trim() })"><label class="btn btn-success" >Back</label></a></p>
+</div>
+
+
+@if (ViewBag.Check != 0)
+{
+    <h2>@ViewBag.DispStandard <img src="~/Content/Images/Arrow_Right.png" /> @ViewBag.DispSubject <img src="~/Content/Images/Arrow_Right.png" /> @ViewBag.DispChapterName</h2>
+    int iRow = 0;
+    foreach (var list in ViewBag.getQuestions)
+    {
+        iRow += 1;
+        int QuestionId = @list.QuestionId;
+
+        <div class="panel-group">
+            <div class="panel panel-default">
+
+
+                @if (!string.IsNullOrEmpty(list.Question))
+                {
+                    <div class="panel-heading col-md-12" style="padding-top: 10px;height: 40px;">
+                        <b class="col-md-11" style="left: -15px;">
+                            @iRow. @list.Question
+                        </b>
+                        @if (list.Format == 1)
+                        {
+                            <a href="#">Answer <span class="badge">@list.Answer</span></a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="panel-heading col-md-12" style="padding-top: 10px;height: 180px;">
+                        <b class="col-md-11" style="left: -15px;">
+                            @iRow. <span>@list.Question_Image_Description</span><br />
+                            <img src="@list.Question_Image" class="QuestionWidth" style="width:160px; height:140px;" />
+                        </b>
+                        @if (list.Format == 1)
+                        {
+                            <a href="#">Answer <span class="badge">@list.Answer</span></a>
+                        }
+                    </div>
+                }
+
+
+
+                <div class="panel-body">
+                    @if (list.Format == 1)
+                    {
+
+                        if (!string.IsNullOrEmpty(list.OptionA))
+                        {
+                            <p>A. @list.OptionA</p>
+                        }
+                        else
+                        {
+                            <span>A. </span><img src="@list.OptionA_Image" class="OptionWidth" />
+                        }
+                        if (!string.IsNullOrEmpty(list.OptionB))
+                        {
+                            <p>B. @list.OptionB</p>
+                        }
+                        else
+                        {
+                            <span>B. </span><img src="@list.OptionB_Image" class="OptionWidth" />
+                        }
+                        if (!string.IsNullOrEmpty(list.OptionC))
+                        {
+                            <p>C. @list.OptionC</p>
+                        }
+                        else
+                        {
+                            <span>C. </span><img src="@list.OptionC_Image" class="OptionWidth" />
+                        }
+                        if (!string.IsNullOrEmpty(list.OptionD))
+                        {
+                            <p>D. @list.OptionD</p>
+                        }
+                        else
+                        {
+                            <span>D. </span><img src="@list.OptionD_Image" class="OptionWidth" />
+                        }
+                    }
+                    else
+                    {
+                        <br />
+                        <span>Answer is @list.FillAnswer</span>
+                    }
+                </div>
+                <nav class="navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#" style="padding:0 10 0 0;">
+                                <img alt="Brand" src="~/Content/Images/iconDescription.png">
+                            </a><b>Description:</b> @list.AnswerDescription
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="col-md-12">
+        <span class="alert alert-danger col-md-12"><strong>Sorry!</strong> You dont have records</span>
+    </div>
+}
+

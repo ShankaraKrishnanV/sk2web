@@ -1,0 +1,202 @@
+﻿
+@{
+    ViewBag.Title = "Exam";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function () {
+        $("#ContentTitle").text("Exams");
+        var table = $("#t01").DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                 'excel', 'pdf', {
+                    text: 'New Record',
+                    action: function (e, dt, node, config) {
+                        $("#hiddenStdID").val(0);
+                        $("#Hidestd").trigger("click");
+                    }
+                }
+            ],
+
+            "iDisplayLength": 10,
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "All"]],
+        });
+
+        $("#liExam").addClass("active");
+        $("#tblSubjectList").css("visibility", "visible");
+        $("#t01 tbody").on('click', 'tr', function () {
+            $("#hiddenStdID").val(table.row(this).data()[0]);
+            $("#txtStadName").val(table.row(this).data()[1]);
+            $("#txtStandDescription").val(table.row(this).data()[2]);
+
+        });
+        $("#t01").css("visibility", "visible");
+
+    });
+
+    function SaveRecord() {
+        var _dataURL = "/Settings/InsertStandard/";
+        $.ajax({
+            type: 'POST',
+            url: _dataURL,
+            data: "{'ExamID':" + $("#hiddenStdID").val() + ",'Name':'" + $("#txtStadName").val() + "','Desc':'" + $("#txtStandDescription").val() + "'}",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                $("#btnCloseR").trigger("click");
+                if (data == "true") {
+                    window.location.reload();
+                }
+                else {
+                    alert('Failed1');
+                    return false;
+                }
+
+            },
+            error: function (data) {
+                alert('Failed');
+                return false;
+            }
+        });
+    }
+
+    function DeleteRecord() {
+
+
+
+        var _dataURL = "/Settings/DeleteStandard/";
+        $.ajax({
+            type: 'POST',
+            url: _dataURL,
+            data: "{'StdID':" + $("#hiddenStdID").val() + "}",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                $("#btnClose").trigger("click");
+
+                if (data == "true") {
+                    window.location.reload();
+                }
+                else {
+                    alert('Failed1');
+                    return false;
+                }
+
+            },
+            error: function (data) {
+                alert('Failed');
+                return false;
+            }
+        });
+        return false;
+    }
+
+    function test(_p) {
+        var Alert = "";
+        if (_p == 0) {
+            Alert = "Are you sure? Do you want to deactivate the record?";
+        }
+        else {
+            Alert = "Are you sure? Do you want to activate the record?";
+        }
+
+        $("#mdlDialogue").text(Alert);
+    }
+
+</script>
+<table id="t01" class="display tblHeader" cellspacing="0" width="100%" style="visibility:hidden;">
+    <thead>
+        <tr>
+            <th>Exam Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    @foreach (var item in ViewBag.getStandardList)
+    {
+        <tr>
+            <td>@item.ExamId</td>
+
+            <td>@item.ExamName</td>
+            <td>@item.Description</td>
+            <td>
+                @if (item.Active == true)
+                {
+                    <a href="#" type="button" data-target="#modal-confirm" onclick="test(0);"
+                       data-toggle="modal">
+                        <img src="~/Content/Images/True.png" width="25px" alt="Active" title="Active" />
+                    </a>
+                }
+                else
+                {
+                    <a href="#" type="button" data-target="#modal-confirm" onclick="test(1);"
+                       data-toggle="modal">
+                        <img src="~/Content/Images/false.png" width="25px" alt="Active" title="Active" />
+                    </a>
+                }
+            </td>
+            <td>
+                <a href="#" type="button"
+                   data-target="#modal-stackable"
+                   data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span></a>
+            </td>
+
+        </tr>
+    }
+
+</table>
+@Html.ActionLink("Back", "home", "settings", new { @area = "" }, new { @class = "btn btn-info" })
+<!--Get collection Modal Confirm-->
+<div id="modal-stackable" tabindex="-1" role="dialog" aria-labelledby="modal-stackable-label"
+     aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true"
+                        class="close">
+                    &times;
+                </button>
+                <h4 id="modal-stackable-label" class="modal-title">Add/Update Standard</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hiddenStdID" data-tabindex="1" />
+                <input type="text" id="txtStadName" data-tabindex="2" class="form-control mbm" />
+                <input type="text" id="txtStandDescription" data-tabindex="2" class="form-control mbm" />
+            </div>
+            <div class="modal-footer">
+                <button id="btnCloseR" type="button" data-dismiss="modal" class="btn btn-primary">
+                    Close
+                </button>
+                <input type="button" class="btn btn-success" onclick="SaveRecord();" value="Save changes" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Confirm-->
+<div id="modal-confirm" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="mdlDialogue" class="modal-body"></div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" data-dismiss="modal" class="btn btn-default">
+                    Cancel
+                </button>
+                <input type="button" data-dismiss="modal" class="btn btn-success" onclick="DeleteRecord();" value="Ok">
+            </div>
+        </div>
+    </div>
+</div>
+
+<a id="Hidestd" href="#" type="button"
+   data-target="#modal-stackable"
+   data-toggle="modal" style="visibility:hidden;"></a>

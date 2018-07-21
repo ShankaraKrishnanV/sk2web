@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "Invitations";
+
+    if (Convert.ToInt32(Session["UserType"]) == 2)
+    {
+        Layout = "~/Views/Shared/_StaffLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    }
+
+}
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $("#liInvitations").addClass("active");
+        $("#ContentTitle").text("Invitations");
+    });
+</script>
+
+<style>
+    .page-profile .summary img, .timeline .summary img {
+        height: 250px;
+    }
+</style>
+<div class="fluid">
+    <div class="box-content">
+        <!--BEGIN CONTENT-->
+        <div class="content">
+            <div class="timeline-wrapper">
+                <ul class="timeline clearfix">
+                    @foreach (var iInvitations in ViewBag.listStatus)
+                    {
+                        <li class="post-list">
+                            <div class="timeline-badge">
+                                <a href="#" data-hover="tooltip" data-placement="top"
+                                   data-original-title="@iInvitations.PostedOn"></a>
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="avatar">
+                                    @if (!string.IsNullOrEmpty(Convert.ToString(iInvitations.ProfilePicture)))
+                                    {
+                                        if (iInvitations.ProfilePicture != "test.png")
+                                        {
+                                            <img style="width: 55px; height: 55px;" src="@iInvitations.ProfilePicture" class="img-circle" />
+                                        }
+                                        else
+                                        {
+                                            <img style="width: 55px; height: 55px;" src="~/Content/Images/img_avatar2.png" class="img-circle" />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <img style="width: 55px; height: 55px;" src="~/Content/Images/img_avatar2.png" class="img-circle" />
+                                    }
+
+                                </div>
+                                <div class="post-body">
+                                    <div class="desc">
+                                        <strong class="post-user mrs">@iInvitations.FirstName  @iInvitations.LastName</strong>
+                                        <small class="text-muted">posted a new note</small>
+                                        &nbsp;-&nbsp;
+                                        @*<small class="text-muted">1 days ago at 6:18am</small>*@
+                                        @{int Calculate = ((DateTime.Now) - (iInvitations.PostedOn)).Days;}
+                                        <small class="text-muted">@Calculate days ago at @iInvitations.PostedTime</small>
+                                    </div>
+                                    <div class="post-content">
+                                        <a href="#" class="post-title">
+                                            <img src="~/Content/assets/images/icon-vine.png"
+                                                 class="mrs" /><strong>@iInvitations.InvitationTitle</strong>
+                                            </a>
+                                            <div class="summary mts cleafix">
+                                                @if (!string.IsNullOrEmpty(Convert.ToString(iInvitations.InvitationImage)))
+                                                {
+                                                    <div class="img-wrapper">
+                                                        <img style="width: 405px; height: 320px;" src="@iInvitations.InvitationImage" class="mrs" />
+                                                    </div>
+                                                }
+                                                <p style="text-align:justify">@iInvitations.Description</p>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        @*<div class="action-post mtl">
+                                                <a href="#"><i class="fa fa-heart-o mrx"></i>Like</a>&nbsp;
+                                                - &nbsp;<a href="#"><i class="fa fa-comments-o mrx"></i>Comments</a>&nbsp;
+                                                - &nbsp;<a href="#"><i class="fa fa-share-square-o mrx"></i>Share</a>
+                                            </div>*@
+                                    </div>
+                                </div>
+                            </li>
+
+                                            }
+
+                </ul>
+            </div>
+        </div>
+        <!--END CONTENT-->
+    </div>
+</div>

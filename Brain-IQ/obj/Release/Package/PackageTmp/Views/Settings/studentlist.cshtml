@@ -1,0 +1,215 @@
+﻿
+@{
+    ViewBag.Title = "Student List";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function () {
+        var table = $("#t01").DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print', {
+                    text: 'Add New',
+                    action: function (e, dt, node, config) {
+                        $("#hiddenSTUDID").val(0);
+                        $("#txtFirstName").val("");
+                        $("#txtLastName").val("");
+                        $("#txtPhoneNo").val("");
+                        $("#txtEmail").val("");
+                        $("#txtPostalCode").val("");
+                        $("#txtDateOfBirth").val("");
+                        $("#txtCountry").val("");
+                        $("#txtState").val("");
+                        $("#Hidestd").trigger("click");
+                    }
+                }
+            ],
+
+            "iDisplayLength": 10,
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "All"]],
+        });
+
+
+
+        $("#liExam").addClass("active");
+        $("#ContentTitle").text("Student List");
+        $("#tblSubjectList").css("visibility", "visible");
+        $("#t01 tbody").on('click', 'tr', function () {
+
+            $("#hiddenSTUDID").val(table.row(this).data()[1]);
+
+            $("#txtFirstName").val(table.row(this).data()[2]);
+            $("#txtLastName").val(table.row(this).data()[3]);
+            $("#txtPhoneNo").val(table.row(this).data()[5]);
+            $("#txtEmail").val(table.row(this).data()[6]);
+            $("#txtPostalCode").val(table.row(this).data()[7]);
+            $("#txtDateOfBirth").val(table.row(this).data()[4]);
+            $("#txtCountry").val(table.row(this).data()[9]);
+            $("#txtState").val(table.row(this).data()[8]);
+
+
+        });
+        $("#t01").css("visibility", "visible");
+    });
+
+    function SaveRecord() {
+
+        var student = Object();
+        var StudID = $("#hiddenSTUDID").val();
+        student.StudentId = StudID;
+
+        student.FirstName = $("#txtFirstName").val();
+        student.LastName = $("#txtLastName").val();
+        student.PhoneNo = $("#txtPhoneNo").val();
+        student.Address = $("#txtEmail").val();
+        student.PostelCode = $("#txtPostalCode").val();
+
+        student.DOB = $("#txtDateOfBirth").val();
+        student.Country = $("#txtCountry").val();
+        student.State = $("#txtState").val();
+
+        var StudentModels = JSON.stringify({ studentModels: student });
+        var _dataURL = "/Settings/InsertStudent/";
+        $.ajax({
+            type: 'POST',
+            url: _dataURL,
+            data: StudentModels,
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                $("#btnCloseR").trigger("click");
+                if (data == "true") {
+                    window.location.reload();
+                }
+                else {
+                    alert('Failed1');
+                    return false;
+                }
+
+            },
+            error: function (data) {
+                alert('Failed');
+                return false;
+            }
+        });
+    }
+
+</script>
+
+
+<div class="form-group col-md-12">
+    <input type="hidden" id="hiddenSTUDID" />
+    @{ string Display = string.Empty;}
+    @if (Session["StandardID"].ToString().Trim() == "1")
+    {
+        Display = "st";
+    }
+    else if (Session["StandardID"].ToString().Trim() == "2")
+    {
+        Display = "nd";
+    }
+    else if (Session["StandardID"].ToString().Trim() == "3")
+    {
+        Display = "rd";
+    }
+    else
+    {
+        Display = "th";
+    }
+    <h3 style="color:darkblue">Add/update the @Session["StandardID"].ToString().Trim()<sup>@Display</sup> student list</h3>
+    <table id="t01" class="display tblHeader" cellspacing="0" width="100%" style="visibility:hidden;">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Roll No</th>
+
+                <th>First name</th>
+                <th>Last name</th>
+                <th>DOB</th>
+                <th>Phone No</th>
+                <th>Address</th>
+                <th>Postal Code</th>
+                <th>State</th>
+                <th>Country</th>
+                <th></th>
+            </tr>
+        </thead>
+        @{int ival = 1;}
+        @foreach (var item in ViewBag.getStudentList)
+            {
+            <tr>
+                <td>@ival</td>
+                <td>@item.UID</td>
+
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>@item.DateOfBirth</td>
+                <td>@item.PhoneNo</td>
+                <td>@item.Address</td>
+                <td>@item.PostalCode</td>
+                <td>@item.State</td>
+                <td>@item.Country</td>
+                <td>
+                    <a href="#" type="button"
+                       data-target="#modal-stackable"
+                       data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+            ival++;
+        }
+
+    </table>
+    @Html.ActionLink("Back", "student", "settings", new { @class = "btn btn-info" })
+</div>
+
+
+<!--Get collection Modal Confirm-->
+<div id="modal-stackable" tabindex="-1" role="dialog" aria-labelledby="modal-stackable-label"
+     aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true"
+                        class="close">
+                    &times;
+                </button>
+                <h4 id="modal-stackable-label" class="modal-title">Add/Update Student</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mbm"><input id="txtFirstName" type="text" tabindex="1" placeholder="First Name" class="form-control" /></div>
+                        <div class="mbm"><input id="txtEmail" type="text" tabindex="3" placeholder="Address" class="form-control" /></div>
+                        <div class="mbm"><input id="txtDateOfBirth" type="text" tabindex="5" placeholder="DOB" class="form-control" /></div>
+                        <div class="mbm"><input id="txtState" type="text" tabindex="7" placeholder="State" class="form-control" /></div>
+                        @*<div class="mbm"><input type="text" placeholder="First Name" class="form-control" /></div>
+                            <div class="mbm"><input type="text" placeholder="First Name" class="form-control" /></div>*@
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mbm"><input id="txtLastName" type="text" tabindex="2" placeholder="Last Name" class="form-control" /></div>
+                        <div class="mbm"><input id="txtPhoneNo" type="text" tabindex="4" placeholder="Phone no" class="form-control" /></div>
+                        <div class="mbm"><input id="txtPostalCode" type="text" tabindex="6" placeholder="Postal Code" class="form-control" /></div>
+                        <div class="mbm"><input id="txtCountry" type="text" tabindex="8" placeholder="Country" class="form-control" /></div>
+                        @*<div class="mbm"><input type="text" placeholder="First Name" class="form-control" /></div>
+                            <div class="mbm"><input type="text" placeholder="First Name" class="form-control" /></div>
+                            <div class="mbm"><input type="text" placeholder="First Name" class="form-control" /></div>*@
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCloseR" type="button" tabindex="10" data-dismiss="modal" class="btn btn-primary">
+                    Close
+                </button>
+                <input type="button" class="btn btn-success" tabindex="9" onclick="SaveRecord();" value="Save changes" />
+            </div>
+        </div>
+    </div>
+</div>
+<a id="Hidestd" href="#" type="button"
+   data-target="#modal-stackable"
+   data-toggle="modal" style="visibility:hidden;"></a>

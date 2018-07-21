@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "Available Exams";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    //Layout = null;
+}
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<table id="tblAvailableExam" class="display tblfont" cellspacing="0" width="100%" style="visibility:hidden;">
+    <thead>
+        <tr>
+            <th>Available Exams</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><a href="#">SBI PO Main(2017) Test - 1</a></td>
+            <td style="text-align:center"><p><span class="icon-calendar"></span></p><p class="font12">Start - May. 28, 2017, 09:00:00 AM</p><p class="font12"> End - None</p></td>
+            <td><p><span class="glyphicon glyphicon-question-sign"></span><span class="font12"><strong style="font-size: 18px;">155</strong> questions</span></p>
+            <p><span class="glyphicon glyphicon-time"></span><strong style="font-size: 18px;">00:05:00</strong></p></td>
+            <td><input type="button" class="btn btn-default btn-3d btn-circle" value="Start Exam" /></td>
+           
+        </tr>
+        <tr>
+            <td><a href="#">SBI PO Main(2017) Test - 2</a></td>
+            <td style="text-align:center"><p><span class="icon-calendar"></span></p><p class="font12">Start - May. 28, 2017, 09:00:00 AM</p><p class="font12"> End - None</p></td>
+            <td>
+                <p><span class="glyphicon glyphicon-question-sign"></span><span class="font12"><strong style="font-size: 18px;">155</strong> questions</span></p>
+                <p><span class="glyphicon glyphicon-time"></span><strong style="font-size: 18px;">00:05:00</strong></p>
+            </td>
+            <td><input type="button" class="btn btn-default btn-3d btn-circle" value="Start Exam" /></td>
+
+        </tr>
+        <tr>
+            <td><a href="#">SBI PO Main(2017) Test - 3</a></td>
+            <td style="text-align:center"><p><span class="icon-calendar"></span></p><p class="font12">Start - May. 28, 2017, 09:00:00 AM</p><p class="font12"> End - None</p></td>
+            <td>
+                <p><span class="glyphicon glyphicon-question-sign"></span><span class="font12"><strong style="font-size: 18px;">155</strong> questions</span></p>
+                <p><span class="glyphicon glyphicon-time"></span><strong style="font-size: 18px;">00:05:00</strong></p>
+            </td>
+            <td><input type="button" class="btn btn-default btn-3d btn-circle" value="Start Exam" /></td>
+
+        </tr>
+        <tr>
+            <td><a href="#">SBI PO Main(2017) Test - 4</a></td>
+            <td style="text-align:center"><p><span class="icon-calendar"></span></p><p class="font12">Start - May. 28, 2017, 09:00:00 AM</p><p class="font12"> End - None</p></td>
+            <td>
+                <p><span class="glyphicon glyphicon-question-sign"></span><span class="font12"><strong style="font-size: 18px;">155</strong> questions</span></p>
+                <p><span class="glyphicon glyphicon-time"></span><strong style="font-size: 18px;">00:05:00</strong></p>
+            </td>
+            <td><input type="button" class="btn btn-default btn-3d btn-circle" value="Start Exam" /></td>
+
+        </tr>
+        <tr>
+            <td><a href="#">SBI PO Main(2017) Test - 5</a></td>
+            <td style="text-align:center"><p><span class="icon-calendar"></span></p><p class="font12">Start - May. 28, 2017, 09:00:00 AM</p><p class="font12"> End - None</p></td>
+            <td>
+                <p><span class="glyphicon glyphicon-question-sign"></span><span class="font12"><strong style="font-size: 18px;">155</strong> questions</span></p>
+                <p><span class="glyphicon glyphicon-time"></span><strong style="font-size: 18px;">00:05:00</strong></p>
+            </td>
+            <td><input type="button" class="btn btn-default btn-3d btn-circle" value="Start Exam" /></td>
+
+        </tr>
+        <tr>
+            <td><a href="#">SBI PO Main(2018) Test - 6</a></td>
+            <td style="text-align:center"><p><span class="icon-calendar"></span></p><p class="font12">Start - May. 28, 2017, 09:00:00 AM</p><p class="font12"> End - None</p></td>
+            <td>
+                <p><span class="glyphicon glyphicon-question-sign"></span><span class="font12"><strong style="font-size: 18px;">155</strong> questions</span></p>
+                <p><span class="glyphicon glyphicon-time"></span><strong style="font-size: 18px;">00:05:00</strong></p>
+            </td>
+            <td><input type="button" class="btn btn-default btn-3d btn-circle" value="Start Exam" /></td>
+
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+
+        var table = $("#tblAvailableExam").DataTable({
+
+
+
+            "pageLength": 5,
+            "bLengthChange": false   // To disable 10,20,50 list dropdown from the datatable
+        });
+        $("#tblAvailableExam").css("visibility", "visible");
+        //$("#tblAvailableExam tbody").on("click", "tr", function () {
+        //    if ($(this).hasClass('selected')) {
+        //        $(this).removeClass('selected');
+        //    }
+        //    else {
+        //        table.$('tr.selected').removeClass('selected');
+        //        $(this).addClass('selected');
+        //    }
+        //});
+
+
+
+        $("#button").click(function () {
+            table.row('.selected').remove().draw(false);
+        });
+    });
+</script>

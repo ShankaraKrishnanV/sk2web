@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Exam";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $("#liExam").addClass("active");
+        $("#ContentTitle").text("Select Exam");
+
+
+    });
+
+
+</script>
+
+<div id="BindSectionList" class="form-group col-md-3">
+
+</div>
+
+<div class="col-md-12">
+    @foreach (var item in ViewBag.getChapterList)
+    {
+        if (item.Active == true)
+        {
+            <div class="form-group col-md-2" style="cursor:pointer;">
+                <a href="@Url.Action("Index", "Subjects", new { area = "", ExamID = item.ExamId})">
+                
+                    <img src="~/Content/Images/img_avatar2.png" alt="@item.ExamId" class="img-responsive img-circle">
+                    <label>@item.ExamName</label>
+                </a>
+            </div>
+        }
+    }
+
+
+</div>
+
+

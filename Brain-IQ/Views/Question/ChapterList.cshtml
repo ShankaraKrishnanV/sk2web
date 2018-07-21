@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewBag.Title = "Chapter List";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $("#ContentTitle").text("Chapters");
+        var table = $("#t01").DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', {
+                    text: 'New Record',
+                    action: function (e, dt, node, config) {
+                        $("#hiddenChapterID").val(0);
+                        $("#Hidestd").trigger("click");
+                    }
+                }
+            ],
+
+            "iDisplayLength": 10,
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "All"]],
+        });
+
+        $("#liExam").addClass("active");
+        $("#tblSubjectList").css("visibility", "visible");
+        $("#t01 tbody").on('click', 'tr', function () {
+            var ROW1 = table.row(this).data()[0];
+
+            var Val = $("#lblChapterID_" + ROW1).text();
+
+            $("#hiddenChapterID").val(Val);
+            $("#txtChapName").val(table.row(this).data()[1]);
+            $("#txtChapDescription").val(table.row(this).data()[2]);
+
+        });
+        $("#t01").css("visibility", "visible");
+
+    });
+
+    function SaveRecord() {
+       
+        var _dataURL = "/Settings/InsertChapter/";
+        $.ajax({
+            type: 'POST',
+            url: _dataURL,
+            data: "{'ChapterId':" + $("#hiddenChapterID").val() + ",'Name':'" + $("#txtChapName").val() + "','Desc':'" + $("#txtChapDescription").val() + "'}",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                $("#btnCloseR").trigger("click");
+                if (data == "true") {
+                    window.location.reload();
+                }
+                else {
+                    alert('Failed1');
+                    return false;
+                }
+
+            },
+            error: function (data) {
+                alert('Failed');
+                return false;
+            }
+        });
+    }
+
+
+</script>
+<div class="form-group col-md-12">
+    <div class="form-group col-md-12">
+        <table id="t01" class="display tblHeader" cellspacing="0" width="100%" style="visibility:hidden;">
+            <thead>
+                <tr>
+                    <th>Chapter ID</th>
+                    <th>Chapter Name</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            @{int iLoop = 1;}
+            @foreach (var item in ViewBag.getChapter)
+            {
+
+            <tr>
+                <td>@iLoop </td>
+
+                <td>@item.ChapterName</td>
+                <td>@item.ChapterDescription</td>
+                <td>
+                    <a href="#" type="button"
+                       data-target="#modal-stackable"
+                       data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <span id="lblChapterID_@iLoop" style="display:none;">@item.ChapterId</span>
+                </td>
+            </tr>
+                iLoop++;
+            }
+
+        </table>
+
+    </div>
+</div>
+<div class="col-md-12">
+    <div class="col-md-12">
+        @Html.ActionLink("Back", "chapter", "settings", new { area="" }, new { @class = "btn btn-info" })
+    </div>
+</div>
+<div id="modal-stackable" tabindex="-1" role="dialog" aria-labelledby="modal-stackable-label"
+     aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-hidden="true"
+                        class="close">
+                    &times;
+                </button>
+                <h4 id="modal-stackable-label" class="modal-title">Add/Update Chapter</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hiddenChapterID" data-tabindex="1" />
+                <input type="text" id="txtChapName" data-tabindex="2" class="form-control mbm" />
+                <input type="text" id="txtChapDescription" data-tabindex="2" class="form-control mbm" />
+            </div>
+            <div class="modal-footer">
+                <button id="btnCloseR" type="button" data-dismiss="modal" class="btn btn-primary">
+                    Close
+                </button>
+                <input type="button" class="btn btn-success" onclick="SaveRecord();" value="Save changes" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<a id="Hidestd" href="#" type="button"
+   data-target="#modal-stackable"
+   data-toggle="modal" style="visibility:hidden;"></a>
+

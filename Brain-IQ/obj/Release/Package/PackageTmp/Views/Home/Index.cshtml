@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = null;
+}
+
+<!-- WHEN THE w0ff2 is not gonna work, us this: "chrome://flags/#enable-quic" and DISABLE the option 1-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+
+    <link rel="icon" type="image/x-icon" href="~/Content/assets/images/Favicon.ico">
+    <link href="~/Content/HomeDesign/css/Merriweather.css" rel="stylesheet" />
+    <link href="~/Content/HomeDesign/css/4.0.0-alpha.6/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/HomeDesign/css/darcula.min.css" rel="stylesheet" />
+
+    <style>
+        .font22 {
+            font-size: 21px;
+            padding-top: 18px;
+        }
+
+        .mc-image {
+            top: 80px;
+        }
+        #box {
+            border: 1px solid rgb(200, 200, 200);
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 5px 2px;
+            background: rgba(200, 200, 200, 0.1);
+            border-radius: 4px;
+            margin-left: 250px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+        }
+        /* For header background*/
+        .nav
+        {
+            width: 98.7%;
+            background-color: #71c502;
+        }
+        .font18{
+            font-size: 18px !important;
+        }
+    </style>
+    <script src="~/Content/HomeDesign/js/highlight.min.js"></script>
+    <script type="text/javascript">
+        function RedirectToLogin() {
+            location.href = "/logins/logins/";
+        }
+    </script>
+
+    <link href="~/Content/HomeDesign/css/index.css" rel="stylesheet" />
+</head>
+<body>
+
+    <ul class="nav" data-wall-section-nav style="background-color: black; width:98.8%">
+        <img src="~/Content/assets/images/logo3.png" style="width:250px;height:65px;margin-right: 111px;padding: 10px 5px 5px 10px;" />
+        <li class="nav-link font22" style="">Home</li>
+        <li class="nav-link font22">About Us</li>
+        <li class="nav-link font22">Students</li>
+        <li class="nav-link font22">Gallery</li>
+        <li class="nav-link font22">Facilities</li>
+        <li class="nav-link font22">Careers</li>
+        <li class="nav-link font22">Contact</li>
+        <li class="nav-link font22" onclick="RedirectToLogin();">Login</li>
+    </ul>
+    <div id="wall" class="wall main">
+        <section class="section section-1">
+            <div class="wrapper">
+                @{ Html.RenderPartial("SlideBar", "Home");}
+            </div>
+        </section>
+        <section class="section section-2">
+            <div class="wrapper">
+                <h1>Home</h1>
+                <div class="sub-header">
+                    <h5>Do you see the nav at top and dots at right?</h5>
+                </div>
+                <p class="font18">
+                    The School Association was formed on August 27th 1977 by a few like-minded to promote holistic education for the benefit of all the people irrespective of caste, creed, religion or language.
+                    The school was opened on 18th June 1979. It is recognized as a Matriculation Higher Secondary School by the Government of Tamil Nadu. It is a co-educational English medium school.
+                </p>
+
+            </div>
+        </section>
+        <section class="section section-3">
+            <div class="slide" data-wall-slide>
+                <div class="wrapper">
+                    <div class="container">
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h1 style="margin-left: -260px;">What We Do</h1>
+                                <p>Introduce the visitor to the business using clear, informative text. Use well-targeted keywords within your sentences to make sure search engines can find the business.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et molestiae similique eligendi reiciendis sunt distinctio odit? Quia, neque, ipsa, adipisci quisquam ullam deserunt accusantium illo iste exercitationem nemo voluptates asperiores.</p>
+                                <p>
+                                    <a class="btn btn-default btn-lg" href="#">Call to Action &raquo;</a>
+                                </p>
+                            </div>
+                            
+                        </div>
+                        <!-- /.row -->
+                        <hr>
+                        <div class="row" style="text-align:justify">
+                            <div class="col-sm-4">
+                                <img class="img-circle img-responsive img-center" style="border-radius: 142px; width:300px; height:300px;" src="~/Content/HomeSlideBar/image/demo/A.jpg" alt="">
+                                <h2>Marketing Box #1</h2>
+                                <p>These marketing boxes are a great place to put some information. These can contain summaries of what the company does, promotional information, or anything else that is relevant to the company. These will usually be below-the-fold.</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <img class="img-circle img-responsive img-center" style="border-radius: 142px; width:300px; height:300px;" src="~/Content/HomeSlideBar/image/demo/B.jpg" alt="">
+                                <h2>Marketing Box #2</h2>
+                                <p>The images are set to be circular and responsive. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <img class="img-circle img-responsive img-center" style="border-radius: 142px; width:300px; height:300px;" src="~/Content/HomeSlideBar/image/demo/C.jpg" alt="">
+                                <h2>Marketing Box #3</h2>
+                                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+                            </div>
+                        </div>
+                        <!-- /.row -->
+                        <hr>
+                        <!-- Footer -->
+                        <footer>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p>Send your queries to admin@admin.com for more details</p>
+                                </div>
+                            </div>
+                            <!-- /.row -->
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div data-wall-slide-arrow class="prev-slide">
+
+            </div>
+            <div data-wall-slide-arrow class="next-slide">
+
+            </div>
+        </section>
+        <section class="section section-4" data-wall-animate-duration=3>
+            <div class="wrapper">
+                <h1>Students</h1>
+                <div class="sub-header">
+                    <h5>Do you see the nav at top and dots at right?</h5>
+                </div>
+                <p>
+                    The School Association was formed on August 27th 1977 by a few like-minded to promote holistic education for the benefit of all the people irrespective of caste, creed, religion or language.
+                    The school was opened on 18th June 1979. It is recognized as a Matriculation Higher Secondary School by the Government of Tamil Nadu. It is a co-educational English medium school.
+                </p>
+            </div>
+        </section>
+        <section class="section section-5">
+            <div class="wrapper">
+                <h1>Gallery</h1>
+                <div class="sub-header">
+                    <h5>Do you see the nav at top and dots at right?</h5>
+                </div>
+                <p>
+                    The School Association was formed on August 27th 1977 by a few like-minded to promote holistic education for the benefit of all the people irrespective of caste, creed, religion or language.
+                    The school was opened on 18th June 1979. It is recognized as a Matriculation Higher Secondary School by the Government of Tamil Nadu. It is a co-educational English medium school.
+                </p>
+            </div>
+        </section>
+        <section class="section section-6">
+            <div class="wrapper">
+                <div class="wrapper">
+                    <h1>Facilities</h1>
+                    <div class="sub-header">
+                        <h5>Do you see the nav at top and dots at right?</h5>
+                    </div>
+                    <p>
+                        The School Association was formed on August 27th 1977 by a few like-minded to promote holistic education for the benefit of all the people irrespective of caste, creed, religion or language.
+                        The school was opened on 18th June 1979. It is recognized as a Matriculation Higher Secondary School by the Government of Tamil Nadu. It is a co-educational English medium school.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="section section-7">
+            <div class="wrapper">
+                <h1>Careers</h1>
+
+                <div class="container-fluid">
+                    <div class="row-fluid col-md-offset-12 col-md-12">
+
+                        <div class="col-md-offset-6 col-md-6" id="box">
+                            <h2>Send the informations!</h2>
+                            <hr>
+                            <form class="form-horizontal" action="" method="" id="contact_form">
+                                <fieldset>
+                                    <!-- Form Name -->
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                                <input name="first_name" placeholder="Name" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                                <input name="email" placeholder="E-Mail Address" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                                                <input name="phone" placeholder="(005)501-120101" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <div class="col-md-12 inputGroupContainer">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                                <textarea class="form-control" name="comment" placeholder="Message"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-warning pull-right">Send <span class="glyphicon glyphicon-send"></span></button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <section class="section section-7">
+            <div class="wrapper">
+                <h1>Contact Us</h1>
+
+                <div class="sub-header">
+                    <h5>Do you see the nav at top and dots at right?</h5>
+                </div>
+                <p>
+                    The School Association was formed on August 27th 1977 by a few like-minded to promote holistic education for the benefit of all the people irrespective of caste, creed, religion or language.
+                    The school was opened on 18th June 1979. It is recognized as a Matriculation Higher Secondary School by the Government of Tamil Nadu. It is a co-educational English medium school.
+                </p>
+                
+            </div>
+        </section>
+
+    </div>
+    <div id="prev" class="btn btn-secondary">prev</div>
+    <div id="next" class="btn btn-primary">next</div>
+    <ul class="dot" data-wall-section-nav>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+
+    </ul>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+
+    <script src="~/Content/HomeDesign/js/dist/wall.js"></script>
+    <script src="~/Content/HomeDesign/js/dist/index.js"></script>
+</body>
+</html>

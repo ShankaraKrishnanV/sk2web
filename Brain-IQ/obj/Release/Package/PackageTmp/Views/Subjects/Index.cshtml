@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Subject";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        var table = $("#tblSubjectList").DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "iDisplayLength": 10,
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "All"]],
+        });
+
+        $("#liExam").addClass("active");
+        $("#ContentTitle").text("Write Exam");
+        $("#tblSubjectList").css("visibility", "visible");
+    });
+</script>
+
+
+<table id="tblSubjectList" class="display tblHeader" cellspacing="0" width="100%" style="visibility:hidden;">
+    <thead>
+        <tr>
+            <th>No#</th>
+            <th>Subject</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>No#</th>
+            <th>Subject</th>
+            <th>Description</th>
+            <th></th>
+           
+        </tr>
+    </tfoot>
+    @{ int iNumber = 1;}
+    @foreach (var item in ViewBag.getSubject)
+    {
+        <tr>
+            <td>@iNumber</td>
+            <td>@item.Subject</td>
+            <td>@item.Description</td>
+            <td>
+                <a href='@Url.Action("subjectlist", "subjects", new { subjectId = @item.SubjectId})'>
+                    <input class="btn btn-default btn-3d btn-circle" type="submit" value='Select' />
+                </a>
+            </td>
+           
+        </tr>
+        iNumber = iNumber + 1;
+    }
+
+</table>
+
+
+
+
+
+

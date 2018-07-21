@@ -1,0 +1,1665 @@
+/* Font styles
+--------------------------------------------- */
+@font-face {
+    font-family: 'NotoSerif';
+    src: url('../Fonts/notoserif-regular.eot');
+    src: url('../Fonts/notoserif-regular.eot?#iefix') format('embedded-opentype'), url('../Fonts/notoserif-regular.woff') format('woff'), url('../Fonts/notoserif-regular.ttf') format('truetype'), url('../Fonts/notoserif-regular.svg#notoserif-regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Droidsans';
+    src: url('../Fonts/droidsans.eot');
+    src: url('../Fonts/droidsans.eot?#iefix') format('embedded-opentype'), url('../Fonts/droidsans.woff') format('woff'), url('../Fonts/droidsans.ttf') format('truetype'), url('../Fonts/droidsans.svg#droidsans') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DroidsansBold';
+    src: url('../Fonts/droidsans-bold.eot');
+    src: url('../Fonts/droidsans-bold.eot?#iefix') format('embedded-opentype'), url('../Fonts/droidsans-bold.woff') format('woff'), url('../Fonts/droidsans-bold.ttf') format('truetype'), url('../Fonts/droidsans-bold.svg#droidsans-bold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+/* Reset styles
+--------------------------------------------- */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    border: 0;
+    vertical-align: baseline;
+    margin: 0;
+    outline: 0;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+header, section, footer {
+    clear: both;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+label {
+    display: block;
+}
+
+input[type="button"], button {
+    cursor: pointer;
+    border: none;
+}
+/* Master styles
+--------------------------------------------- */
+body {
+    font: 13px/18px 'Droidsans', sans-serif;
+}
+
+* {
+    font-weight: 100;
+}
+
+* {
+    outline: none;
+}
+
+a {
+    outline: none;
+    text-decoration: none;
+    -webkit-transition: 0.25s;
+    -moz-transition: 0.25s;
+    -o-transition: 0.25s;
+    transition: 0.25s;
+    -webkit-backface-visibility: hidden;
+}
+
+    a:hover, a:active, a:focus, a:visited {
+        outline: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+input, select {
+    vertical-align: middle;
+}
+
+input, textarea {
+    font-family: Droidsans, sans-serif;
+    resize: none;
+    outline: none;
+}
+
+strong {
+    font-weight: bold;
+}
+
+textarea {
+    margin: 0;
+    overflow: auto;
+    vertical-align: top;
+}
+
+iframe {
+    width: 100%;
+    margin: 0;
+    border: none;
+    overflow: hidden;
+}
+
+figure img {
+    max-width: 95%;
+}
+
+img {
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+p {
+    font-size: 13px;
+    margin-bottom: 1em;
+    line-height: 19px;
+}
+/* Misc styles
+--------------------------------------------- */
+.clear {
+    width: 100%;
+    float: left;
+    clear: both;
+    margin-bottom: 10px;
+}
+
+.rows {
+    width: 100%;
+    float: left;
+}
+
+.alignC {
+    text-align: center;
+}
+
+.alignL {
+    text-align: left;
+}
+
+.alignR {
+    text-align: right;
+}
+
+.fLeft {
+    float: left !important;
+}
+
+.fRight {
+    float: right !important;
+}
+
+.mAuto {
+    margin: 0 auto;
+}
+
+.bdr0 {
+    border: none;
+}
+
+.pd0 {
+    padding: 0;
+}
+
+.mT0 {
+    margin-top: 0 !important;
+}
+
+.mT10 {
+    margin-top: 10px !important;
+}
+
+.mT15 {
+    margin-top: 15px !important;
+}
+
+.mT20 {
+    margin-top: 20px !important;
+}
+
+.mL0 {
+    margin-left: 0 !important;
+}
+
+.mL-20 {
+    margin-left: -20px !important;
+}
+
+.mB0 {
+    margin-bottom: 0 !important;
+}
+
+.mB5 {
+    margin-bottom: 5px;
+}
+
+.mB10 {
+    margin-bottom: 10px !important;
+}
+
+.mB-10 {
+    margin-bottom: -10px !important;
+}
+
+.input-mini {
+    width: 80% !important;
+}
+
+.input-small {
+    width: 85% !important;
+}
+
+.input-medium {
+    width: 97% !important;
+}
+
+.input-large {
+    width: 99% !important;
+}
+
+.input-xlarge {
+    width: 100% !important;
+}
+
+.k-widget {
+    width: 100% !important;
+    float: left;
+}
+
+.txtArea {
+    height: 104px;
+}
+
+.infoBox {
+    float: left;
+    padding: 20px;
+    display: block;
+    overflow: hidden;
+}
+
+    .infoBox p {
+        margin-bottom: 0;
+    }
+/*.whiteBox {
+	margin: 20px auto 0 auto;	
+	overflow: hidden;
+}*/
+.btnBlue:hover, .btnBlue:focus {
+    -webkit-transition: 0.25s;
+    -moz-transition: 0.25s;
+    -o-transition: 0.25s;
+    transition: 0.25s;
+    outline: none;
+}
+
+.btnBlue:active, .btnBlue.active {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    outline: none;
+}
+
+.disbtn {
+    float: right;
+    padding: 8px 5px;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.btnC {
+    clear: right !important;
+    clear: both !important;
+}
+/* Page structure
+--------------------------------------------- */
+.wrapper {
+    width: 1100px;
+    margin: 0 auto;
+    position: relative;
+}
+/* Grid structure
+--------------------------------------------- */
+.clm1, .clm2, .clm3, .clm4, .clm5, .clm6, .clm7, .clm8, .clm9, .clm10, .clm11, .clm12 {
+    float: left;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-left: 2%;
+}
+
+.rows .clm1:first-child, .rows .clm2:first-child, .rows .clm3:first-child, .rows .clm4:first-child, .rows .clm5:first-child, .rows .clm6:first-child, .rows .clm7:first-child, .rows .clm8:first-child, .rows .clm9:first-child, .rows .clm10:first-child, .rows .clm11:first-child, .rows .clm12:first-child {
+    margin-left: 0;
+}
+
+.clm {
+    margin-left: 0 !important;
+}
+
+    .clm:first-child {
+        margin-left: 0;
+    }
+
+.clm1 {
+    width: 6.5%;
+}
+
+.clm2 {
+    width: 15%;
+}
+
+.clm3 {
+    width: 23.5%;
+}
+
+.clm4 {
+    width: 32%;
+}
+
+.clm5 {
+    width: 40.5%;
+}
+
+.clm6 {
+    width: 49%;
+}
+
+.clm7 {
+    width: 35.5%;
+}
+
+.clm8 {
+    width: 66%;
+}
+
+.clm9 {
+    width: 74.5%;
+}
+
+.clm10 {
+    width: 83%;
+}
+
+.clm11 {
+    width: 91.5%;
+}
+
+.clm12 {
+    width: 90%;
+    margin-left: 60px;
+}
+
+.row5 {
+    width: 50%;
+    margin: 0 auto;
+}
+/* Header styles
+--------------------------------------------- */
+header {
+    height: 95px;
+    position: relative;
+    padding-top: 10px;
+}
+
+    header .wrapper {
+        width: 980px;
+    }
+
+.logo {
+    float: left;
+    margin-top: 20px;
+}
+
+.welcomeSec {
+    float: right;
+    margin-bottom: 10px;
+}
+
+    .welcomeSec h2 {
+        margin-top: 40px;
+        font-family: 'Droidsans', sans-serif;
+    }
+
+        .welcomeSec h2 span {
+            float: none;
+        }
+
+    .welcomeSec span {
+        float: left;
+        margin-right: 5px;
+        line-height: 30px;
+    }
+
+    .welcomeSec a {
+        float: right;
+        margin-left: 10px;
+        padding: 7px;
+        line-height: 0;
+    }
+/* Footer styles
+--------------------------------------------- */
+.copyright {
+    margin: 30px auto 30px auto;
+    text-align: center;
+}
+
+    .copyright span {
+        padding-right: 15px;
+    }
+
+        .copyright span a {
+            background: none;
+            padding: 0;
+        }
+
+    .copyright a {
+        padding: 0 15px;
+    }
+/* Login styles
+--------------------------------------------- */
+.logOuter {
+    width: 66.5%;
+}
+
+    .logOuter .userImg {
+        width: 19%;
+        margin-right: 40px;
+    }
+
+.logLeft p {
+    font-size: 15px;
+    line-height: 24px;
+}
+
+.logLeft .infoBox {
+    margin-top: 20px;
+}
+
+    .logLeft .infoBox span {
+        float: left;
+        padding: 11px 22px 0 7px;
+        font-size: 15px;
+    }
+
+.logRight {
+    padding-left: 68px;
+    min-height: 296px;
+}
+
+    .logRight h2 {
+        font-size: 20px;
+    }
+
+    .logRight .btn {
+        float: left;
+        margin-left: 0;
+    }
+
+.staySign {
+    width: 120px;
+    float: left;
+    margin: 12px 0 0 55px;
+    font-size: 15px;
+}
+
+.forgetLink {
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+    .forgetLink li {
+        float: left;
+        padding: 0 18px;
+    }
+
+        .forgetLink li:first-child {
+            background: none;
+            padding-left: 0;
+        }
+/* Agency styles
+--------------------------------------------- */
+.chooseAc {
+    padding-top: 20px;
+    min-height: 180px;
+}
+
+    .chooseAc .infoBox {
+        padding: 25px;
+    }
+
+        .chooseAc .infoBox p {
+            clear: both;
+        }
+
+        .chooseAc .infoBox .btn {
+            float: none;
+            margin: 0 auto;
+            display: block;
+        }
+
+.chooseTop {
+    text-align: center;
+}
+
+    .chooseTop h1 {
+        margin: 15px 0 0 0;
+    }
+
+    .chooseTop p {
+        font-size: 15px;
+    }
+
+.chooseOr {
+    width: 32px;
+    height: 27px;
+    margin: 58px auto 0 auto;
+    text-align: center;
+    padding-top: 5px;
+    font: 14px 'NotoSerif', sans-serif;
+    font-weight: bold;
+}
+
+.topDesc {
+    overflow: hidden;
+}
+
+    .topDesc h1 {
+        margin-bottom: 5px;
+        font-size: 24px;
+    }
+
+    .topDesc p {
+        font-size: 14px;
+    }
+
+.topPad {
+    padding-top: 40px;
+}
+
+.greyShad {
+    margin-top: 5px;
+}
+
+.userImg {
+    width: 99%;
+    float: left;
+    margin-bottom: 20px;
+    position: relative;
+    text-align: center;
+}
+
+    .userImg img {
+        padding: 10px 0;
+    }
+
+    .userImg figcaption {
+        width: 85.5%;
+        position: absolute;
+        bottom: -1px;
+        display: block;
+        padding: 2px 10px 5px 10px;
+    }
+
+        .userImg figcaption img {
+            float: left;
+            margin-right: 10px;
+            padding: 0;
+        }
+
+        .userImg figcaption a {
+            float: left;
+            margin-top: 4px;
+        }
+
+.checkRegion {
+    width: auto;
+    float: right;
+    margin-bottom: 6px;
+}
+
+    .checkRegion label {
+        margin-left: 10px;
+        font-size: 11px;
+    }
+/* Form styles
+--------------------------------------------- */
+.formSec {
+    clear: both;
+}
+
+.logOuter .formSec .outerFit {
+    width: 77.8% !important;
+}
+
+.formSec ul {
+    width: 100%;
+    float: left;
+}
+
+    .formSec ul li {
+        width: 100%;
+        float: left;
+        margin-bottom: 20px;
+        position: relative;
+        top: -1px;
+        left: 0px;
+    }
+
+.formSec label {
+    position: relative;
+}
+
+.formSec ul li ul li {
+    margin-bottom: 0 !important;
+}
+
+.formSec .errTxt:before {
+    border-color: #eed3d7 transparent;
+    border-style: solid;
+    border-width: 10px 10px 0;
+    bottom: -9px;
+    content: "";
+    display: block;
+    right: 6px;
+    position: absolute;
+    width: 0;
+}
+
+.formSec .errTxt:after {
+    border-color: #f2dede transparent;
+    border-style: solid;
+    border-width: 10px 9px 0;
+    bottom: -8px;
+    content: "";
+    display: block;
+    right: 7px;
+    position: absolute;
+    width: 0;
+}
+
+.formSec .errTxt {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #eed3d7;
+    font-size: 11px;
+    color: #b94a48;
+    line-height: 14px;
+    background-color: #f2dede;
+    margin: 0;
+    width: 180px;
+    padding: 5px 10px;
+    right: 0;
+    bottom: 43px;
+    position: absolute;
+}
+
+.formSec .errFil {
+    border: 1px solid #eed3d7;
+    box-shadow: inset 0 0px 1px 0px #b94a48;
+    color: #b94a48;
+}
+
+.twoClm {
+    margin-left: -20px;
+}
+
+    .twoClm li {
+        width: 46.5%;
+        float: left;
+        margin-left: 3.5%;
+    }
+
+        .twoClm li li {
+            width: 47%;
+            float: left;
+            margin-left: 6%;
+            margin-bottom: 0;
+        }
+
+.twoClmIn li {
+    width: 48.2%;
+    float: left;
+    margin-left: 3.6%;
+}
+
+    .twoClmIn li:first-child {
+        margin-left: 0;
+    }
+
+.twoClm li.mgrClm {
+    width: 100% !important;
+}
+
+.twoClm li li:first-child {
+    margin-left: 0;
+}
+
+.listClm li {
+    float: left;
+    margin-left: 2.5%;
+}
+
+    .listClm li:first-child {
+        margin-left: 0;
+    }
+
+.listClm .lastBtn {
+    width: 55%;
+}
+
+.btnHolder {
+    margin-top: 20px;
+    float: left;
+    width: 100%;
+}
+
+.daylight {
+    width: 31%;
+}
+
+.states {
+    width: 26.4%;
+}
+
+.currency {
+    width: 15%;
+}
+
+.language {
+    width: 20%;
+}
+
+.dateFormat {
+    width: 20%;
+    margin-left: 0 !important;
+}
+
+.timeFormat {
+    width: 20%;
+}
+/* Content section styles
+--------------------------------------------- */
+.subHeader {
+    clear: both;
+    display: block;
+}
+
+.contentSec {
+    clear: both;
+    display: block;
+    overflow: hidden;
+}
+
+    .contentSec h1 {
+        font-size: 25px;
+        display: inline-block;
+    }
+
+.subHeader h1 {
+    font-size: 25px;
+    display: inline-block;
+}
+
+.content {
+    overflow: hidden;
+    display: block;
+    position: relative;
+    padding: 20px;
+    min-height: 300px;
+    overflow: hidden;
+}
+
+.cList {
+    margin-bottom: 10px;
+    display: block;
+    padding: 10px 20px 20px 20px;
+    border: 1px solid #f1f5f8;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+    .cList figure {
+        height: 85px;
+        position: relative;
+        text-align: center;
+    }
+
+    .cList figcaption {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        padding: 5px 0 10px 0;
+    }
+
+    .cList span {
+        float: left;
+        padding: 5px 15px;
+    }
+
+        .cList span a {
+            padding: 0 8px;
+        }
+
+.contentSec .nav-tabs {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+    .contentSec .nav-tabs > li {
+        width: 33.3%;
+    }
+
+.contentSec .tab-content {
+    margin-top: 50px;
+}
+
+.contSec {
+    clear: both;
+    overflow: hidden;
+    display: block;
+}
+
+.listRows {
+    width: 100%;
+}
+
+    .listRows li {
+        float: left;
+        width: 100%;
+        margin-top: 1px;
+        padding-bottom: 10px;
+    }
+
+        .listRows li:first-child {
+            border-top: 0;
+            margin-top: 0;
+        }
+
+        .listRows li h4 {
+            padding-left: 20px;
+        }
+
+.iconSet a {
+    height: 70px;
+    float: left;
+    padding: 0 10px 5px 10px;
+    text-align: center;
+    margin: 0 10px;
+}
+
+    .iconSet a img {
+        width: 50px;
+        margin: 0 auto;
+        display: block;
+        overflow: hidden;
+    }
+
+    .iconSet a span {
+        width: 100%;
+        float: left;
+        line-height: 15px;
+    }
+
+.intro {
+    padding: 15px 0;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.titSec {
+    float: left;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+    .titSec h4 {
+        display: inline;
+        padding: 0;
+        margin: 0;
+        line-height: 25px;
+        float: left;
+    }
+
+    .titSec span {
+        float: left;
+        margin-right: 5px;
+    }
+
+    .titSec i {
+        margin-top: 6px;
+    }
+
+    .titSec .titNav {
+        float: right;
+    }
+
+.spliter {
+    /*background:url(../Images/arrow-split.png) no-repeat 0 0;*/
+    float: left;
+    margin-right: 10px;
+    padding-right: 30px;
+    min-height: 290px;
+    border-right: 1px solid #e5e8e8;
+}
+
+.textSmall {
+    font-size: 11px;
+}
+
+.user-details {
+    background: #f9fafb;
+    border: 1px solid #d4d9db;
+    padding: 8px 18px 5px 18px;
+}
+
+.userArrow {
+    background: url(../Images/arrow-userlist.png) no-repeat 0 0;
+    width: 25px;
+    height: 26px;
+    margin: 0 0 0 -28px;
+    position: absolute;
+}
+
+.user-details figure {
+    float: left;
+    border: 1px solid #d4d9db;
+}
+
+.user-details h6 {
+    float: left;
+    margin: 5px 0 0 5px;
+    font-family: 'DroidsansBold', sans-serif;
+    color: #626782;
+}
+
+.user-details .detailTop {
+    margin-bottom: 6px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid #cad1d4;
+    overflow: hidden;
+}
+
+.iconSetting {
+    float: right;
+    margin-top: 4px;
+}
+
+.strength {
+    width: 50%;
+    margin-top: -6px;
+    display: block;
+    overflow: hidden;
+    font-size: 11px;
+}
+
+    .strength .progesss {
+        background: #fff;
+        margin-top: -3px;
+        display: block;
+        overflow: hidden;
+        border: 1px solid #dae4ea;
+    }
+
+        .strength .progesss span {
+            background: #27ae60;
+            width: 50%;
+            height: 5px;
+            float: left;
+        }
+
+.listRNav {
+    height: 26px;
+    width: 100%;
+    float: left;
+    font-size: 12px;
+}
+
+    .listRNav a {
+        margin-left: 10px;
+        line-height: 15px;
+    }
+
+        .listRNav a.current {
+            background-color: #eb5b4c;
+        }
+
+            .listRNav a.current i {
+                margin: 2px;
+                padding: 0;
+                line-height: 10px;
+            }
+
+.recList {
+    margin-bottom: 18px;
+    padding: 0;
+    border: 1px solid #f1f5f8;
+    font-size: 12px;
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    background-color:#59C9F8;
+    border-radius:10px;
+}
+
+    .recList .detail {
+        background-color: #E6E9EB;
+        width: 100%;
+        float: left;
+        text-align: center;
+        border-radius:60px;
+    }
+
+    .recList h4 {
+        margin: 20px 0 5px 0;
+    }
+
+    .recList .detail p {
+        font-size: 11px;
+        padding: 0 0 10px 0;
+        margin: 0;
+        line-height: 14px;
+        color: darkgreen;
+    }
+
+    .recList .detail .avgSec {
+        text-align: center;
+        padding: 10px;
+        width: 40%;
+        float: left;
+        border-right: 3px solid #59C9F8;
+        height: 125px;
+        background-color: #E6E9EB;
+    }
+
+        .recList .detail .avgSec strong {
+            font-size: 40px;
+            color: #eb5b4c;
+            float: left;
+            width: 100%;
+            line-height: 70px;
+        }
+
+    .recList .detail .subSec, .recList .detail .blsSec {
+        float: left;
+        width: 135px;
+        padding: 10px;
+        height: 50px;
+    }
+
+        .recList .detail .subSec strong, .recList .detail .blsSec strong {
+            font-size: 30px;
+            color: #27ae61;
+        }
+
+.k-grid-tab {
+    width: 100%;
+    float: left;
+}
+
+.listView {
+    width: 100%;
+    float: left;
+}
+
+.titTab {
+    width: 100%;
+    float: left;
+}
+
+    .titTab h4 {
+        float: left;
+    }
+
+    .titTab .titNav {
+        float: right;
+        margin-top: 12px;
+    }
+
+.searchSec {
+    margin-bottom: 20px;
+    padding: 15px;
+    display: block;
+    clear: both;
+}
+
+.searchBox {
+    width: 330px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.tableCont {
+    width: 100%;
+    float: left;
+}
+
+    .tableCont table {
+        border: 1px solid #ecf0f1;
+    }
+
+        .tableCont table > thead > tr > th {
+            text-align: left;
+            padding: 10px;
+            border-top: 1px solid #ecf0f1;
+            border-left: 1px solid #ecf0f1;
+            font-size: 15px;
+        }
+
+        .tableCont table > tbody > tr > td {
+            padding: 10px;
+            border-top: 1px solid #ecf0f1;
+            border-left: 1px solid #ecf0f1;
+            color: #646883;
+        }
+
+        .tableCont table > tbody > tr.even {
+            background: #f2faf8;
+        }
+
+        .tableCont table td .checkboxMedium {
+            margin-right: 4px;
+        }
+
+        .tableCont table td label {
+            float: none;
+        }
+
+.formSec label .labTxt {
+    float: left;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.formSec label .labFild {
+    float: left;
+}
+/* Checkbox and radio styles
+--------------------------------------------- */
+.checkbox_blue, .radio_blue {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.checkbox_blue {
+    background-position: 0 0;
+}
+
+    .checkbox_blue.hover {
+        background-position: -22px 0;
+    }
+
+    .checkbox_blue.checked {
+        background-position: -44px 0;
+    }
+
+    .checkbox_blue.disabled {
+        background-position: -66px 0;
+        cursor: default;
+    }
+
+    .checkbox_blue.checked.disabled {
+        background-position: -88px 0;
+    }
+
+.radio_blue {
+    background-position: -110px 0;
+}
+
+    .radio_blue.hover {
+        background-position: -130px 0;
+    }
+
+    .radio_blue.checked {
+        background-position: -150px 0;
+    }
+
+    .radio_blue.disabled {
+        background-position: -170px 0;
+        cursor: default;
+    }
+
+    .radio_blue.checked.disabled {
+        background-position: -190px 0;
+    }
+
+.checkboxSmall {
+    background-repeat: no-repeat;
+    position: relative;
+    width: 11px;
+    height: 11px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.checkboxSmall {
+    background-position: 0 -30px;
+}
+
+    .checkboxSmall.hover {
+        background-position: -13px -30px;
+    }
+
+    .checkboxSmall.checked {
+        background-position: -26px -30px;
+    }
+
+    .checkboxSmall.disabled {
+        background-position: -39px -30px;
+        cursor: default;
+    }
+
+    .checkboxSmall.checked.disabled {
+        background-position: -52px -30px;
+    }
+
+.checkboxMedium {
+    background-repeat: no-repeat;
+    position: relative;
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.checkboxMedium {
+    background-position: 0 -51px;
+}
+
+    .checkboxMedium.hover {
+        background-position: -16px -51px;
+    }
+
+    .checkboxMedium.checked {
+        background-position: -32px -51px;
+    }
+
+    .checkboxMedium.disabled {
+        background-position: -48px -51px;
+        cursor: default;
+    }
+
+    .checkboxMedium.checked.disabled {
+        background-position: -64px -51px;
+    }
+/* Textfield tags styles
+--------------------------------------------- */
+.tagsField {
+    width: 96.8% !important;
+    margin-bottom: 20px;
+    padding: 5px 10px;
+    clear: both;
+}
+
+    .tagsField.active {
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .tagsField li.tag {
+        float: left;
+        margin: 0;
+        margin-right: 1.5%;
+        padding-left: 10px;
+        display: block;
+        line-height: 28px;
+        cursor: pointer;
+    }
+
+        .tagsField li.tag:hover {
+            opacity: 0.9;
+        }
+
+        .tagsField li.tag a {
+            width: 20px;
+            height: 30px;
+            float: right;
+            margin-left: 10px;
+        }
+
+    .tagsField input[type="text"] {
+        width: auto;
+        padding: 5px 0 5px 0;
+        border: none;
+        box-shadow: 0 0 0;
+    }
+/* FlexSlider styles
+--------------------------------------------- */
+.flex-control-nav {
+    width: 100%;
+    position: absolute;
+    bottom: -40px;
+    text-align: center;
+}
+
+    .flex-control-nav li {
+        margin: 0 6px;
+        display: inline-block;
+        zoom: 1;
+        *display: inline;
+    }
+
+.flex-control-paging li a {
+    width: 10px;
+    height: 10px;
+    display: block;
+    cursor: pointer;
+    text-indent: -9999px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+    border-radius: 20px;
+}
+
+    .flex-control-paging li a.flex-active {
+        cursor: default;
+    }
+
+.btnHolder .flex-direction-nav {
+    display: block;
+}
+
+.agencySlide {
+    height: 390px;
+    overflow: hidden;
+}
+
+    .agencySlide .slides > li {
+        display: none;
+    }
+
+        .agencySlide .slides > li:first-child {
+            display: block;
+        }
+
+    .agencySlide .flex-direction-nav {
+        display: none;
+    }
+
+    .agencySlide .flex-control-nav {
+        margin-top: -10px;
+        position: relative;
+        bottom: 0;
+    }
+
+    .agencySlide .flex-control-paging li a {
+        cursor: default;
+    }
+/* breakpoint_1 */
+body:after {
+    display: none;
+    content: 'breakpoint_1';
+}
+
+.passStrn {
+    float: right;
+    width: 80px;
+    margin-right: 10px;
+    line-height: 14px;
+}
+
+    .passStrn span {
+        border: 1px solid #ddd;
+        background-color: #27ae60;
+        text-align: left;
+        width: 100%;
+        float: left;
+        height: 5px;
+    }
+
+.checkBoxG .checkboxMedium {
+    float: left;
+}
+
+.checkBoxG label {
+    float: left;
+    padding: 1px 0 0 5px;
+    display: inline;
+    line-height: 11px;
+}
+
+.radio_blue {
+    float: left;
+    margin: -3px 0 0 0 !important;
+}
+
+.selt2 {
+    width: 150px !important;
+}
+
+label.withTxt label {
+    display: inline-block;
+    padding-left: 5px;
+    float: left;
+}
+
+.beforeAdd {
+    width: 300px;
+    margin: 100px auto 0 auto;
+    text-align: center;
+}
+
+    .beforeAdd .btnC {
+        clear: right !important;
+        clear: both !important;
+        width: 110px;
+        margin: 0 auto;
+    }
+
+.afterAdd, .editView {
+    display: none;
+}
+
+    .editView h5 {
+        font-family: 'Droidsans', sans-serif;
+    }
+
+    .editView .btnGrey {
+        width: 100%;
+        padding: 7px;
+        font-family: 'Droidsans', sans-serif;
+        font-size: 13px;
+        text-transform: none;
+    }
+
+.afterAdd, .userDetail {
+    display: none;
+}
+
+.twoClm .checkBoxG {
+    margin-left: 13px;
+    line-height: 17px;
+}
+
+.tickGreen {
+    margin-right: 5px;
+}
+
+.icon {
+    line-height: 15px;
+}
+
+    .icon i {
+        margin-top: 2px;
+    }
+
+i {
+    margin-right: 5px;
+}
+
+.twoClm i {
+    margin-right: 5px;
+    margin-left: 13px;
+}
+
+.viewSetting1 {
+    display: none;
+}
+
+.txtIcon {
+    margin-top: -30px;
+}
+
+.border-box {
+    border: 1px solid #f0f4f7;
+    padding: 15px;
+    display: block;
+    overflow: hidden;
+}
+
+.clm2-grid {
+    margin: -3.5% 0 0 -3.5%;
+}
+
+    .clm2-grid h3, .clm2-grid h6 {
+        margin: 0;
+        padding: 0;
+    }
+
+    .clm2-grid li {
+        margin: 3.5% 0 0 3.5%;
+        width: 46.5%;
+        float: left;
+    }
+
+.chart-wrapper {
+    width: 105%;
+    float: left;
+    margin: 0 0 0 -15px;
+}
+
+    .chart-wrapper .k-chart {
+        height: 245px;
+    }
+
+.recip-grid li .border-box {
+    height: 150px;
+}
+
+.recipBunch {
+    margin-top: 30px;
+    width: 100%;
+    background-color: #fcfefe;
+}
+
+.creRecBunCont {
+    position: relative;
+    border: 1px solid #ecf0f1;
+    background: url(../Images/tre-bg-line.png) no-repeat 55px bottom;
+}
+
+    .creRecBunCont .titSec {
+        float: left;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+        .creRecBunCont .titSec h5 {
+            border: 1px solid #ecf0f1;
+            padding: 10px 20px;
+            border-bottom: 0;
+            margin: -37px 0 0 -1px;
+            line-height: 15px;
+            display: block;
+            overflow: hidden;
+            width: 95.2%;
+        }
+
+.recipBunch .recLNav {
+    display: table-cell;
+    vertical-align: middle;
+    width: 120px;
+    text-align: center;
+    border: 1px solid #ecf0f1;
+}
+
+.recipBunch ul {
+    float: left;
+    width: 100%;
+}
+
+    .recipBunch ul li {
+        margin: 0;
+        padding: 20px;
+        border-top: 1px solid #ecf0f1;
+        display: block;
+        overflow: hidden;
+    }
+
+        .recipBunch ul li:first-child {
+            border-top: none;
+        }
+
+.recipBunch li:nth-child(even) {
+}
+
+.recipBunch li:nth-child(odd) {
+    background: url(../Images/bg-lblue-tran.png) repeat left top;
+}
+
+.expNav {
+    float: left;
+    width: 10%;
+    margin-top: 8px;
+}
+
+.rowFild {
+    float: left;
+    width: 90%;
+}
+
+    .rowFild label {
+        width: 30%;
+        margin-left: 3%;
+        float: left;
+        margin-bottom: 0;
+    }
+
+.expNav .iconCos {
+    background: url(../Images/icons-exp.jpg) no-repeat left top;
+    width: 30px;
+    display: block;
+    overflow: hidden;
+    height: 26px;
+    margin: 0 auto;
+}
+
+.expNav .iconCos-exp {
+    background-position: left top;
+}
+
+.expNav .iconCos-cols {
+    background-position: left -26px;
+}
+/* breakpoint_2 */
+@media all and (min-width: 480px) {
+    body:after {
+        display: none;
+        content: 'breakpoint_2';
+    }
+}
+/* breakpoint_3 */
+@media all and (min-width: 767px) {
+    body:after {
+        display: none;
+        content: 'breakpoint_3';
+    }
+}
+/* breakpoint_4 */
+@media all and (min-width: 999px) {
+    body:after {
+        display: none;
+        content: 'breakpoint_4';
+    }
+}
+
+/* Responsive defaults
+--------------------------------------------- */
+@media screen and (max-width: 767px) {
+    h1, h2, h4, h5 {
+        font-family: Georgia, "Times New Roman", Times, "serif 9";
+    }
+
+    header .wrapper {
+        width: 100%;
+    }
+
+    .wrapper {
+        width: 100%;
+    }
+
+    .whiteBox {
+        margin-top: 20px;
+    }
+
+    .copyright {
+        margin: 18px auto 18px auto;
+    }
+}

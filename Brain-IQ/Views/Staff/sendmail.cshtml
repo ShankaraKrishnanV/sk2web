@@ -1,0 +1,1145 @@
+﻿@{
+    ViewBag.Title = "sendmail";
+    if (Convert.ToInt32(Session["UserType"]) == 2)
+    {
+        Layout = "~/Views/Shared/_StaffLayout.cshtml";
+    }
+    else if(Convert.ToInt32(Session["UserType"]) == 3)
+    {
+        Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    }
+}
+
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    var TotalEmailLength = '';
+
+    // Page load
+    jQuery(document).ready(function () {
+        $("#ContentTitle").text("Email");
+        BindEmailList();
+        return false;
+    });
+
+    function ClearAlert() {
+        $("#mailValidationError").text("");
+        return false;
+    }
+
+    // 1) Clear component controls
+    function ClearComposeControls() {
+        $("#txtToMails").val('');
+        $("#txtCCMails").val('');
+        $("#txtSubjectMails").val('');
+        $("#txtMessageMails").val('');
+        return faslse;
+    }
+
+    // 2) Add TO list
+    function fnAddTOlist() {
+        $("#txtToMails").val('');
+        var MasterEmailList = "";
+        var Master_UID = '';
+        for (var iFind = 1; iFind <= TotalEmailLength; iFind++) {
+            if ($("#chkEmailID_" + iFind).is(":checked")) {
+                var _UID = $("#hdnUID_" + iFind).val().trim() + "; ";
+                var _Email = $("#hdnEmail_" + iFind).val().trim() + "; ";
+                MasterEmailList = MasterEmailList + _Email;
+                Master_UID = Master_UID + _UID;
+            }
+        }
+        $("#txtToMails").val(MasterEmailList);
+        $("#hdnUIDemaillist_TO").val(Master_UID);
+        $("#btnCloseSearch").trigger("click");
+    }
+
+    // 3) Add CC list
+    function fnAddCClist() {
+        $("#txtCCMails").val('');
+        var MasterEmailList = "";
+        var Master_UID = "";
+        for (var iFind = 1; iFind <= TotalEmailLength; iFind++) {
+            if ($("#chkEmailID_" + iFind).is(":checked")) {
+                var _UID = $("#hdnUID_" + iFind).val().trim() + "; ";
+                var _Email = $("#hdnEmail_" + iFind).val().trim() + "; ";
+                MasterEmailList = MasterEmailList + _Email;
+                Master_UID = Master_UID + _UID;
+            }
+        }
+        $("#txtCCMails").val(MasterEmailList);
+        $("#hdnUIDemaillist_CC").val(Master_UID);
+        $("#btnCloseSearch").trigger("click");
+    }
+
+    // 4) SEND EMAIL TO USERS
+    function SendEmailToUsers() {
+        var TOlist = $("#txtToMails").val().trim();
+        var CClist = $("#txtCCMails").val().trim();
+        var Subject = $("#txtSubjectMails").val().trim();
+        var Message = $("#txtMessageMails").val().trim();
+        var TO_list_ID = $("#hdnUIDemaillist_TO").val().trim();
+        var CC_list_ID = $("#hdnUIDemaillist_CC").val().trim();
+
+        // Remove the last character
+        var TO_list_ID = TO_list_ID.substring(0, TO_list_ID.length - 1);
+        var CC_list_ID = CC_list_ID.substring(0, CC_list_ID.length - 1);
+
+
+        if (TOlist != "") {
+            if (Subject != "") {
+                if (Message == "") {
+                    if (confirm("Do you want to send the mail with out message?")) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+
+                var serviceURL = "/Staff/SaveEmailList/";
+                $.ajax({
+                    type: "POST",
+                    url: serviceURL,
+                    data: "{'Subject':'" + Subject + "', 'Message':'" + Message + "','TO_list_ID':'" + TO_list_ID + "','CC_list_ID':'" + CC_list_ID + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: SaveEmail,
+                    error: Saveerror
+                });
+            }
+            else {
+                $("#classAlert").removeClass("alert-success");
+                $("#classAlert").addClass("alert-danger");
+                $("#mailValidationError").text("SUBJECT box should not be empty!");
+            }
+        }
+        else {
+            $("#classAlert").removeClass("alert-success");
+            $("#classAlert").addClass("alert-danger");
+            $("#mailValidationError").text("TO box should not be empty!");
+        }
+        return false;
+    }
+
+    // (4.1)
+    function SaveEmail(data, status) {
+        if (data == "true") {
+            $("#classAlert").removeClass("alert-danger");
+            $("#classAlert").addClass("alert-success");
+            $("#mailValidationError").text("Mail sent successfully");
+        }
+        else {
+            $("#classAlert").removeClass("alert-success");
+            $("#classAlert").addClass("alert-danger");
+            $("#mailValidationError").text("Unable to sent the mail");
+        }
+        location.href = "/staff/sendmail";
+    }
+
+    // (4.2)
+    function Saveerror() {
+        $("#classAlert").removeClass("alert-success");
+        $("#classAlert").addClass("alert-danger");
+        $("#mailValidationError").text("Unable to sent the mail");
+    }
+
+    // 5) Search email ID
+    function SearchE() {
+        var UserType = $("#ddType").val();
+        if (UserType == 2) {
+            $("#divStandardLabel").css("display", "none");
+            $("#divStandardText").css("display", "none");
+            $("#txtSearchStandard").val('');
+        }
+        else {
+            $("#divStandardLabel").css("display", "block");
+            $("#divStandardText").css("display", "block");
+        }
+
+
+        var SearchEmail = $("#txtSearchEmail").val();
+        var StdEmail = $("#txtSearchStandard").val();
+        if (SearchEmail != "" || StdEmail != "" || UserType != 0) {
+
+            if (SearchEmail == "") { SearchEmail = ""; }
+            if (StdEmail == "") { StdEmail = ""; }
+            if (UserType == "") { UserType = 0; }
+            var serviceURL = "/Registration/SearchEmail/";
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{'SearchText':'" + SearchEmail + "', 'std':'" + StdEmail + "','UserType':" + UserType + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successEmail,
+                error: errorFunc
+            });
+        }
+        else {
+            $("#divEmailBlockA").empty();
+            $("#divEmailBlockB").empty();
+            $("#lblTotalEmailCount").text("No records found");
+            return false;
+        }
+
+    }
+
+    // (5.1)
+    function successEmail(data, status) {
+        TotalEmailLength = data.length;
+        $("#divEmailBlockA").empty();
+        $("#divEmailBlockB").empty();
+        if (parseInt(data.length) > 0) {
+            var i = 0;
+            $("#lblTotalEmailCount").text(data.length + " records found");
+            for (var iSearchItem = 0; iSearchItem < data.length; iSearchItem++) {
+                var UID = data[iSearchItem].UID;
+                var FirstName = data[iSearchItem].FirstName;
+                var LastName = data[iSearchItem].LastName;
+                var MailID = data[iSearchItem].EmailId;
+                var UserType = data[iSearchItem].UserType;
+
+                var EmailID = '<li><div class="checkbox checkbox-success">' +
+                                    '<input id="chkEmailID_' + (parseInt(iSearchItem) + parseInt(1)) + '" class="styled" type="checkbox">' +
+                                    '<label for="chkEmailID_' + (parseInt(iSearchItem) + parseInt(1)) + '">' +
+                                        MailID + ' (' + FirstName + ', ' + LastName + ')' +
+                                    '</label></div><input type="hidden" id="hdnUID_' + (parseInt(iSearchItem) + parseInt(1)) + '" value="' + UID + '">' +
+                                    '<input type="hidden" id="hdnEmail_' + (parseInt(iSearchItem) + parseInt(1)) + '" value="' + MailID + '">' +
+                               '</li>';
+                if (i == 0) {
+                    $("#divEmailBlockA").append(EmailID);
+                    i = 1;
+                }
+                else {
+                    $("#divEmailBlockB").append(EmailID);
+                    i = 0;
+                }
+            }
+
+        }
+        else {
+            $("#lblTotalEmailCount").text("No records found");
+        }
+        return false;
+    }
+
+    // (5.2)
+    function errorEmail() {
+        alert("Error - Unable to search the email");
+        return false;
+    }
+
+
+    // 6) Bind Inbox, Draft, Sent item mails
+    function BindEmailList() {
+        var serviceURL = "/Staff/SendMailList/";
+        $.ajax({
+            type: "POST",
+            url: serviceURL,
+            data: "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: successFunc,
+            error: errorFunc
+        });
+    }
+
+    // (6.1)
+    function successFunc(data, status) {
+        debugger;
+        if (data.length > 0) {
+            var LoginUser = @this.Session["UserId"];
+
+            for (var iLoadItems = 0; iLoadItems < data.length; iLoadItems++) {
+
+                var ID = data[iLoadItems].ID;
+                var SchoolID = data[iLoadItems].SchoolID;
+                var MessageBoxID = data[iLoadItems].MessageBoxID;
+                var SentBy = data[iLoadItems].SentBy;
+                var SentByName = data[iLoadItems].SentByName;
+                var SentTo = data[iLoadItems].SentTo;
+                var Subject = data[iLoadItems].Subject;
+                var Body = data[iLoadItems].Body;
+                var MoveTo = data[iLoadItems].MoveTo;
+                var FolderName = data[iLoadItems].FolderName;
+                var IsFavorite = data[iLoadItems].IsFavorite;
+                var SendDate = data[iLoadItems].SendDate;
+                var SendTime = data[iLoadItems].SendTime;
+                var ReadContent = data[iLoadItems].ReadContent;
+                var PreviousBody = "";
+                var PreviousSubject = "";
+                var PrevMessageBoxID = "";
+                if (iLoadItems != 0) {
+                    PreviousBody = data[iLoadItems - 1].Body;
+                    PreviousSubject = data[iLoadItems - 1].Subject;
+                    PrevMessageBoxID = data[iLoadItems - 1].MessageBoxID;
+                }
+                var Deleted = data[iLoadItems].Deleted;
+
+                var SentByNameDisplay = '';     // LEFT Title
+                var StrongSubject = '';  // CENTER Title
+                var IsFavoriteMark = '';  // Is Favorite
+                var iCount = 0;
+                var BodyStartUp = data[iLoadItems].Body.substring(0, 30);
+
+                if (IsFavorite == 1) {
+                    IsFavoriteMark = '<span class="fa fa-star mrm mlm text-warning"></span>';
+                }
+                else {
+                    IsFavoriteMark = '<span class="fa fa-star-o mrm mlm"></span>';
+                }
+
+                if (!ReadContent) {
+                    if (LoginUser == SentBy) {
+                        ReadContent = true;
+                    }
+                    else {
+                        ReadContent = false;
+                    }
+                }
+
+                if (ReadContent) {
+
+                    iCount = 0;
+                    SentByNameDisplay = '<span id="lblSenderName_'+MessageBoxID+'" class="mail-from">' + SentByName + '</span>';
+                    StrongSubject = '<i  class="mail-title">' + Subject + '</i>';
+
+                }
+                else {
+                    iCount = 1;
+                    SentByNameDisplay = '<strong class="mail-from">' + SentByName + '</strong>';
+                    StrongSubject = '<strong class="mail-title"><i>' + Subject + '</i></strong>';
+                }
+
+
+                if (PrevMessageBoxID != MessageBoxID) {
+
+                    var BindData = '<a href="#" class="list-group-item">' +
+                                        '<div class="row">' +
+                                            '<div class="col-md-5 col-lg-4">' +
+                                                  '<input type="checkbox" />' + IsFavoriteMark + '' +
+                                                  SentByNameDisplay +
+                                            '</div>' +
+                                            '<div class="col-md-7 col-lg-8">' +
+                                                   StrongSubject +
+                                                   '&nbsp; - &nbsp;' +
+                                                   '<span style="font-size: 11px;" class="text-muted">' + BodyStartUp + '...</span>' +
+                                                   '<span class="pull-right">' + SendTime + '</span><span class="pull-right mrl">' +
+                                                        '<span class="glyphicon glyphicon-paperclip"></span>' +
+                                                   '</span>' +
+                                                   '</div>' +
+                                            '</div>' +
+                                    '</a>';
+                    if (MoveTo == 1) {
+
+                        $("#Bind_inbox").append(BindData);
+                        $("#inbox_count").text(parseInt($("#inbox_count").text()) + parseInt(iCount));
+                    }
+                    else if (MoveTo == 2) {
+                        $("#Bind_Sent").append(BindData);
+                        $("#sent_count").text(parseInt($("#sent_count").text()) + parseInt(iCount));
+                    }
+                    else if (MoveTo == 3) {
+                        $("#Bind_Draft").append(BindData);
+                        $("#draft_count").text(parseInt($("#draft_count").text()) + parseInt(iCount));
+                    }
+                    else if (MoveTo == 4) {
+                        $("#Bind_important").append(BindData);
+                        $("#important_count").text(parseInt($("#important_count").text()) + parseInt(iCount));
+                    }
+                    else if (MoveTo == 5) {
+                        $("#Bind_trash").append(BindData);
+                        $("#trash_count").text(parseInt($("#trash_count").text()) + parseInt(iCount));
+                    }
+                    else {
+
+                        if (LoginUser == SentBy) {
+                            $("#Bind_Sent").append(BindData);
+                            $("#sent_count").text(parseInt($("#sent_count").text()) + parseInt(iCount));
+                        }
+                        else {
+                            $("#Bind_inbox").append(BindData);
+                            $("#inbox_count").text(parseInt($("#inbox_count").text()) + parseInt(iCount));
+                        }
+                    }
+                }
+                else
+                {
+                    $("#lblSenderName_"+MessageBoxID).text("Group");
+                }
+
+            }
+
+            if (parseInt($("#inbox_count").text()) > 0) {
+                $("#inbox_count").removeAttr("style");
+                $("#inbox_count").text(' (' + $("#inbox_count").text() + ')');
+            }
+
+            if (parseInt($("#sent_count").text()) > 0) {
+                $("#sent_count").removeAttr("style");
+                $("#sent_count").text(' (' + $("#sent_count").text() + ')');
+            }
+
+            if (parseInt($("#draft_count").text()) > 0) {
+                $("#draft_count").removeAttr("style");
+                $("#draft_count").text(' (' + $("#draft_count").text() + ')');
+            }
+
+            if (parseInt($("#important_count").text()) > 0) {
+                $("#important_count").removeAttr("style");
+                $("#important_count").text(' (' + $("#important_count").text() + ')');
+            }
+
+            if (parseInt($("#trash_count").text()) > 0) {
+                $("#trash_count").removeAttr("style");
+                $("#trash_count").text(' (' + $("#trash_count").text() + ')');
+            }
+
+            if (parseInt($("#Bind_inbox a").length) == 0) {
+                $("#Bind_inbox").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+            if (parseInt($("#Bind_Sent a").length) == 0) {
+                $("#Bind_Sent").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+            if (parseInt($("#Bind_Draft a").length) == 0) {
+                $("#Bind_Draft").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+            if (parseInt($("#Bind_important a").length) == 0) {
+                $("#Bind_important").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+            if (parseInt($("#Bind_trash a").length) == 0) {
+                $("#Bind_trash").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+        }
+        else {
+            if (parseInt($("#Bind_inbox a").length) == 0) {
+                $("#Bind_inbox").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+            if (parseInt($("#Bind_Sent a").length) == 0) {
+                $("#Bind_Sent").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+            if (parseInt($("#Bind_Draft a").length) == 0) {
+                $("#Bind_Draft").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+            if (parseInt($("#Bind_important a").length) == 0) {
+                $("#Bind_important").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+            if (parseInt($("#Bind_trash a").length) == 0) {
+                $("#Bind_trash").append("<label class='col-md-7 pull-right' style='color:red'>No email occured</label>");
+            }
+        }
+    }
+
+    // (6.2)
+    function errorFunc() {
+
+        alert("Error");
+        return false;
+    }
+
+    // 7) Clear controls
+    function ClearSearchControls() {
+        $("#mailValidationError").text('');
+        if ($("#txtToMails").val() == "") {
+            $("#txtSearchEmail").val('');
+            $("#txtSearchStandard").val('');
+            $("#divEmailBlockA").empty();
+            $("#divEmailBlockB").empty();
+            $("#lblTotalEmailCount").text("No records found");
+            $("#ddType").val(0);
+        }
+        return false;
+    }
+
+</script>
+<div class="fluid">
+    <!--BEGIN TEMPLATE SETTING-->
+    <div class="hidden-xs hidden-sm">
+        <div id="template-setting">
+            <div class="content-template-setting">
+                <button id="save-setting" class="btn btn-success btn-sm pull-right">Save Change</button>
+                <div class="mbm clearfix"></div>
+                <h5 class="pull-left">Header theme</h5>
+                <div class="pull-right">
+                    <div id="setting-header-dark" data-on="info" data-off="default" data-on-label="Dark"
+                         data-off-label="Light" class="make-switch switch-small">
+                        <input type="checkbox" class="switch" />
+                    </div>
+                </div>
+                <div class="mbm clearfix"></div>
+                <h5>Sidebar Colors</h5>
+                <ul class="sidebar-color list-unstyled list-inline">
+                    <li data-style="grey" class="grey-blue active"></li>
+                    <li data-style="default" class="grey"></li>
+                    <li data-style="blue" class="blue"></li>
+                    <li data-style="green" class="green"></li>
+                    <li data-style="orange" class="orange"></li>
+                    <li data-style="white" class="white"></li>
+                </ul>
+                <div class="mbm clearfix"></div>
+                <h5 class="pull-left">Font</h5>
+                <div class="pull-right">
+                    <select id="font-select" class="mts">
+                        <option value="source-sans-pro">Source Sans Pro</option>
+                        <option value="open-sans">Open Sans</option>
+                        <option value="roboto">Roboto</option>
+                        <option value="lato">Lato</option>
+                        <option value="lora">Lora</option>
+                        <option value="helvetica">Helvetica Neue</option>
+                    </select>
+                </div>
+                <div class="mbm clearfix"></div>
+                <hr />
+                <h5 class="pull-left">Header Fixed</h5>
+                <div class="pull-right">
+                    <div id="setting-header-fixed" data-on="success" data-off="default"
+                         class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                </div>
+                <div class="mbm clearfix"></div>
+                <h5 class="pull-left">Sidebar Collapsed</h5>
+                <div class="pull-right">
+                    <div id="setting-sidebar-collapsed" data-on="success" data-off="default"
+                         class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                </div>
+                <div class="mbm clearfix"></div>
+                <h5 class="pull-left">Sidebar Show/Hide</h5>
+                <div class="pull-right">
+                    <div id="setting-sidebar-hide" data-on="success" data-off="default"
+                         class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                </div>
+                <div class="mbm clearfix"></div>
+                <h5 class="pull-left">Sidebar Fixed</h5>
+                <div class="pull-right">
+                    <div id="setting-sidebar-fixed" data-on="success" data-off="default"
+                         class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                </div>
+                <div class="mbm clearfix"></div>
+                <h5 class="pull-left">
+                    Toggle Button<i data-hover="tooltip" data-placement="top"
+                                    title="Switch it then click toogle button on topbar"
+                                    class="fa fa-info-circle mls"></i>
+                </h5>
+                <div class="pull-right">
+                    <div id="setting-toggle-status" data-on="success" data-off="default" data-on-label="Hide"
+                         data-off-label="Mini" class="make-switch switch-small">
+                        <input type="checkbox" class="switch" />
+                    </div>
+                </div>
+                <div class="mbm clearfix"></div>
+                <hr />
+                <h5 class="pull-left">Logo mode</h5>
+                <div class="pull-right">
+                    <div id="setting-logo-status" data-on="success" data-off="default" data-on-label="Aside"
+                         data-off-label="Top" class="make-switch switch-small">
+                        <input type="checkbox" class="switch" />
+                    </div>
+                </div>
+                <div class="mbm clearfix"></div>
+                <h5 class="pull-left">Layout Boxed</h5>
+                <div class="pull-right">
+                    <div id="setting-layout-boxed" data-on="success" data-off="default"
+                         class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                </div>
+                <div class="mbm clearfix"></div>
+                <h5 class="pull-left">Menu Horizontal</h5>
+                <div class="pull-right">
+                    <div id="setting-horizontal-menu" data-on="success" data-off="default"
+                         class="make-switch switch-small"><input type="checkbox" class="switch" /></div>
+                </div>
+                <div class="mbm clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!--END TEMPLATE SETTING-->
+    <div id="wrapper">
+        <!--BEGIN PAGE WRAPPER-->
+        <!--BEGIN PAGE CONTENT-->
+        <div class="page-content1">
+
+            <div class="box-content">
+                <!--BEGIN CONTENT-->
+                <div class="content">
+                    <div class="page-mail">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="sidebar sidebar-left nav nav-pills">
+                                    <div class="sidebar-row">
+                                        <ul class="sidebar-list-info list-unstyled">
+                                            <li style="border-bottom: 1px solid rgba(153, 153, 153, 0.32)"
+                                                class="mbm">
+                                                <div class="sidebar-title">
+                                                    <a href="#tab-compose" role="tab"
+                                                       data-toggle="tab"
+                                                       class="btn btn-danger pll prl">Compose</a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <a href="#tab-inbox" role="tab" data-toggle="tab"
+                                                   class="btn-group dropup btn-block">Inbox<span id="inbox_count" style="display:none;">0</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#tab-sent" role="tab" data-toggle="tab"
+                                                   class="btn-group dropup btn-block">Sent Mail<span id="sent_count" style="display:none;">0</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#tab-drafts" role="tab" data-toggle="tab"
+                                                   class="btn-group dropup btn-block">Drafts<span id="draft_count" style="display:none;">0</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#tab-important" role="tab" data-toggle="tab"
+                                                   class="btn-group dropup btn-block">Important<span id="important_count" style="display:none;">0</span></a>
+                                            </li>
+                                            <li>
+                                                <a href="#tab-trash" role="tab" data-toggle="tab"
+                                                   class="btn-group dropup btn-block">Trash<span id="trash_count" style="display:none;">0</span></a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="mail-main tab-content">
+                                    <!-- TAB COMPOSE -->
+                                    <div id="tab-compose" class="tab-pane fade in active">
+                                        <ul class="list-group mail-action list-unstyled list-inline">
+                                            <li>
+                                                <a onclick="ClearComposeControls();" data-hover="tooltip" data-original-title="Trash" class="btn btn-default">
+                                                    <i class="fa fa-trash-o"></i>
+                                                </a>
+                                            </li>
+                                            <li style="padding-left: 230px;">
+                                                <label id="classAlert"><strong id="mailValidationError"></strong></label>
+                                            </li>
+                                        </ul>
+                                        <form role="form" action="#" class="form-horizontal mtxl">
+                                            <div class="form-group">
+                                                <label class="control-label col-lg-2">To:</label>
+                                                <div class="col-lg-7">
+                                                    <textarea id="txtToMails" style="color:blue;" type="text" placeholder="To"
+                                                              class="form-control"></textarea>
+                                                    <input type="hidden" id="hdnUIDemaillist_TO" />
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <a onclick="ClearSearchControls();" type="button" data-target="#modal-SearchEmail"
+                                                       data-toggle="modal" class="btn btn-info">
+                                                        <i class="fa fa-search"></i> Search
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-lg-2">CC:</label>
+                                                <div class="col-lg-7">
+                                                    <textarea id="txtCCMails" type="text" placeholder="CC"
+                                                              class="form-control" style="color:blue;"></textarea>
+                                                    <input type="hidden" id="hdnUIDemaillist_CC" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-lg-2">Subject:</label>
+                                                <div class="col-lg-7">
+                                                    <input id="txtSubjectMails" onkeyup="ClearAlert();" type="text" placeholder="Subject"
+                                                           class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-lg-2"> </label>
+                                                <div class="col-lg-10">
+                                                    <textarea id="txtMessageMails" type="text" rows="9" placeholder="Message"
+                                                              class="wysihtml5 form-control"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-lg-7 col-lg-offset-2">
+                                                    <input onclick="SendEmailToUsers();" type="button" value="Send" class="btn btn-success" />
+                                                    <button type="button" onclick="ClearComposeControls();" class="btn btn-info">Clear</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- TAB INBOX -->
+                                    <div id="tab-inbox" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <ul class="list-group mail-action list-unstyled list-inline">
+                                                    <li>
+                                                        <a style="padding: 6px 15px;" class="btn btn-default">
+                                                            <input type="checkbox" class="checkall-email" />
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" class="btn btn-default">Mark as read</a>
+                                                    </li>
+                                                    <li class="dropdown" style="display:none;">
+                                                        <a href="#" data-toggle="dropdown"
+                                                           class="btn btn-default dropdown-toggle">
+                                                            <i class="fa fa-folder"></i>&nbsp; Move to &nbsp;<span class="caret"></span>
+                                                        </a>
+                                                        <ul role="menu" class="dropdown-menu">
+                                                            <li><a href="#">Important</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pull-right">
+                                                        <a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-left"></i>
+                                                        </a><a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <div id="Bind_inbox" class="list-group mail-box">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- TAB SENT -->
+                                    <div id="tab-sent" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <ul class="list-group mail-action list-unstyled list-inline">
+                                                    <li>
+                                                        <a style="padding: 6px 15px;" class="btn btn-default">
+                                                            <input type="checkbox" class="checkall-email" />
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#" class="btn btn-default">Mark as read</a></li>
+
+                                                    <li class="dropdown" style="display:none;">
+                                                        <a href="#" data-toggle="dropdown"
+                                                           class="btn btn-default dropdown-toggle">
+                                                            <i class="fa fa-folder"></i>&nbsp; Move to &nbsp;<span class="caret"></span>
+                                                        </a>
+                                                        <ul role="menu" class="dropdown-menu">
+                                                            <li><a href="#">Inbox</a></li>
+                                                            <li><a href="#">Trash</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pull-right">
+                                                        <a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-left"></i>
+                                                        </a><a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <div id="Bind_Sent" class="list-group mail-box">
+                                                    @*<a href="#"
+                                                             class="list-group-item">
+                                                            <div class="row">
+                                                                <div class="col-md-5 col-lg-4">
+                                                                    <input type="checkbox" /><span class="fa fa-star mrm mlm text-warning"></span><span class="mail-from">Sent Envato Market2</span>
+                                                                </div>
+                                                                <div class="col-md-7 col-lg-8">
+                                                                    <i class="mail-title">
+                                                                        Upload your item proble.
+                                                                    </i>&nbsp; - &nbsp;<span style="font-size: 11px;" class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit</span><span class="pull-right">12:10 AM</span><span class="pull-right mrl">
+                                                                        <span class="glyphicon glyphicon-paperclip"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <div class="row">
+                                                                <div class="col-md-5 col-lg-4">
+                                                                    <input type="checkbox" /><span class="fa fa-star mrm mlm text-warning"></span><span class="mail-from">Themeforest Market</span>
+                                                                </div>
+                                                                <div class="col-md-7 col-lg-8">
+                                                                    <i class="mail-title">
+                                                                        Approved!
+                                                                        Your item has...
+                                                                    </i>&nbsp; - &nbsp;<span style="font-size: 11px;" class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit</span><span class="pull-right">12:10 AM</span><span class="pull-right mrl">
+                                                                        <span class="glyphicon glyphicon-paperclip"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </a>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- TAB DRAFT -->
+                                    <div id="tab-drafts" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <ul class="list-group mail-action list-unstyled list-inline">
+                                                    <li>
+                                                        <a style="padding: 6px 15px;" class="btn btn-default">
+                                                            <input type="checkbox" class="checkall-email" />
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#" class="btn btn-default">Mark as read</a></li>
+
+                                                    <li class="dropdown" style="display:none;">
+                                                        <a href="#" data-toggle="dropdown"
+                                                           class="btn btn-default dropdown-toggle">
+                                                            <i class="fa fa-folder"></i>&nbsp; Move to &nbsp;<span class="caret"></span>
+                                                        </a>
+                                                        <ul role="menu" class="dropdown-menu">
+                                                            <li><a href="#">Important</a></li>
+
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pull-right">
+                                                        <a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-left"></i>
+                                                        </a><a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <div id="Bind_Draft" class="list-group mail-box">
+                                                    @*<a href="#"
+                                                             class="list-group-item">
+                                                            <div class="row">
+                                                                <div class="col-md-5 col-lg-4">
+                                                                    <input type="checkbox" /><span class="fa fa-star-o mrm mlm"></span><span class="mail-from">Drafts Bhaumik Patel</span>
+                                                                </div>
+                                                                <div class="col-md-7 col-lg-8">
+                                                                    <i class="mail-title">
+                                                                        Sed ut
+                                                                        perspiciatis unde
+                                                                    </i>&nbsp; - &nbsp;<span style="font-size: 11px;" class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit</span><span class="pull-right">12:10 AM</span><span class="pull-right mrl">
+                                                                        <span class="glyphicon glyphicon-paperclip"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </a>*@
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- TAB IMPORTANT -->
+                                    <div id="tab-important" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <ul class="list-group mail-action list-unstyled list-inline">
+                                                    <li>
+                                                        <a style="padding: 6px 15px;" class="btn btn-default">
+                                                            <input type="checkbox" class="checkall-email" />
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#" class="btn btn-default">Mark as read</a></li>
+
+                                                    <li class="dropdown" style="display:none;">
+                                                        <a href="#" data-toggle="dropdown"
+                                                           class="btn btn-default dropdown-toggle">
+                                                            <i class="fa fa-folder"></i>&nbsp; Move to &nbsp;<span class="caret"></span>
+                                                        </a>
+                                                        <ul role="menu" class="dropdown-menu">
+                                                            <li><a href="#">Important</a></li>
+
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pull-right">
+                                                        <a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-left"></i>
+                                                        </a><a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <div id="Bind_important" class="list-group mail-box">
+                                                    @*<a href="#"
+                                                             class="list-group-item">
+                                                            <div class="row">
+                                                                <div class="col-md-5 col-lg-4">
+                                                                    <input type="checkbox" /><span class="fa fa-star-o mrm mlm"></span><span class="mail-from">Important Bhaumik Patel</span>
+                                                                </div>
+                                                                <div class="col-md-7 col-lg-8">
+                                                                    <i class="mail-title">
+                                                                        Sed ut
+                                                                        perspiciatis unde
+                                                                    </i>&nbsp; - &nbsp;<span style="font-size: 11px;" class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit</span><span class="pull-right">12:10 AM</span><span class="pull-right mrl">
+                                                                        <span class="glyphicon glyphicon-paperclip"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </a>*@
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- TAB TRASH -->
+                                    <div id="tab-trash" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <ul class="list-group mail-action list-unstyled list-inline">
+                                                    <li>
+                                                        <a style="padding: 6px 15px;" class="btn btn-default">
+                                                            <input type="checkbox" class="checkall-email" />
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#" class="btn btn-default">Mark as read</a></li>
+
+                                                    <li class="dropdown" style="display:none;">
+                                                        <a href="#" data-toggle="dropdown"
+                                                           class="btn btn-default dropdown-toggle">
+                                                            <i class="fa fa-folder"></i>&nbsp; Move to &nbsp;<span class="caret"></span>
+                                                        </a>
+                                                        <ul role="menu" class="dropdown-menu">
+                                                            <li><a href="#">Important</a></li>
+
+                                                        </ul>
+                                                    </li>
+                                                    <li class="pull-right">
+                                                        <a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-left"></i>
+                                                        </a><a class="btn btn-sm btn-default">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <div id="Bind_trash" class="list-group mail-box">
+                                                    @*<a href="#"
+                                                             class="list-group-item">
+                                                            <div class="row">
+                                                                <div class="col-md-5 col-lg-4">
+                                                                    <input type="checkbox" /><span class="fa fa-star-o mrm mlm"></span><span class="mail-from">Trash Bhaumik Patel</span>
+                                                                </div>
+                                                                <div class="col-md-7 col-lg-8">
+                                                                    <i class="mail-title">
+                                                                        Sed ut
+                                                                        perspiciatis unde
+                                                                    </i>&nbsp; - &nbsp;<span style="font-size: 11px;" class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit</span><span class="pull-right">12:10 AM</span><span class="pull-right mrl">
+                                                                        <span class="glyphicon glyphicon-paperclip"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </a>*@
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END CONTENT-->
+            </div>
+        </div>
+        <!--END PAGE CONTENT-->
+        <!--END PAGE WRAPPER-->
+    </div>
+
+    <!-- SEARCH EMAIL-->
+    <div id="modal-SearchEmail" tabindex="-1" role="dialog" aria-labelledby="modal-responsive-label"
+         aria-hidden="true" class="modal fade">
+        <div class="modal-dialog" style="width:1000px !important">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-hidden="true"
+                            class="close">
+                        &times;
+                    </button>
+                    <h4 id="modal-responsive-label" class="modal-title">Search By</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-1">
+                                <div class="mbm"><label style="padding-top: 5px;"><strong>Type</strong></label></div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mbm">
+                                    <select id="ddType" onchange="SearchE();" class="form-control">
+                                        <option value="0">Select</option>
+                                        <option value="2">Staff</option>
+                                        <option value="3">Student</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="divStandardLabel" class="col-md-1">
+                                <div class="mbm"><label style="padding-top: 5px;"><strong>Standard</strong></label></div>
+                            </div>
+                            <div id="divStandardText" class="col-md-2">
+                                <div class="mbm"><input id="txtSearchStandard" placeholder="1" onkeyup="SearchE();" type="text" class="form-control" /></div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="mbm"><label style="padding-top: 5px;"><strong>Email</strong></label></div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="mbm"><input id="txtSearchEmail" placeholder="xyz@account.com" onkeyup="SearchE();" type="text" class="form-control" /></div>
+                            </div>
+
+
+                            <div class="col-md-2" style="padding-top: 7px;">
+                                <label id="lblTotalEmailCount" title="Total email counts" style="padding:5px 10px 5px 10px; background-color:#3ab919;" class="badge"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-1">
+
+                            </div>
+                            <div class="row col-md-11">
+                                <div class="form-group">
+                                    <div class="col-md-6">
+                                        <ul id="divEmailBlockA" style="list-style-type: none;"></ul>
+                                        @*<div class="checkbox mbm">
+                                                <label for="closeButton">
+                                                    <input id="closeButton" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Close Button
+                                                </label>
+                                            </div>
+                                            <div class="checkbox mbm">
+                                                <label for="addBehaviorOnToastClick">
+                                                    <input id="addBehaviorOnToastClick" type="checkbox"
+                                                           value="checked" class="input-mini" />&nbsp;
+                                                    Add behavior on toast click
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>*@
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul id="divEmailBlockB" style="list-style-type: none;"></ul>
+                                        @*<div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label for="debugInfo">
+                                                    <input id="debugInfo" type="checkbox" value="checked"
+                                                           class="input-mini" />&nbsp;
+                                                    Debug
+                                                </label>
+                                            </div>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCloseSearch" type="button" data-dismiss="modal" class="btn btn-default">
+                        Close
+                    </button>
+                    <button onclick="fnAddTOlist();" type="button" class="btn btn-success">Add: TO</button>
+                    <button onclick="fnAddCClist();" type="button" class="btn btn-success">Add: CC</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

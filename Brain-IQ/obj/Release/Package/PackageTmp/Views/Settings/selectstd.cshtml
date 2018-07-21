@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Standard";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ContentTitle").text("Record Management");
+    });
+</script>
+
+<div class="col-md-12">
+    @foreach (var item in ViewBag.getStandardList)
+    {
+        if (item.Active == true)
+        {
+            <div class="form-group col-md-2" style="cursor:pointer;">
+                <a href="@Url.Action("subject", "settings", new { area = "", stdid = item.StandardId, param = "xtsub" })">
+                    <img src="~/Content/Images/img_avatar2.png" alt="@item.StandardId" class="img-responsive img-circle">
+                    <label>@item.StandardName</label>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="form-group col-md-2">
+                <img src="~/Content/Images/img_avatar2.png" alt="@item.StandardId" class="img-responsive img-circle">
+                <label style="color:black;">@item.StandardName <span style="color:red;">(Deactive)</span></label>
+
+            </div>
+        }
+    }
+
+
+</div>
+<div class="col-md-12">
+    <div class="col-md-12">
+        @Html.ActionLink("Back", "home", "settings", new { @class = "btn btn-info" })
+    </div>
+</div>

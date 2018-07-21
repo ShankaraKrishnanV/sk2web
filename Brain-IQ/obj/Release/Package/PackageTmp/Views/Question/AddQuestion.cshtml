@@ -1,0 +1,788 @@
+﻿@model Brain_IQ.Models.Question.QuestionModels
+@{
+    ViewBag.Title = "Add Questions";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Content/Bootstrap/jQuery/jquery-1.9.1.js"></script>
+<script src="~/Content/Bootstrap/jQuery/3.3.7/js/bootstrap.min.js"></script>
+<script src="~/Content/Bootstrap/jquery.form.js"></script>
+
+<script type="text/javascript">
+
+    (function () {
+        GetSectionList();
+
+        var bar = $('.progress-bar');
+        var percent = $('.progress-bar');
+        var status = $('#status');
+
+        $('form').ajaxForm({
+
+            beforeSend: function () {
+
+                status.empty();
+                var percentVal = '0%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            uploadProgress: function (event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            success: function (data) {
+
+                var ObjToGenerate = data.split('|');
+                if (ObjToGenerate[0] == "Q") {
+                    $("#img_A_1").css("display", "block");
+                    $("#img_A_1").attr("src", "");
+                    $("#img_A_1").attr("src", ObjToGenerate[1]);
+                }
+                else if (ObjToGenerate[0] == "A") {
+                    $("#img_B_1").css("display", "block");
+                    $("#img_B_1").attr("src", "");
+                    $("#img_B_1").attr("src", ObjToGenerate[1]);
+                }
+                else if (ObjToGenerate[0] == "B") {
+                    $("#img_C_1").css("display", "block");
+                    $("#img_C_1").attr("src", "");
+                    $("#img_C_1").attr("src", ObjToGenerate[1]);
+                }
+                else if (ObjToGenerate[0] == "C") {
+                    $("#img_D_1").css("display", "block");
+                    $("#img_D_1").attr("src", "");
+                    $("#img_D_1").attr("src", ObjToGenerate[1]);
+                }
+                else if (ObjToGenerate[0] == "D") {
+                    $("#img_E_1").css("display", "block");
+                    $("#img_E_1").attr("src", "");
+                    $("#img_E_1").attr("src", ObjToGenerate[1]);
+                }
+
+
+                var percentVal = '100%';
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            complete: function (xhr) {
+                status.html(xhr.responseText);
+            }
+        });
+
+    })();
+
+    //1. get section List
+    function GetSectionList() {
+        var serviceURL = '/Question/GetAjaxStandardsList';
+
+        $.ajax({
+            type: "POST",
+            url: serviceURL,
+            data: param = "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: successFunc,
+            error: errorFunc
+        });
+        function successFunc(data, status) {
+            var length = data.length;
+            ChapterQuestionLength = length;
+            var StoreQuestion = '';
+            var OptionIs = '';
+            for (var iLoop = 0; iLoop < length; iLoop++) {
+                var StandardId = data[iLoop].StandardId;
+                var Data = '<option>' + StandardId + '</option>';
+
+                OptionIs = OptionIs + Data;
+
+            }
+            var BindData = '<div class="col-md-12">' +
+                             '<label for="email"><b>Select Section:</b></label>' +
+                                '<select id="ddSectionList" class="form-control"  onchange="javascript:GetSubjectList();" ><option value="0">Select' +
+                                OptionIs +
+                                '</option></select></div>';
+
+            $("#BindSectionList").append(BindData);
+        }
+        function errorFunc() {
+            $("#DisplayAlert").text("error");
+            $("#btnView").trigger("click");
+        }
+    }
+
+    //2. get subject List
+    function GetSubjectList() {
+
+        var StandardId = $("#ddSectionList").val();
+        if (StandardId != 0) {
+            var serviceURL = '/Question/GetAjaxSubjectList';
+
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{ 'SubjectId': " + StandardId + " }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+
+            function successFunc(data, status) {
+                $("#ddSubjectList").empty();
+                $("#ddChapterList").empty();
+                var length = data.length;
+                ChapterQuestionLength = length;
+                var StoreQuestion = '';
+                var OptionIs = '';
+                for (var iLoop = 0; iLoop < length; iLoop++) {
+                    var Subject = data[iLoop].Subject;
+                    var SubjectId = data[iLoop].SubjectId;
+                    var Data = '<option value=' + SubjectId + '>' + Subject + '</option>';
+
+                    OptionIs = OptionIs + Data;
+
+                }
+                OptionIs = '<option value="0">Select</option>' + OptionIs;
+                $("#ddSubjectList").append(OptionIs);
+                $("#BindSubjectList").css("display", "block");
+                return false;
+            }
+            function errorFunc() {
+
+                $("#DisplayAlert").text("Error: database problem");
+                $("#btnView").trigger("click");
+            }
+        }
+        $("#ddSubjectList").empty();
+        $("#ddChapterList").empty();
+        $("#QuestionBox").css("display", "none");
+        return false;
+    }
+
+    //3. get Chapter List
+    function GetChapterList() {
+
+        var SubjectID = $("#ddSubjectList").val();
+        if (SubjectID != 0) {
+            var serviceURL = '/Question/GetAjaxChapterList';
+
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{ 'SubjectId': " + SubjectID + " }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+
+            function successFunc(data, status) {
+                $("#ddChapterList").empty();
+                var length = data.length;
+                ChapterQuestionLength = length;
+                var StoreQuestion = '';
+                var OptionIs = '';
+                for (var iLoop = 0; iLoop < length; iLoop++) {
+                    var ChapterName = data[iLoop].ChapterName;
+                    var ChapterId = data[iLoop].ChapterId;
+                    var Data = '<option value=' + ChapterId + '>' + ChapterName + '</option>';
+
+                    OptionIs = OptionIs + Data;
+
+                }
+                OptionIs = '<option value="0">Select</option>' + OptionIs;
+                $("#ddChapterList").append(OptionIs);
+                $("#BindChapterList").css("display", "block");
+                return false;
+            }
+            function errorFunc() {
+
+                $("#DisplayAlert").text("Error: database problem");
+                $("#btnView").trigger("click");
+            }
+        }
+        $("#ddChapterList").empty();
+        $("#QuestionBox").css("display", "none");
+
+
+        return false;
+    }
+
+    //4. Store Chapter Id
+    function StoreChapterId() {
+
+        var ChapterId = $("#ddChapterList").val();
+        if (ChapterId != 0) {
+            var serviceURL = '/Question/StoreChapter';
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{ 'ChapterId': " + ChapterId + " }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+
+            function successFunc(data, status) {
+                $("#QuestionBox").css("display", "block");
+
+                if ($("#hdnAccessType").val() == "_View") {
+                    $("#btnViewQuestions").css("display", "block");
+                }
+                else {
+                    $("#btnViewQuestions").css("display", "none");
+                }
+
+
+                return false;
+            }
+            function errorFunc() {
+
+                $("#DisplayAlert").text("Error: database problem");
+                $("#btnView").trigger("click");
+            }
+        }
+        $("#QuestionBox").css("display", "none");
+        return false;
+    }
+
+    function EnableRadioQuestion(_DivIdEnable, _DivDisable) {
+        $("#div_" + _DivIdEnable).css("display", "block");
+        $("#div_" + _DivDisable).css("display", "none");
+        $("#img_" + _DivIdEnable).css("display", "none");
+        $("#img_" + _DivIdEnable).attr("src", "");
+
+        $("#div_A_3").css("display", "none");
+        $("#tr_2").removeAttr("style");
+        $("#tr_3").removeAttr("style");
+        $("#tr_4").removeAttr("style");
+        $("#tr_5").removeAttr("style");
+        $("#ddAnswerList").css("display", "block");
+        $("#txtAnswerList").css("display", "none");
+
+        return false;
+    }
+
+    function EnableQuestion(_DivIdEnable, _DivDisable) {
+        $("#div_" + _DivIdEnable).css("display", "block");
+        $("#div_" + _DivDisable).css("display", "none");
+        $("#txt_" + _DivDisable).val('');
+
+        $("#div_A_3").css("display", "none");
+        $("#tr_2").removeAttr("style");
+        $("#tr_3").removeAttr("style");
+        $("#tr_4").removeAttr("style");
+        $("#tr_5").removeAttr("style");
+        $("#ddAnswerList").css("display", "block");
+        $("#txtAnswerList").css("display", "none");
+        return false;
+    }
+
+    function ResetControls(_RC1, _RC2) {
+        $("#rdo_" + _RC1).prop("checked", false);
+        $("#rdo_" + _RC2).prop("checked", false);
+
+        $("#txt_" + _RC1).val('');
+        $("#file_" + _RC2).val('');
+
+        $("#div_" + _RC1).css("display", "none");
+        $("#div_" + _RC2).css("display", "none");
+
+        $("#img_" + _RC1).attr("src", "");
+        $("#img_" + _RC1).css("display", "none");
+        return false;
+    }
+
+    //CREATE QUESTIONS
+    function CreateQuestion() {
+
+        var GetQuestion = '';
+        var GetQ_ImageLocation = '';
+        var GetQ_ImageQuestion = '';
+
+        var GetOptionA = '';
+        var GetOptionA_Location = '';
+
+        var GetOptionB = '';
+        var GetOptionB_Location = '';
+
+        var GetOptionC = '';
+        var GetOptionC_Location = '';
+
+        var GetOptionD = '';
+        var GetOptionD_Location = '';
+
+        var GetAnswer = '';
+
+        if ($("#rdo_A_1").prop("checked")) { GetQuestion = $("#txt_A_1").val(); }
+        else if ($("#rdo_A_2").prop("checked")) {
+            GetQ_ImageLocation = $("#img_A_1").attr("src")
+            GetQ_ImageQuestion = $("#txt_A_2").val();
+        }
+
+        if ($("#rdo_B_1").prop("checked")) {
+            GetOptionA = $("#txt_B_1").val();
+        }
+        else if ($("#rdo_B_2").prop("checked")) {
+            GetOptionA_Location = $("#img_B_1").attr("src");
+        }
+
+        if ($("#rdo_C_1").prop("checked")) {
+            GetOptionB = $("#txt_C_1").val();
+        }
+        else if ($("#rdo_C_2").prop("checked")) {
+            GetOptionB_Location = $("#img_C_1").attr("src");
+        }
+
+        if ($("#rdo_D_1").prop("checked")) {
+            GetOptionC = $("#txt_D_1").val();
+        }
+        else if ($("#rdo_D_2").prop("checked")) {
+            GetOptionC_Location = $("#img_D_1").attr("src");
+        }
+
+        if ($("#rdo_E_1").prop("checked")) {
+            GetOptionD = $("#txt_E_1").val();
+        }
+        else if ($("#rdo_E_2").prop("checked")) {
+            GetOptionD_Location = $("#img_E_1").attr("src");
+        }
+
+        if ($("#ddAnswerList").val() != 0 || $("#rdo_A_3").prop("checked")) {
+            GetAnswer = $("#ddAnswerList").val();
+
+
+            var SaveQuestion = new Object();
+            SaveQuestion.StandardId = $("#ddSectionList").val();
+            SaveQuestion.SubjectId = $("#ddSubjectList").val();;
+            SaveQuestion.ChapterId = $("#ddChapterList").val();
+            if ($("#rdo_A_3").prop("checked")) {
+                SaveQuestion.Question = $("#txt_A_3").val();
+                SaveQuestion.FillAnswer = $("#txtAnswerList").val();
+                SaveQuestion.AnswerDescription = $("#txt_Answer_Description").val();
+                SaveQuestion.Format = 2;
+            }
+            else {
+
+                SaveQuestion.Question = GetQuestion;
+                SaveQuestion.Question_Image = GetQ_ImageLocation;
+                SaveQuestion.Question_Image_Description = GetQ_ImageQuestion;
+                SaveQuestion.OptionA = GetOptionA;
+                SaveQuestion.OptionA_Image = GetOptionA_Location;
+                SaveQuestion.OptionB = GetOptionB;
+                SaveQuestion.OptionB_Image = GetOptionB_Location;
+                SaveQuestion.OptionC = GetOptionC;
+                SaveQuestion.OptionC_Image = GetOptionC_Location;
+                SaveQuestion.OptionD = GetOptionD;
+                SaveQuestion.OptionD_Image = GetOptionD_Location;
+                SaveQuestion.Answer = GetAnswer;
+                SaveQuestion.AnswerDescription = $("#txt_Answer_Description").val();
+                SaveQuestion.Format = 1;
+            }
+            var QuestionModels = JSON.stringify({ questionModels: SaveQuestion });
+            var serviceURL = '/Question/CreateQuestion';
+
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: QuestionModels,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+        }
+        else {
+            $("#DisplayAlert").text("Please Select the Answer");
+            $("#btnView").trigger("click");
+
+            return false;
+        }
+        function successFunc(data, status) {
+            if (data == true) {
+                ClearControls();
+                $("#DisplayAlert").text("Question created successfully");
+                $("#btnView").trigger("click");
+
+            }
+        }
+        function errorFunc() {
+            $("#DisplayAlert").text("Error: failed to create question");
+            $("#btnView").trigger("click");
+        }
+        return false;
+    }
+
+    function EnableFillOut(_IDFillOut) {
+        $("#img_A_1").attr("src", "");
+        $("#div_A_1").css("display", "none");
+        $("#div_A_2").css("display", "none");
+        $("#div_A_3").css("display", "block");
+        $("#tr_2").css("display", "none");
+        $("#tr_3").css("display", "none");
+        $("#tr_4").css("display", "none");
+        $("#tr_5").css("display", "none");
+        $("#ddAnswerList").css("display", "none");
+        $("#txtAnswerList").css("display", "block");
+        return false;
+    }
+
+    function ClearControls() {
+        //Question
+        $("#rdo_A_1").prop("checked", false);
+        $("#rdo_A_2").prop("checked", false);
+        $("#rdo_A_3").prop("checked", false);
+        $("#txt_A_1").val("");
+        $("#txt_A_2").val("");
+        $("#txt_A_3").val("");
+        $("#img_A_1").attr("src", "");
+        $("#img_A_1").css("display", "none");
+        $("#file_A_2").val("")
+
+        //Option A
+        $("#rdo_B_1").prop("checked", false);
+        $("#rdo_B_2").prop("checked", false);
+        $("#txt_B_1").val("");
+        $("#file_B_2").val("");
+        $("#img_B_1").attr("src", "");
+        $("#img_B_1").css("display", "none");
+
+        //Option B
+        $("#rdo_C_1").prop("checked", false);
+        $("#rdo_C_2").prop("checked", false);
+        $("#txt_C_1").val("");
+        $("#file_C_2").val("");
+        $("#img_C_1").attr("src", "");
+        $("#img_C_1").css("display", "none");
+
+        //Option C
+        $("#rdo_D_1").prop("checked", false);
+        $("#rdo_D_2").prop("checked", false);
+        $("#txt_D_1").val("");
+        $("#file_D_2").val("");
+        $("#img_D_1").attr("src", "");
+        $("#img_D_1").css("display", "none");
+
+        //Option D
+        $("#rdo_E_1").prop("checked", false);
+        $("#rdo_E_2").prop("checked", false);
+        $("#txt_E_1").val("");
+        $("#file_E_2").val("");
+        $("#img_E_1").attr("src", "");
+        $("#img_E_1").css("display", "none");
+
+        //ANSWER
+        $("#ddAnswerList").val(0);
+        $("#txt_Answer_Description").val("");
+    }
+
+</script>
+
+<div class="col-md-12">
+    <p><a href="@Url.Action("Dashboard", "Staff")"><img src="~/Content/Images/CommonBack.png" style="cursor:pointer;" /></a>Back</p>
+</div>
+
+<div class="clearfix">
+
+</div>
+
+<div class="col-md-12">
+@if (Session["EnableView"].ToString().Trim().Equals("_View"))
+{
+    <p>Choose the below option to VIEW the chapter's questions</p>
+}
+else
+{
+    <p>Choose the below section to CREATE the new questions</p>
+}
+   
+</div>
+
+<div id="BindSectionList" class="form-group col-md-3">
+
+</div>
+
+<div id="BindSubjectList" class="form-group col-md-3" style="display:none;">
+    <div class="col-md-12">
+        <label for="email"><b>Select Subject:</b></label>
+        <select id="ddSubjectList" class="form-control" onchange="javascript:GetChapterList();"></select>
+    </div>
+</div>
+
+<div id="BindChapterList" class="form-group col-md-3" style="display:none;">
+    <div class="col-md-12">
+        <label for="email"><b>Select Chapter:</b></label>
+        <select id="ddChapterList" class="form-control" onchange="javascript: StoreChapterId();"></select>
+    </div>
+</div>
+@if (Session["EnableView"].ToString().Trim().Equals("_View"))
+{
+    <div id="divQuestionsView" class="form-group col-md-1" style="margin-top: 25px;">
+        @Html.ActionLink("View", "ViewQuestions", "Question", new { area = "" }, new { @class = "btn btn-warning pull-left", @style = "display:none", @id = "btnViewQuestions" })
+    </div>
+}
+
+
+
+<div id="modal-alert" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="DisplayAlert" class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-success">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="btnView" type="button" data-target="#modal-alert" style="display:none;"
+        data-toggle="modal" class="btn btn-danger">
+    View Demo
+</button>
+
+
+<div>
+    <input type="hidden" id="hdnAccessType" value="@Session["EnableView"].ToString().Trim()" />
+</div>
+@if (Session["EnableView"].ToString().Trim().Equals("_Add"))
+{
+    <div id="QuestionBox" style="display:none;">
+        <div class="col-md-12">
+            <h2>Generate Question</h2>
+        </div>
+        <div class="col-md-8"><span>Create Text/Image question by selecting option in the table</span></div>
+        <div class="col-md-4">
+
+            @Html.ActionLink("View", "ViewQuestions", "Question", new { area = "" }, new { @class = "btn btn-warning pull-right" });
+            <input type="button" class="btn btn-success pull-right" onclick="CreateQuestion();" value="Save Question" style="margin-right: 3px;" />
+        </div>
+        <div class="col-md-12" style="top: 10px;">
+            <table class="table table-bordered" style="font-size: 13px;">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Title</th>
+                        <th>Select Option</th>
+                        <th>Enter Question/Answer</th>
+                        <th>View</th>
+                        <th>Clear</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="tr_1">
+                        <td style="width:28px;">
+                            1
+                        </td>
+                        <td style="width:115px;">QUESTION</td>
+                        <td style="width:165px;"><input id="rdo_A_1" type="radio" value="Text" onclick='EnableRadioQuestion("A_1", "A_2");' name="rdoQuestion" />Text / <input id="rdo_A_2" type="radio" value="Image" onclick='EnableQuestion("A_2", "A_1" );' name="rdoQuestion" />Image / <input id="rdo_A_3" type="radio" value="Fill" onclick='EnableFillOut("A_3");' name="rdoQuestion" />Fill</td>
+                        <td style="width:600px;">
+                            <div id="div_A_1" style="display:none;">
+                                <div class="form-group col-md-12">
+                                    <input id="txt_A_1" type="text" class="form-control" placeholder="Enter Question">
+                                </div>
+                            </div>
+                            <div id="div_A_2" style="display:none;">
+                                @using (Html.BeginForm("UploadQuestionImage", "FileUpload"))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group col-md-9">
+                                        <label for="file">Upload Image:</label>
+                                        <div class="form-group col-md-10">
+                                            <input type="file" name="files" id="file_A_2" style="width: 75%;" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <input type="submit" value="Upload" class="btn btn-default" />
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="file">Question</label>
+                                        <div class="form-group col-md-12">
+                                            <input type="text" class="form-control" id="txt_A_2" placeholder="Enter Question" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(m => m.QuestionHidden, new { Value = "Q" })
+                                }
+
+                            </div>
+                            <div id="div_A_3" style="display:none;">
+                                <div class="form-group col-md-12">
+                                    <input id="txt_A_3" type="text" class="form-control" placeholder="Enter Question">
+                                </div>
+                            </div>
+                        </td>
+                        <td style="width:200px;">
+                            <img id="img_A_1" src='' style="width:100px; height:100px; display:none;" />
+
+                        </td>
+                        <td><img src="~/Content/Images/close_icon.gif" onclick='ResetControls("A_1", "A_2");' /></td>
+                    </tr>
+                    <tr id="tr_2">
+                        <td>2</td>
+                        <td>Option - A</td>
+                        <td><input id="rdo_B_1" type="radio" value="Text" name="rdoOptionA" onclick='EnableRadioQuestion("B_1", "B_2")' />Text / <input id="rdo_B_2" type="radio" value="Image" name="rdoOptionA" onclick='EnableQuestion("B_2", "B_1" );' />Image</td>
+                        <td style="width:600px;">
+                            <div id="div_B_1" style="display:none;">
+                                <div class="form-group col-md-12">
+                                    <input id="txt_B_1" type="text" class="form-control" placeholder="Enter OptionA">
+                                </div>
+                            </div>
+                            <div id="div_B_2" style="display:none;">
+                                @using (Html.BeginForm("UploadOptionAImage", "FileUpload"))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group col-md-9">
+                                        <label for="file">Upload Image:</label>
+                                        <div class="form-group col-md-10">
+                                            <input type="file" name="files" id="file_B_2" style="width: 75%;" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <input type="submit" value="Upload" class="btn btn-default" />
+                                    </div>
+
+                                    @Html.HiddenFor(m => m.OptionAHidden, new { Value = "A" })
+                                }
+                            </div>
+                        </td>
+                        <td style="width:200px;">
+                            <img id="img_B_1" src='' style='width:100px; height:100px; display:none;' />
+                        </td>
+                        <td><img src="~/Content/Images/close_icon.gif" onclick='ResetControls("B_1", "B_2");' /></td>
+                    </tr>
+                    <tr id="tr_3">
+                        <td>3</td>
+                        <td>Option - B</td>
+                        <td><input id="rdo_C_1" type="radio" value="Text" name="rdoOptionB" onclick='EnableRadioQuestion("C_1", "C_2")' />Text / <input id="rdo_C_2" type="radio" value="Image" name="rdoOptionB" onclick='EnableQuestion("C_2", "C_1" );' />Image</td>
+                        <td style="width:600px;">
+                            <div id="div_C_1" style="display:none;">
+                                <div class="form-group col-md-12">
+
+                                    <input id="txt_C_1" type="text" class="form-control" placeholder="Enter OptionB">
+                                </div>
+                            </div>
+                            <div id="div_C_2" style="display:none;">
+                                @using (Html.BeginForm("UploadOptionBImage", "FileUpload"))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group col-md-9">
+                                        <label for="file">Upload Image:</label>
+                                        <div class="form-group col-md-10">
+                                            <input type="file" name="files" id="file_C_2" style="width: 75%;" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <input type="submit" value="Upload" class="btn btn-default" />
+                                    </div>
+
+                                    @Html.HiddenFor(m => m.OptionBHidden, new { Value = "B" })
+                                }
+
+                            </div>
+                        </td>
+                        <td style="width:200px;">
+                            <img id="img_C_1" src='' style='width:100px; height:100px; display:none;' />
+                        </td>
+                        <td><img src="~/Content/Images/close_icon.gif" onclick='ResetControls("C_1", "C_2");' /></td>
+                    </tr>
+                    <tr id="tr_4">
+                        <td>4</td>
+                        <td>Option - C <span style="color:#5ea505">(Optional)</span></td>
+                        <td><input id="rdo_D_1" type="radio" value="Text" name="rdoOptionC" onclick='EnableRadioQuestion("D_1", "D_2")' />Text / <input id="rdo_D_2" type="radio" value="Image" name="rdoOptionC" onclick='EnableQuestion("D_2", "D_1" );' />Image</td>
+                        <td style="width:600px;">
+                            <div id="div_D_1" style="display:none;">
+                                <div class="form-group col-md-12">
+
+                                    <input id="txt_D_1" type="text" class="form-control" placeholder="Enter OptionC">
+                                </div>
+                            </div>
+                            <div id="div_D_2" style="display:none;">
+
+                                @using (Html.BeginForm("UploadOptionCImage", "FileUpload"))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group col-md-9">
+                                        <label for="file">Upload Image:</label>
+                                        <div class="form-group col-md-10">
+                                            <input type="file" name="files" id="file_D_2" style="width: 75%;" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <input type="submit" value="Upload" class="btn btn-default" />
+                                    </div>
+
+                                    @Html.HiddenFor(m => m.OptionCHidden, new { Value = "C" })
+                                }
+
+
+                            </div>
+                        </td>
+                        <td style="width:200px;">
+                            <img id="img_D_1" src='' style='width:100px; height:100px; display:none;' />
+                        </td>
+                        <td><img src="~/Content/Images/close_icon.gif" onclick='ResetControls("D_1", "D_2");' /></td>
+                    </tr>
+                    <tr id="tr_5">
+                        <td>5</td>
+                        <td>Option - D <span style="color:#5ea505">(Optional)</span></td>
+                        <td><input id="rdo_E_1" type="radio" value="Text" name="rdoOptionD" onclick='EnableRadioQuestion("E_1", "E_2")' />Text / <input id="rdo_E_2" type="radio" value="Image" name="rdoOptionD" onclick='EnableQuestion("E_2", "E_1" );' />Image</td>
+                        <td style="width:600px;">
+                            <div id="div_E_1" style="display:none;">
+                                <div class="form-group col-md-12">
+
+                                    <input id="txt_E_1" type="text" class="form-control" placeholder="Enter OptionD">
+                                </div>
+                            </div>
+                            <div id="div_E_2" style="display:none;">
+                                @using (Html.BeginForm("UploadOptionDImage", "FileUpload"))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group col-md-9">
+                                        <label for="file">Upload Image:</label>
+                                        <div class="form-group col-md-10">
+                                            <input type="file" name="files" id="file_E_2" style="width: 75%;" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <input type="submit" value="Upload" class="btn btn-default" />
+                                    </div>
+
+                                    @Html.HiddenFor(m => m.OptionDHidden, new { Value = "D" })
+                                }
+
+                            </div>
+                        </td>
+                        <td style="width:200px;">
+                            <img id="img_E_1" src='' style='width:100px; height:100px; display:none;' />
+                        </td>
+                        <td><img src="~/Content/Images/close_icon.gif" onclick='ResetControls("E_1", "E_2");' /></td>
+                    </tr>
+                    <tr id="tr_6">
+                        <td></td>
+                        <td>ANSWER</td>
+                        <td>
+                            <select id="ddAnswerList" class="form-control col-md-5">
+                                <option value="0">Select</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                            <input id="txtAnswerList" style="display:none;" type="text" class="form-control" placeholder="Enter Answer" />
+                        </td>
+                        <td>
+                            <div class="form-group col-md-12">
+
+                                <textarea id="txt_Answer_Description" cols="5" rows="5" class="form-control" placeholder="Enter Answer Description"></textarea>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <label style="color:red">*Maximum 4 options can be create</label>
+        </div>
+    </div>
+}

@@ -1,0 +1,10 @@
+﻿.application_image {
+    width: 275px;
+    height: 60px;
+    margin-top: 15px;
+}
+
+.login-textbox {
+    width: 250px !important;
+    margin-left: -38px !important;
+}

@@ -1,0 +1,197 @@
+﻿
+@{
+    ViewBag.Title = "Vote";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    (function () {
+
+        $("#liDashboard").removeClass("active");
+        $("#liCalender").removeClass("active");
+        $("#liElection").addClass("active");
+        $("#ContentTitle").text("Vote Leader");
+    })();
+
+    function StoreUserId(_userID) {
+        alert(_userID);
+        $("#hdnLeaderID").val(_userID);
+    }
+
+    function fnSubmitVote() {
+        var _id = "";
+        var serviceURL = '/Student/InsertVote';
+        var TotalCount = $("#hdnLeaderID").val();
+        for (var iLoop = 1; iLoop < TotalCount; iLoop++) {
+           
+            if ($("#checked_img_" + iLoop).is(":checked")) {
+                _id = $("#checked_img_" + iLoop).attr("accesskey");
+                $("#img_" + $("#checked_img_" + iLoop).attr("accesskey")).css("background-color", "lawngreen");
+               
+                var GetName = $("#label_name_" + _id).text();
+                $("#lblName").removeAttr("style");
+                $("#lblName").css("color", "blue");
+                $("#lblName").text("You have nominatted the '" + GetName + "'");
+            }
+            else
+            {
+                $("#img_" + $("#checked_img_" + iLoop).attr("accesskey")).css("background-color", "#e9e9e9");
+            }
+        }
+        if (_id != "") {
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{'NominattedVoterID':" + _id + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+        }
+    }
+    // Success results
+    function successFunc(data, status) {
+
+        if (data == true) {
+            alert("You have nominatted your class leader");
+        }
+    }
+    function errorFunc() {
+        alert("Error");
+    }
+
+</script>
+
+@*<link href="~/Content/RangeSlide/css/rangeslide.css" rel="stylesheet" />*@
+@{string Displayname = string.Empty;}
+@{int SelectImage = 0;}
+<div class="col-md-12">
+    <div><label><h3>Select your leader: <label class="alert alert-info" style="color:blue; display:none" id="lblName"></label></h3></label></div>
+</div>
+<div class="col-md-12" style="top: 10px;">
+    @{int iLoop = 1;}
+
+    @foreach (var iLeader in ViewBag.getLeaderList)
+    {
+        if (string.IsNullOrEmpty(Displayname.ToString().Trim()))
+        {
+            if (!string.IsNullOrEmpty(Convert.ToString(iLeader.NominattedUsername)))
+            {
+                Displayname = iLeader.NominattedUsername;
+                SelectImage = iLeader.NominattedUserID;
+            }
+
+        }
+        <div class="col-md-2">
+            @if (string.IsNullOrEmpty(Convert.ToString(iLeader.ProfilePicture)))
+            {
+                <img id="img_@iLeader.UID" src="~/Images/Unknown/Notexist.jpg" class="img-thumbnail" width="150" height="135">
+            }
+            else
+            {
+                string checkvalue = iLeader.ProfilePicture.ToString().Trim().Replace("http://localhost:17954", "");
+                if (File.Exists(checkvalue))
+                {
+                    <img id="img_@iLeader.UID" src="@iLeader.ProfilePicture" class="img-thumbnail" width="150" height="135">
+                }
+                else
+                {
+                    <img id="img_@iLeader.UID" src="~/Images/Unknown/Notexist.jpg" class="img-thumbnail" width="150" height="135">
+                }
+
+            }
+            <input id="checked_img_@iLoop" type="radio" name="leader" accesskey="@iLeader.UID" /><strong id="label_name_@iLeader.UID" style="margin-left: 5px;">@iLeader.FirstName @iLeader.LastName</strong>
+
+        </div>
+        iLoop = iLoop + 1;
+    }
+
+    <input id="hdnLeaderID" type="hidden" value="@iLoop" />
+    <input id="hdnDisplayname" type="hidden" value="@Displayname" />
+    <input id="hdnSelectImage" type="hidden" value="@SelectImage" />
+</div>
+
+<div class="col-md-12" style="top: 20px; display:none;">
+    <div class="col-md-2"><label><strong>Select your vote:</strong></label></div>
+    <div class="col-md-10" style="top: 5px;">
+        <div class="sliders">
+            <div class="example">
+                <div id="rangeslide10" class="rangeslide"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12" style="top: 20px;">
+
+    <div class="col-md-10"><label style="color:red !important"><strong>Note: The rating section will be closed on Aug 10, 2017.</strong></label></div>
+</div>
+<div class="col-md-12" style="top: 30px;">
+
+    <div class="col-md-1"><input type="button" class="btn btn-success" onclick="fnSubmitVote();" value="Submit" /></div>
+    <div class="col-md-1"><input type="button" class="btn btn-default" value="Clear" /></div>
+</div>
+
+@*<script src="~/Content/RangeSlide/js/rangeslide.js"></script>
+    <script>
+        var data1 = [
+            { name: "2016", item: "This is some sample text associated with first item." },
+            { name: "2017", item: "This is some sample text associated with second item." },
+            { name: "2018", item: "This is some sample text associated with third item. It was returned from a function." },
+            { name: "2019", item: function () { return "This is some sample text associated with fourth item. It was also returned from a function."; } },
+            { name: "2020", item: "This is some sample text associated with fifth item." },
+            { name: "2021", item: "This is some sample text associated with sixth item." },
+             { name: "2021", item: "This is some sample text associated with sixth item." },
+              { name: "2021", item: "This is some sample text associated with sixth item." },
+               { name: "2021", item: "This is some sample text associated with sixth item." },
+                { name: "2021", item: "This is some sample text associated with sixth item." },
+            { name: "2022", item: "This is some sample text associated with the last item." }
+        ];
+
+
+
+
+        var onChange = function (arguments) {
+            var presenter = document.getElementById("presenter");
+            if (typeof arguments.item === "string") {
+                presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.item;
+            }
+            else if (typeof arguments.item === "function") {
+                presenter.innerHTML = "<b>#" + this.getElement().id + ":</b> " + arguments.item();
+            }
+        };
+
+        var rangeslide10 = rangeslide("#rangeslide10", {
+            data: data1,
+            startPosition: 0,
+            autoPlay: true,
+            autoPlayDelay: 1000,
+            loop: true,
+            thumbHeight: 22,
+            thumbWidth: 22,
+            showTrackMarkers: true,
+            showTrackMarkersProgress: true,
+            showTrackProgress: true,
+            markerSize: 16,
+            showValue: true
+        });
+
+
+
+    </script>*@
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var Displayname = $("#hdnDisplayname").val();
+        var SelectImage = $("#hdnSelectImage").val();
+        if (Displayname != "" && SelectImage != "") {
+            $("#img_" + SelectImage).css("background-color", "lawngreen");
+            $("#lblName").removeAttr("style");
+            $("#lblName").css("color", "blue");
+            $("#lblName").text("You have nominatted the '" + Displayname + "'");
+        }
+
+    })
+</script>

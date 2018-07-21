@@ -1,0 +1,287 @@
+﻿
+@{
+    ViewBag.Title = "create question";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+    var ChapterLength;
+    $(document).ready(function () {
+        $("#ContentTitle").text("Create question paper");
+        GetSectionList();
+    });
+
+    //1. get section List
+    function GetSectionList() {
+
+        var serviceURL = '/Question/GetAjaxStandardsList';
+
+        $.ajax({
+            type: "POST",
+            url: serviceURL,
+            data: param = "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: successFunc,
+            error: errorFunc
+        });
+        function successFunc(data, status) {
+            var length = data.length;
+            ChapterQuestionLength = length;
+            var StoreQuestion = '';
+            var OptionIs = '';
+            for (var iLoop = 0; iLoop < length; iLoop++) {
+                var StandardId = data[iLoop].StandardId;
+                var Data = '<option>' + StandardId + '</option>';
+
+                OptionIs = OptionIs + Data;
+
+            }
+            var BindData = '<div class="col-md-12">' +
+                             '<label for="email"><b>Standard:</b></label>' +
+                                '<select id="ddSectionList" class="form-control"  onchange="javascript:GetSubjectList();" ><option value="0">Select' +
+                                OptionIs +
+                                '</option></select></div>';
+
+            $("#BindSectionList").append(BindData);
+        }
+        function errorFunc() {
+            $("#DisplayAlert").text("error");
+            $("#btnView").trigger("click");
+        }
+    }
+
+    //2. get subject List
+    function GetSubjectList() {
+
+        var StandardId = $("#ddSectionList").val();
+        if (StandardId != 0) {
+            var serviceURL = '/Question/GetAjaxSubjectList';
+
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{ 'SubjectId': " + StandardId + " }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+
+            function successFunc(data, status) {
+                $("#ddSubjectList").empty();
+                $("#ddChapterList").empty();
+                var length = data.length;
+                ChapterQuestionLength = length;
+                if (ChapterQuestionLength > 0) {
+                    var StoreQuestion = '';
+                    var OptionIs = '';
+                    for (var iLoop = 0; iLoop < length; iLoop++) {
+                        var Subject = data[iLoop].Subject;
+                        var SubjectId = data[iLoop].SubjectId;
+                        var Data = '<option value=' + SubjectId + '>' + Subject + '</option>';
+
+                        OptionIs = OptionIs + Data;
+
+                    }
+                    OptionIs = '<option value="0">Select</option>' + OptionIs;
+                    $("#ddSubjectList").append(OptionIs);
+                    $("#BindSubjectList").css("display", "block");
+                }
+                else {
+                    $("#ChapterList").css("display", "none");
+                    $("#errorDIV").css("display", "none");
+
+                }
+                return false;
+            }
+            function errorFunc() {
+
+                $("#DisplayAlert").text("Error: database problem");
+                $("#btnView").trigger("click");
+            }
+        }
+        $("#ddSubjectList").empty();
+        $("#ddChapterList").empty();
+        $("#QuestionBox").css("display", "none");
+        return false;
+    }
+
+    //3. get Chapter List
+    function GetChapterList() {
+
+        var SubjectID = $("#ddSubjectList").val();
+        if (SubjectID != 0) {
+            var serviceURL = '/Question/GetQuestionBasedChapterList';
+
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{ 'SubjectId': " + SubjectID + " }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+
+            function successFunc(data, status) {
+                $("#ddChapterList").empty();
+                var length = data.length;
+                ChapterLength = length;
+                ChapterQuestionLength = length;
+                var StoreQuestion = '';
+                var OptionIs = '';
+                if (ChapterQuestionLength > 0) {
+                    for (var iLoop = 0; iLoop < length; iLoop++) {
+                        var ChapterName = data[iLoop].Answer;
+                        var ChapterId = data[iLoop].ChapterId;
+                        var Data = '<p><input type="checkbox" value="' + ChapterId + '" id="chk_chapter_' + (iLoop + 1) + '" style="margin-right:10px;">' + ChapterName + '</p>';
+
+                        OptionIs = OptionIs + Data;
+
+                    }
+                    $("#BindChapterList").empty();
+                    $("#BindChapterList").append(OptionIs);
+                    $("#ChapterList").css("display", "block");
+                    $("#errorDIV").css("display", "none");
+                }
+                else {
+                    $("#ChapterList").css("display", "none");
+                    $("#errorDIV").css("display", "block");
+                }
+
+                return false;
+            }
+            function errorFunc() {
+
+                $("#DisplayAlert").text("Error: database problem");
+                $("#btnView").trigger("click");
+            }
+        }
+        $("#ddChapterList").empty();
+        $("#QuestionBox").css("display", "none");
+        $("#ChapterList").css("display", "none");
+
+        return false;
+    }
+
+    function GenerateQuestion() {
+        var ExamName = $("#txtExamName").val();
+        var NoofQuestions = $("#txtNoofQuestions").val();
+        var ExamTime = $("#txtExamTime").val();
+        var CheckBoxoption = "";
+        for (var iLoop = 1; iLoop <= ChapterLength; iLoop++) {
+            if ($("#chk_chapter_" + iLoop).is(":Checked")) {
+                CheckBoxoption = CheckBoxoption + $("#chk_chapter_" + iLoop).val() + ";";
+            }
+
+        }
+        var SubjectId = $("#ddSubjectList").val();
+        var StandardId = $("#ddSectionList").val();
+
+        if (CheckBoxoption.trim() != "") {
+            if (ExamName.trim() != "") {
+                if (NoofQuestions.trim() != "") {
+                    if (ExamTime.trim() != "") {
+
+
+                        var QuestionModels = Object();
+                        QuestionModels.StandardId = StandardId;
+                        QuestionModels.SubjectId = SubjectId;
+                        QuestionModels.ChapterIDList = CheckBoxoption;
+                        QuestionModels.ExamTime = ExamTime;
+                        QuestionModels.NoofQuestions = NoofQuestions;
+                        QuestionModels.ExamName = ExamName;
+
+
+                        var serviceURL = '/Question/GenerateQuestions';
+                        $.ajax({
+                            type: "POST",
+                            url: serviceURL,
+                            data: JSON.stringify({ Questions: QuestionModels }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                $("#txtExamName").val("");
+                                $("#txtNoofQuestions").val("");
+                                $("#txtExamTime").val("");
+                                for (var iLoop = 1; iLoop <= ChapterLength; iLoop++) {
+                                    $("#chk_chapter_" + iLoop).attr("checked", false)
+                                }
+                                alert("Your question created successfully.")
+                            },
+                            error: function (data) {
+
+                            }
+                        });
+                    }
+                    else {
+                        alert("Enter the exam time");
+                    }
+                }
+                else {
+                    alert("Enter the no of question to generate");
+                }
+            }
+            else {
+                alert("Enter the exam name");
+            }
+        }
+        else {
+            alert("Select any one of chapter")
+        }
+    }
+
+
+</script>
+<div id="BindSectionList" class="form-group col-md-3">
+
+</div>
+
+<div id="BindSubjectList" class="form-group col-md-3" style="display:none; padding-left:15px;">
+    <div class="col-md-12">
+        <label for="email"><b>Subject:</b></label>
+        <select id="ddSubjectList" class="form-control" onchange="javascript:GetChapterList();"></select>
+    </div>
+</div>
+
+<div id="ChapterList" class="form-group col-md-12" style="display:none;">
+
+    <div class="form-group col-md-12">
+        <label for="InputText" class="col-md-3 control-label">Exam name:</label>
+        <div class="col-md-6">
+            <input type="text" id="txtExamName" placeholder="exam name" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group col-md-12">
+        <label for="InputText" class="col-md-3 control-label">No of questions:</label>
+        <div class="col-md-6">
+            <input type="text" id="txtNoofQuestions" placeholder="no of questions" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group col-md-12">
+        <label for="InputText" class="col-md-3 control-label">Exam time</label>
+        <div class="col-md-3">
+            <input type="text" id="txtExamTime" placeholder="60" class="form-control" />
+        </div>
+        <label for="InputText" class="col-md-3 control-label">Mintues</label>
+    </div>
+    <div class="form-group col-md-12">
+        <label for="InputText" class="col-md-3 control-label">Select chapters:</label>
+        <div class="col-md-6" style="padding-left: 0px;">
+            <div id="BindChapterList" class="col-md-8">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <input type="button" onclick="GenerateQuestion();" class="btn btn-success" value="Create" />
+    </div>
+
+</div>
+<div id="errorDIV" class="col-md-12" style="display:none; padding-left:30px;">
+    <span class="alert alert-danger col-md-2">No record found</span>
+</div>
+

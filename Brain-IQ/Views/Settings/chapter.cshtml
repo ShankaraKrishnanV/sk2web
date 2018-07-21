@@ -1,0 +1,200 @@
+﻿
+@{
+    ViewBag.Title = "Chapter";
+    Layout = "~/Views/Shared/_StaffLayout.cshtml";
+}
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        GetSectionList();
+    });
+
+    //1. get section List
+    function GetSectionList() {
+        var serviceURL = '/Question/GetAjaxStandardsList';
+
+        $.ajax({
+            type: "POST",
+            url: serviceURL,
+            data: param = "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: successFunc,
+            error: errorFunc
+        });
+        function successFunc(data, status) {
+
+            var length = data.length;
+            ChapterQuestionLength = length;
+            var StoreQuestion = '';
+            var OptionIs = '';
+            for (var iLoop = 0; iLoop < length; iLoop++) {
+                var ExamId = data[iLoop].ExamId;
+                var ExamName = data[iLoop].ExamName;
+                var Active = data[iLoop].Active;
+                var Data = '';
+                //if (Active == false) {
+                //    Data = '<option style="color:red">' + StandardId + ' (Deactivate)</option>';
+                //}
+                //else
+                //{
+                Data = '<option value=' + ExamId + '>' + ExamName + '</option>';
+                //}
+                OptionIs = OptionIs + Data;
+
+            }
+            var BindData = '<div class="col-md-12">' +
+                             '<label for="email"><b>Select Exam:</b></label>' +
+                                '<select id="ddSectionList" class="form-control"  onchange="javascript:GetSubjectList();" ><option value="0">Select' +
+                                OptionIs +
+                                '</option></select></div>';
+
+            $("#BindSectionList").append(BindData);
+        }
+        function errorFunc() {
+            $("#DisplayAlert").text("error");
+            $("#btnView").trigger("click");
+        }
+    }
+
+    //2. get subject List
+    function GetSubjectList() {
+
+        var StandardId = $("#ddSectionList").val();
+        if (StandardId != 0) {
+            var serviceURL = '/Question/GetAjaxSubjectList';
+
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{ 'SubjectId': " + StandardId + " }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+
+            function successFunc(data, status) {
+
+                $("#ddSubjectList").empty();
+                $("#ddChapterList").empty();
+                var length = data.length;
+                ChapterQuestionLength = length;
+                if (length > 0) {
+                    var StoreQuestion = '';
+                    var OptionIs = '';
+                    for (var iLoop = 0; iLoop < length; iLoop++) {
+                        var Subject = data[iLoop].Subject;
+                        var SubjectId = data[iLoop].SubjectId;
+
+
+                        var Data = '<div class="col-md-2"><a href="/Question/ChapterList?SubjectId=' + SubjectId + '"><img src="/Content/Images/img_avatar2.png" alt=' + SubjectId + ' class="img-responsive img-circle">' +
+                                   '<label style="margin-left: 30px;">' + Subject + '</label>' +
+                                   '</a></div>';
+                        OptionIs = OptionIs + Data;
+
+                    }
+
+                    $("#ddSubjectList").append(OptionIs);
+                    $("#BindSubjectList").css("display", "block");
+                }
+                else {
+                    $("#ddSubjectList").append("<label style='color:red;'>No Record Found</label>");
+                    $("#BindSubjectList").css("display", "block");
+                }
+                return false;
+            }
+            function errorFunc() {
+
+                $("#DisplayAlert").text("Error: database problem");
+                $("#btnView").trigger("click");
+            }
+        }
+        $("#ddSubjectList").empty();
+        $("#ddChapterList").empty();
+        $("#QuestionBox").css("display", "none");
+        return false;
+    }
+
+    //3. get Chapter List
+    function GetChapterList() {
+
+        var StandardId = $("#ddSubjectList").val();
+        if (StandardId != 0) {
+            var serviceURL = '/Question/GetAjaxChapterList';
+
+            $.ajax({
+                type: "POST",
+                url: serviceURL,
+                data: "{ 'SubjectId': " + StandardId + " }",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: successFunc,
+                error: errorFunc
+            });
+
+            function successFunc(data, status) {
+                $("#ddChapterList").empty();
+                var length = data.length;
+                ChapterQuestionLength = length;
+                var StoreQuestion = '';
+                var OptionIs = '';
+                for (var iLoop = 0; iLoop < length; iLoop++) {
+                    var ChapterName = data[iLoop].ChapterName;
+                    var ChapterId = data[iLoop].ChapterId;
+                    var Data = '<option value=' + ChapterId + '>' + ChapterName + '</option>';
+
+                    OptionIs = OptionIs + Data;
+
+                }
+                OptionIs = '<option value="0">Select</option>' + OptionIs;
+                $("#ddChapterList").append(OptionIs);
+                $("#BindChapterList").css("display", "block");
+                return false;
+            }
+            function errorFunc() {
+
+                $("#DisplayAlert").text("Error: database problem");
+                $("#btnView").trigger("click");
+            }
+        }
+        $("#ddChapterList").empty();
+        $("#QuestionBox").css("display", "none");
+
+
+        return false;
+    }
+
+
+</script>
+
+<div id="BindSectionList" class="form-group col-md-3">
+
+</div>
+
+<div id="BindSubjectList" class="form-group col-md-12" style="display:none;">
+    <div class="col-md-12">
+        <label for="email"><b>Select Subject:</b></label>
+        <div id="ddSubjectList" class="col-md-12">
+
+        </div>
+    </div>
+</div>
+<div class="form-group col-md-12">
+    <div class="col-md-12">
+        @Html.ActionLink("Back", "home", "settings", new { area = "" }, new { @class = "btn btn-info" })
+    </div>
+</div>
+
+
+@*<div id="BindChapterList" class="form-group col-md-12" style="display:none;">
+        <div class="col-md-12">
+            <label for="email"><b>Select Chapter</b></label>
+
+        </div>
+    </div>*@
+
+
+

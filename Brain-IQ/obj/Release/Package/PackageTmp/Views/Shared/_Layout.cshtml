@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/DevCSS/Common.css" rel="stylesheet" />
+    <link href="~/Content/DevCSS/ui-Brain.css" rel="stylesheet" />
+    <link href="~/Content/DevCSS/ui-layout.css" rel="stylesheet" />
+    <link href="~/Content/DevCSS/ui-theme.css" rel="stylesheet" />
+  
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+              
+                    @Html.ActionLink("SRV", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+              
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active">@Html.ActionLink("Home", "Index", "Home")</li>
+               
+                <li><a href="#">Page 2</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">@Html.ActionLink("About", "About", "Home")</a></li>
+                        <li><a href="#">@Html.ActionLink("Contact", "Contact", "Home")</a></li>
+                        <li><a href="#">@Html.ActionLink("Logout","Login","Login")</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+   
+    <div class="body-content">    @*<div class="container body-content">*@
+    @RenderBody()
+    <hr />
+    <footer>
+        <p>&copy; @DateTime.Now.Year - School Management</p>
+    </footer>
+</div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,178 @@
+﻿
+@{
+    ViewBag.Title = "Review";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+<style>
+    .panel-info > .panel-heading {
+        background-color: #053c16;
+    }
+
+    .label-info {
+        background-color: #053c16;
+        border-color: #2196f3;
+        border-radius: 25px;
+        height: 20px;
+        padding-top: 5px;
+    }
+
+    p {
+        margin: 0 0 9px;
+        color: black;
+    }
+
+    h6 {
+        color: black;
+    }
+</style>
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<h2 class="col-md-12"><span>Review the answer</span> @Html.ActionLink("Take Exam", "Index", "Subjects", new { area = "" }, new { @class = "btn btn-info pull-right" })</h2>
+<div class="panel-group col-md-12" id="accordion">
+    @{int iCount = 1; }
+    @foreach (var itemList in ViewBag.getSubject)
+    {
+        string Collapse = string.Empty;
+        string ResultType = string.Empty;
+
+
+        if (iCount == 1)
+        {
+            Collapse = "panel-collapse collapse in";
+        }
+        else
+        {
+            Collapse = "panel-collapse collapse";
+        }
+
+        if (itemList.Format.ToString().Trim() == "2")
+        {
+            if (!string.IsNullOrEmpty(Convert.ToString(itemList.AnswerSelected)))
+            {
+                if (itemList.FillAnswer.ToString().Trim() == itemList.AnswerSelected.ToString().Trim())
+                {
+                    ResultType = "True.png";
+                }
+                else
+                {
+                    ResultType = "false.png";
+                }
+            }
+            else
+            {
+                ResultType = "false.png";
+            }
+        }
+        else if (itemList.Format.ToString().Trim() == "1")
+        {
+            if (!string.IsNullOrEmpty(Convert.ToString(itemList.AnswerSelected)))
+            {
+                if (itemList.Answer.ToString().Trim() == itemList.AnswerSelected.ToString().Trim())
+                {
+                    ResultType = "True.png";
+                }
+                else
+                {
+                    ResultType = "false.png";
+                }
+            }
+            else
+            {
+                ResultType = "false.png";
+            }
+        }
+        else
+        {
+
+        }
+
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    @iCount.
+                    @if (!string.IsNullOrEmpty(Convert.ToString(itemList.Question)))
+                    {
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_@iCount">
+                            @itemList.Question <img src='~/Content/Images/@ResultType' />
+                        </a>
+                    }
+                    else
+                    {
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse_@iCount">
+                            @itemList.Question_Image_Description <img src='~/Content/Images/@ResultType' /><br />
+                            <img src='@itemList.Question_Image' style="width: 220px; height:180px; padding-bottom: 10px;" />
+                        </a>
+                    }
+
+                </h4>
+            </div>
+            <div id="collapse_@iCount" class="@Collapse">
+                <div class="panel-body">
+                    @if (itemList.Format == 1)
+                    {
+                        if (!string.IsNullOrEmpty(Convert.ToString(itemList.OptionA)))
+                        {
+                            <p>A. @itemList.OptionA</p>
+
+                        }
+                        else
+                        {
+                            <span>A. <img src="@itemList.OptionA_Image" style="width: 100px;height: 135px;" /></span>
+
+                        }
+
+                        if (!string.IsNullOrEmpty(Convert.ToString(itemList.OptionB)))
+                        {
+                            <p>B. @itemList.OptionB</p>
+                        }
+                        else
+                        {
+                            <span>B. <img src="@itemList.OptionB_Image" style="width: 100px;height: 135px; margin-left: 50px;" /></span>
+                        }
+
+                        if (!string.IsNullOrEmpty(Convert.ToString(itemList.OptionC)))
+                        {
+                            <p>C. @itemList.OptionC</p>
+                        }
+                        else
+                        {
+                            <span>C. <img src="@itemList.OptionC_Image" style="width: 100px;height: 135px;margin-left: 50px;" /></span>
+                        }
+
+                        if (!string.IsNullOrEmpty(Convert.ToString(itemList.OptionD)))
+                        {
+                            <p>D. @itemList.OptionD</p>
+                        }
+                        else
+                        {
+                            <span>D. <img src="@itemList.OptionD_Image" style="width: 100px;height: 135px;margin-left: 50px;" /></span>
+                        }
+                    }
+                    @if (string.IsNullOrEmpty(Convert.ToString(@itemList.AnswerSelected)))
+                    {
+                        <p><b>Your answer was: ----</b></p>
+                    }
+                    else
+                    {
+                        <p><b>Your answer was: @itemList.AnswerSelected</b></p>
+                    }
+                    
+                    <p><b>Description:</b> @itemList.AnswerDescription</p>
+
+                </div>
+                <div class="panel-footer" style="height: 36px;padding-top: 1px;">
+                    @if (itemList.Format == 1)
+                    {
+                        <h6>ANSWER <span class="label label-info"> @itemList.Answer </span></h6>
+                    }
+                    else
+                    {
+                        <h6>ANSWER <span class="label label-info"> @itemList.FillAnswer </span></h6>
+                    }
+                </div>
+            </div>
+        </div>
+        iCount += 1;
+    }
+</div>

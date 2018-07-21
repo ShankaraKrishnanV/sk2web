@@ -1,0 +1,580 @@
+﻿@model Brain_IQ.Models.Exam.ChapterExamModels
+@{
+    ViewBag.Title = "Questions";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+
+<link href="~/Content/themes/alertify.core.css" rel="stylesheet" />
+<link href="~/Content/themes/alertify.default.css" rel="stylesheet" />
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="~/Content/lib/alertify.min.js"></script>
+
+<style>
+    .body-content {
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-top: 0px;
+        background-color: white !important;
+    }
+
+    hr {
+        border-color: #2196f3;
+    }
+</style>
+<script type="text/javascript">
+    var ChapterQuestionLength;
+    var DynamicProgressValue = "";
+    var MaintainPageMasterID = 1;
+
+    $(document).ready(function () {
+        BindChapterQuestions();
+        $("#ContentTitle").text("Exam");
+    });
+
+    function reset() {
+        $("#toggleCSS").attr("href", "../themes/alertify.default.css");
+        alertify.set({
+            labels: {
+                ok: "OK",
+                cancel: "Cancel"
+            },
+            delay: 5000,
+            buttonReverse: false,
+            buttonFocus: "ok"
+        });
+    }
+
+    // Bind Chapter based questions
+    function BindChapterQuestions() {
+        var serviceURL = '/Subjects/GetQuestions';
+
+        $.ajax({
+            type: "POST",
+            url: serviceURL,
+            data: param = "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: successFunc,
+            error: errorFunc
+        });
+
+        function successFunc(data, status) {
+
+            var length = data.length;
+
+            ChapterQuestionLength = length;
+            DynamicProgressValue = (100 / ChapterQuestionLength);
+            var StoreQuestion = '';
+            var CreateQuestionLocker = '';
+            for (var iLoop = 0; iLoop < length; iLoop++) {
+
+                var QuestionId = data[iLoop].QuestionId;
+                var ChapterId = data[iLoop].ChapterId;
+                var SubjectId = data[iLoop].SubjectId;
+                var Question = data[iLoop].Question;
+                var OptionA = data[iLoop].OptionA;
+                var OptionB = data[iLoop].OptionB;
+                var OptionC = data[iLoop].OptionC;
+                var OptionD = data[iLoop].OptionD;
+                var Form = data[iLoop].Format;
+                // Encode the String
+                if (data[iLoop].Format == 1) {
+                    var Answer = btoa(data[iLoop].Answer);
+                }
+                else {
+                    var Answer = btoa(data[iLoop].FillAnswer);
+                }
+                var Display = ""; var DisplayQuestion = ""; var DisplayOptionA = ""; var DisplayOptionB = ""; var DisplayOptionC = ""; var DisplayOptionD = "";
+                if (iLoop == 0)
+                    Display = "block;";
+                else
+                    Display = "none;";
+
+                if (Question == "" || Question == null) {
+                    DisplayQuestion = "<div class='panel-heading' style='border-radius: 0 0 15px 15px;' ><h4 id='readQuestion_" + (iLoop + 1) + "'><a onclick='PlayAudio(" + (iLoop + 1) + ")'><span class='glyphicon glyphicon-volume-up'></span></a> " + (iLoop + 1) + ". " + data[iLoop].QuestionDescription + "</h4>" +
+                        "<img src='" + data[iLoop].QuestionImage + "' width=160 height=120 /></div>";
+                }
+                else {
+                    if (data[iLoop].Format == 1) {
+                        DisplayQuestion = "<h4 class='panel-heading' id='readQuestion_" + (iLoop + 1) + "'><a onclick='PlayAudio(" + (iLoop + 1) + ")'><span class='glyphicon glyphicon-volume-up'></span></a> " + (iLoop + 1) + ". " + Question + "</h4>";
+                    }
+                    else {
+                        DisplayQuestion = "<h4 class='panel-heading' id='readQuestion_" + (iLoop + 1) + "'><a onclick='PlayAudio(" + (iLoop + 1) + ")'><span class='glyphicon glyphicon-volume-up'></span></a> " + (iLoop + 1) + ". " + Question + " <input id='readAnswerText_" + (iLoop + 1) + "' onclick='clearChecked(" + (iLoop + 1) + ")' type='text' style='font-size: 14px;' /></h4>";
+                    }
+                }
+
+                if (OptionA == "" || OptionA == null) {
+                    DisplayOptionA = "<div class='col-md-3' style='margin-top:5px'>" +
+                                        "<input onchange='RemoveChecked(" + (iLoop + 1) + ");' id='Option_A_" + (iLoop + 1) + "' name='Option_" + (iLoop + 1) + "' type='radio'>" +
+                                        "<span id='spanOption_A_" + (iLoop + 1) + "'> A. <img src='" + data[iLoop].OptionAImage + "' width=120 height=100></span>" +
+                                     "</div>";
+                }
+                else {
+                    DisplayOptionA = "<div class='col-md-12' style='margin-top:5px'>" +
+                                        "<input onchange='RemoveChecked(" + (iLoop + 1) + ");' id='Option_A_" + (iLoop + 1) + "' name='Option_" + (iLoop + 1) + "' type='radio'>" +
+                                        "<span id='spanOption_A_" + (iLoop + 1) + "'> A. " + OptionA + "</span>" +
+                                     "</div>";
+                }
+
+                if (OptionB == "" || OptionB == null) {
+                    DisplayOptionB = "<div class='col-md-3' style='margin-top:5px'>" +
+                                        "<input onchange='RemoveChecked(" + (iLoop + 1) + ");' id='Option_B_" + (iLoop + 1) + "' name='Option_" + (iLoop + 1) + "' type='radio'>" +
+                                        "<span id='spanOption_B_" + (iLoop + 1) + "'> B. <img src='" + data[iLoop].OptionBImage + "' width=120 height=100></span>" +
+                                     "</div>";
+                }
+                else {
+                    DisplayOptionB = "<div class='col-md-12' style='margin-top:5px'>" +
+                                        "<input onchange='RemoveChecked(" + (iLoop + 1) + ");' id='Option_B_" + (iLoop + 1) + "' name='Option_" + (iLoop + 1) + "' type='radio'>" +
+                                        "<span id='spanOption_B_" + (iLoop + 1) + "'> B. " + OptionB + "</span>" +
+                                     "</div>";
+                }
+
+                if (OptionC == "" || OptionC == null) {
+                    DisplayOptionC = "<div class='col-md-3' style='margin-top:5px'>" +
+                                          "<input onchange='RemoveChecked(" + (iLoop + 1) + ");' id='Option_C_" + (iLoop + 1) + "' name='Option_" + (iLoop + 1) + "' type='radio'>" +
+                                          "<span id='spanOption_C_" + (iLoop + 1) + "'> C. <img src='" + data[iLoop].OptionCImage + "' width=120 height=100></span>" +
+                                     "</div>";
+                }
+                else {
+                    DisplayOptionC = "<div class='col-md-12' style='margin-top:5px'>" +
+                                         "<input onchange='RemoveChecked(" + (iLoop + 1) + ");' id='Option_C_" + (iLoop + 1) + "' name='Option_" + (iLoop + 1) + "' type='radio'>" +
+                                         "<span id='spanOption_C_" + (iLoop + 1) + "'> C. " + OptionC + "</span>" +
+                                    "</div>";
+                }
+
+                if (OptionD == "" || OptionD == null) {
+                    DisplayOptionD = "<div class='col-md-3' style='margin-top:5px'>" +
+                                          "<input onchange='RemoveChecked(" + (iLoop + 1) + ");' id='Option_D_" + (iLoop + 1) + "' name='Option_" + (iLoop + 1) + "' type='radio'>" +
+                                          "<span id='spanOption_D_" + (iLoop + 1) + "'> D. <img src='" + data[iLoop].OptionDImage + "' width=120 height=100></span>" +
+                                      "</div>";
+                }
+                else {
+                    DisplayOptionD = "<div class='col-md-12' style='margin-top:5px'>" +
+                                          "<input onchange='RemoveChecked(" + (iLoop + 1) + ");' id='Option_D_" + (iLoop + 1) + "' name='Option_" + (iLoop + 1) + "' type='radio'>" +
+                                          "<span id='spanOption_D_" + (iLoop + 1) + "'> D. " + OptionD + "</span>" +
+                                      "</div>";
+                }
+
+
+                if (data[iLoop].Format == 2) {
+                    DisplayOptionA = "";
+                    DisplayOptionB = "";
+                    DisplayOptionC = "";
+                    DisplayOptionD = "";
+                }
+
+
+                var BindQuestions = "<div id='EnableQuestion_" + (iLoop + 1) + "' style='Display:" + Display + "'>" +
+                                    "<div>" +
+                                            "<div class='col-lg-8  panel panel-default'>" +
+                                                 DisplayQuestion +
+                                                    "<div class='panel-default'>" +
+                                                        "<div class='col-md-12' style='margin-bottom: 50px;'>" +
+                                                                DisplayOptionA +
+                                                                DisplayOptionB +
+                                                                DisplayOptionC +
+                                                                DisplayOptionD +
+                                                                 "<div class='col-md-12' style='margin-top:5px'>" +
+                                                                   "<input onclick='RemoveRadioItems(" + (iLoop + 1) + ");' type='checkbox' id='chkReview_" + (iLoop + 1) + "' name ='review_" + (iLoop + 1) + "'> <b>Mark as review later</b>" +
+                                                                "</div>" +
+                                                                "<div id='lblAlert_" + (iLoop + 1) + "' class='col-md-12' style='display:none; margin-top:15px'>" +
+                                                                    "<div class='col-md-4'></div><label class='alert-danger'>Sorry!! Please mark the Answer or Review</label></div></div>" +
+                                                                "</div>" +
+                                        "</div>" +
+                                        "<input id='xkyoq_" + (iLoop + 1) + "' type='hidden' value='" + Answer + "'>" +
+                                        "<input id='QuestionId_" + (iLoop + 1) + "' type='hidden' value='" + QuestionId + "'>" +
+                                        "<input id='ChapterId_" + (iLoop + 1) + "' type='hidden' value='" + ChapterId + "'>" +
+                                        "<input id='SubjectId_" + (iLoop + 1) + "' type='hidden' value='" + SubjectId + "'>" +
+                                        "<input id='ProgressId_" + (iLoop + 1) + "' type='hidden' value='0'>" +
+                                        "<input id='Fromat_" + (iLoop + 1) + "' type='hidden' value='" + Form + "'>" +
+                                "</div>" +
+                                "<div id='divViewAnswer_" + (iLoop + 1) + "' style='display:none'><button type='button' onclick='fnCollapse(" + (iLoop + 1) + ")'>Answer</button>: <label id='panel_" + (iLoop + 1) + "' title='0'>" + data[iLoop].Answer + "</label></div>" +
+                            "</div>";
+
+                CreateQuestionLocker = CreateQuestionLocker + "<div class='col-lg-3' style='padding-bottom: 5px;'><b>" + (iLoop + 1) + "</b> <img id='imgView_" + (iLoop + 1) + "'  onclick='GotoPanel(" + (iLoop + 1) + ");' src='/Content/Images/LockQ.png' /> </div>";
+                StoreQuestion = StoreQuestion + BindQuestions;
+            }
+
+
+
+            var RightWidow = "<div class='col-md-4 well' style='background-color:#e4e4ff;margin-left: 10px;width: 366px;'>" +
+                                   "<div>" +
+                                       "<span class='glyphicon glyphicon-time' style='font-size:18px;'></span> <span style='font-size:18px;'>REMINING TIME</span> <br/><span id='timer' style='font-size:36px;'>01:00 </span> <span class='glyphicon glyphicon-time'></span>" +
+                                       "<p></p>" +
+                                   "</div>" +
+                                   "<hr />" +
+                                   "<div>" +
+                                       "<span class='glyphicon glyphicon-stats' style='font-size:18px;'> </span> <span style='font-size:18px;'>STATUS</span>" +
+                                       "<div class='row'>" +
+                                           CreateQuestionLocker +
+                                       "</div>" +
+                                   "</div>" +
+                                   "</div></div>";
+
+
+            var BindQuestionAndStatusDIV = "<div class='row'>" + StoreQuestion + RightWidow + "</div>";
+
+            var BindFooter = "<footer>" +
+                                "<div class='row'>" +
+                                    "<div class='col-lg-8'>" +
+                                        "<div class='col-md-4'></div>" +
+                                        "<div class='col-md-3' style='padding-left: 60px;'><img id='btnGoBack' style='cursor:pointer;' onclick='GobackQuestionPanel();' src='/Content/Images/GoBack.png' title='Go Previous' />" +
+                                        "<img title='Go Next' id='btnGoNext' style='cursor:pointer; padding-left: 10px;'  onclick='GoNextQuestionPanel();' src='/Content/Images/GoRight.png' /></div>" +
+                                        "<div class='col-md-4'></div>" +
+                                    "</div>" +
+                                    "<div class='col-lg-12'>" +
+                                        "<div class='col-lg-8'>"+
+                                            "<div class='col-md-3'><img src='/Content/Images/LockQ.png' /> Fill the questions</div>" +
+                                            "<div class='col-md-3'><img src='/Content/Images/MarkedQ.png' /> Review Questions</div>" +
+                                            "<div class='col-md-3'><img src='/Content/Images/Finished.png' /> Answered</div>" +
+                                        "</div>"+
+                                        "<div class='col-lg-4'>"+
+                                            "<div class='col-md-1'><button id='saveQuestions' type='button' width='70px;' class='btn btn-success' onclick='doValidates();'>Save</button></div>"+
+                                            "<div class='col-md-1'></div>"+
+                                            "<div class='col-md-1'><button id='cancelQuestions' width='70px;' type='button' onclick='CancelExam();' class='btn btn-warning'>Cancel</button></div>" +
+
+                                     "</div>" +
+
+                                    "</div>" +
+
+                                "</div>" +
+                            "</footer>";
+
+
+            BindQuestionAndStatusDIV = BindQuestionAndStatusDIV + BindFooter;
+
+
+            $("#divBindQuestions").append(BindQuestionAndStatusDIV);
+            countdown(1);
+        }
+
+        function errorFunc() {
+            alert('error');
+        }
+    }
+
+    function CancelExam() {
+        location.href = "/Subjects/Index";
+    }
+
+    var ExamAlert=0;
+
+    /* Timer calculation */
+    var timeoutHandle;
+    function countdown(minutes) {
+        var seconds = @Session["ExamTime"].ToString().Trim();
+        var mins = minutes
+        function tick() {
+            var counter = document.getElementById("timer");
+            var current_minutes = mins - 1
+            seconds--;
+            counter.innerHTML = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+            if (seconds > 0) {
+                //alert('2');
+                timeoutHandle = setTimeout(tick, 1000);
+            } else {
+                ExamAlert = 2;
+                doValidate();
+                if (mins > 1) {
+                    setTimeout(function () { countdown(mins - 1); }, 1000);
+                }
+            }
+        }
+        tick();
+    }
+
+    //countdown(1);
+
+    function GotoPanel(_OpenID) {
+        $("#EnableQuestion_" + MaintainPageMasterID).css("display", "none");
+        $("#EnableQuestion_" + _OpenID).css("display", "block");
+        MaintainPageMasterID = _OpenID;
+        return false;
+    }
+
+    function clearChecked(_ID)
+    {
+        debugger;
+        if ($("#ProgressId_" + _ID).val() == "0") {
+            var getCurrentVal = (parseFloat($("#DynamicProgress").attr("title")) + parseFloat(DynamicProgressValue)).toFixed();
+            $("#DynamicProgress").text(Math.floor(getCurrentVal) + "%");
+
+            $("#DynamicProgress").attr("title", getCurrentVal);
+            $("#DynamicProgress").width(getCurrentVal + "%");
+
+        }
+        $("#ProgressId_" + _ID).val(1);
+        $("#chkReview_" + _ID).prop("checked", false);
+        $("#chkReview_" + MaintainPageMasterID).prop("checked", false);
+        $("#imgView_" + MaintainPageMasterID).attr("src", "/Content/Images/Finished.png");
+        $("#lblAlert_" + MaintainPageMasterID).remove();
+    }
+
+    //Remove the checked item from the question
+    function RemoveChecked(_AccessID) {
+        if ($("#ProgressId_" + _AccessID).val() == "0") {
+            $("#DynamicProgress").text(Math.floor(parseFloat($("#DynamicProgress").attr("title")) + parseFloat(DynamicProgressValue)) + "%");
+            var getCurrentVal = (parseFloat($("#DynamicProgress").attr("title")) + parseFloat(DynamicProgressValue)).toFixed(2);
+            $("#DynamicProgress").attr("title", getCurrentVal);
+            $("#DynamicProgress").width(getCurrentVal + "%");
+
+        }
+        $("#ProgressId_" + _AccessID).val(1);
+
+        $("#chkReview_" + MaintainPageMasterID).prop("checked", false);
+        $("#imgView_" + MaintainPageMasterID).attr("src", "/Content/Images/Finished.png");
+        $("#lblAlert_" + MaintainPageMasterID).remove();
+
+        return false;
+    }
+    var Master_AccessID = 0;
+    //Remove radio items when choose the review option
+    function RemoveRadioItems(_AccessID) {
+        if ($("#ProgressId_" + _AccessID).val() == "1") {
+            if (parseFloat($("#DynamicProgress").attr("title")) > 0) {
+                $("#DynamicProgress").text(Math.floor(parseFloat($("#DynamicProgress").attr("title")) - parseFloat(DynamicProgressValue)) + "%");
+                var getCurrentVal = (parseFloat($("#DynamicProgress").attr("title")) - parseFloat(DynamicProgressValue)).toFixed(2);
+                $("#DynamicProgress").attr("title", getCurrentVal);
+                $("#DynamicProgress").width(getCurrentVal + "%");
+
+            }
+            $("#ProgressId_" + _AccessID).val(0);
+        }
+        var Form = $("#Fromat_" + MaintainPageMasterID).val();
+        if (Form == 1) {
+            $("#Option_A_" + MaintainPageMasterID).prop("checked", false);
+            $("#Option_B_" + MaintainPageMasterID).prop("checked", false);
+            $("#Option_C_" + MaintainPageMasterID).prop("checked", false);
+            $("#Option_D_" + MaintainPageMasterID).prop("checked", false);
+        }
+        else {
+            $("#readAnswerText_" + MaintainPageMasterID).val("");
+        }
+        $("#lblAlert_" + MaintainPageMasterID).remove();
+        $("#imgView_" + MaintainPageMasterID).attr("src", "/Content/Images/MarkedQ.png");
+        return false;
+    }
+
+    function GobackQuestionPanel() {
+        //$("#saveQuestions").css("display", "none");
+        //$("#cancelQuestions").css("display", "none");
+        if (MaintainPageMasterID > 1) {
+            $("#EnableQuestion_" + MaintainPageMasterID).css("display", "none");
+            var AssignPage = (MaintainPageMasterID - 1);
+            $("#EnableQuestion_" + (AssignPage)).css("display", "block");
+            MaintainPageMasterID = AssignPage;
+            return false;
+        }
+    }
+
+    function GoNextQuestionPanel() {
+        //$("#saveQuestions").css("display", "none");
+        //$("#cancelQuestions").css("display", "none");
+        var Status = 0;
+        if (MaintainPageMasterID <= ChapterQuestionLength) {
+
+            var Form = $("#Fromat_" + MaintainPageMasterID).val();
+            if (Form == 1) {
+                if ($("#Option_A_" + MaintainPageMasterID).prop("checked")) {
+                    Status = 1;
+                }
+                if ($("#Option_B_" + MaintainPageMasterID).prop("checked")) {
+                    Status = 1;
+                }
+                if ($("#Option_C_" + MaintainPageMasterID).prop("checked")) {
+                    Status = 1;
+                }
+                if ($("#Option_D_" + MaintainPageMasterID).prop("checked")) {
+                    Status = 1;
+                }
+                if ($("#chkReview_" + MaintainPageMasterID).prop("checked")) {
+                    Status = 1;
+                }
+            }
+            else {
+                if ($("#readAnswerText_" + MaintainPageMasterID).val() != "") {
+                    Status = 1;
+                }
+                if ($("#chkReview_" + MaintainPageMasterID).prop("checked")) {
+                    Status = 1;
+                }
+            }
+
+            //Disabled condition, if they give the value or not also it wont consider the item marked for later.
+
+            //if (Status == 1) {
+            if ((MaintainPageMasterID + 1) > ChapterQuestionLength) {
+                if (confirm("Are you sure? Do you want to finish the exam?")) {
+                    $("#EnableQuestion_" + MaintainPageMasterID).css("display", "none");
+                    var AssignPage = (MaintainPageMasterID + 1);
+                    $("#EnableQuestion_" + AssignPage).css("display", "block");
+                    MaintainPageMasterID = AssignPage;
+                    for (var iD = 1; iD <= ChapterQuestionLength; iD++) {
+                        $("#imgView_" + iD).attr("onclick", "");
+                    }
+                    if (MaintainPageMasterID > ChapterQuestionLength) {
+                        //$("#saveQuestionsQuestions").css("display", "block");
+                        //$("#cancelQuestions").css("display", "block");
+                        $("#btnGoBack").css("display", "none");
+                        $("#btnGoNext").css("display", "none");
+                    }
+                    return false;
+                }
+                else {
+                    return false;
+                }
+            }
+            $("#EnableQuestion_" + MaintainPageMasterID).css("display", "none");
+            var AssignPage = (MaintainPageMasterID + 1);
+            $("#EnableQuestion_" + AssignPage).css("display", "block");
+            MaintainPageMasterID = AssignPage;
+            //}
+            //else {
+            //    $("#lblAlert_" + MaintainPageMasterID).css("display", "block");
+            //    return false;
+            //}
+        }
+
+
+    }
+
+    function fnCollapse(CollapseId) {
+
+        if ($("#panel_" + CollapseId).attr("title") == "0") {
+            $("#panel_" + CollapseId).slideDown("slow");
+            $("#panel_" + CollapseId).attr("title", "1")
+        }
+        else {
+            $("#panel_" + CollapseId).slideUp("slow");
+            $("#panel_" + CollapseId).attr("title", "1")
+        }
+    }
+
+    function PlayAudio(msg1) {
+
+        var Question = $("#readQuestion_" + msg1).text();
+        var OA = "Option A " + $("#spanOption_A_" + msg1).text();
+        var OB = "Option B " + $("#spanOption_B_" + msg1).text();
+        var OC = "Option C " + $("#spanOption_C_" + msg1).text();
+        var OD = "Option D " + $("#spanOption_D_" + msg1).text();
+        var SpeakOut = Question + OA + OB + OC + OD;
+        var msg = new SpeechSynthesisUtterance(SpeakOut);
+
+        window.speechSynthesis.speak(msg);
+    }
+
+    function doValidates()
+    {
+        ExamAlert = 1;
+        doValidate();
+    }
+
+    function doValidate() {
+        if(ExamAlert == 2)
+        {
+            alert("Time out!");
+        }
+        var iCount = 0;
+        var PushResult = [];
+        debugger;
+        for (var iAnswer = 0; iAnswer < ChapterQuestionLength; iAnswer++) {
+
+            var Option = "";
+            var QuestionId = "";
+            var ChapterId = "";
+            var SubjectId = "";
+            var Form = $("#Fromat_" + (iAnswer + 1)).val();
+            if (Form == 1) {
+                if ($("#Option_A_" + (iAnswer + 1)).prop("checked")) { Option = "A"; }
+                if ($("#Option_B_" + (iAnswer + 1)).prop("checked")) { Option = "B"; }
+                if ($("#Option_C_" + (iAnswer + 1)).prop("checked")) { Option = "C"; }
+                if ($("#Option_D_" + (iAnswer + 1)).prop("checked")) { Option = "D"; }
+            }
+            if ($("#chkReview_" + (iAnswer + 1)).prop("checked")) { Option = "U"; } // U defines undefined
+            var encodedString = atob($("#xkyoq_" + (iAnswer + 1)).val());
+            QuestionId = $("#QuestionId_" + (iAnswer + 1)).val();
+            ChapterId = $("#ChapterId_" + (iAnswer + 1)).val();
+            SubjectId = $("#SubjectId_" + (iAnswer + 1)).val();
+
+
+
+            if (Form == 1) {
+                if (Option == encodedString.trim()) {
+                    iCount = iCount + 1;
+                }
+            }
+            else {
+                var GetText = $("#readAnswerText_" + (iAnswer + 1)).val();
+                if (GetText == encodedString.trim()) {
+                    iCount = iCount + 1;
+                }
+            }
+
+            var QuestionModels = new Object();
+            QuestionModels.QuestionId = QuestionId;
+            QuestionModels.ChapterId = @Session["exam_ChapterID"].ToString().Trim();
+            if (Form == 1) {
+                QuestionModels.Answer = Option;
+            }
+            else {
+                QuestionModels.Answer = $("#readAnswerText_" + (iAnswer + 1)).val();
+            }
+
+            QuestionModels.SubjectId = @Session["exam_SubjectID"].ToString().Trim();
+            QuestionModels.TimeStart = "5.00";
+            QuestionModels.SchoolID = @Session["ExamID"];
+            var CalculateTiming = (parseFloat(QuestionModels.TimeStart) - parseFloat($("#timer").text().trim().replace(":", "."))).toFixed(2);
+            QuestionModels.TimeFinished = CalculateTiming;
+            QuestionModels.ExamID = @Session["ExamId"];
+            if ((iAnswer + 1) == ChapterQuestionLength) {
+                QuestionModels.TotalCount = iCount;
+            }
+            PushResult.push(QuestionModels);
+        }
+        Update(PushResult);
+    }
+
+    function Update(PushResult) {
+        var serviceURL = '/Subjects/Update';
+        var RawFilter = { questionModels: PushResult };
+
+        $.ajax({
+            type: "POST",
+            url: serviceURL,
+            data: JSON.stringify(RawFilter),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            traditional: true,
+            success: successFunc,
+            error: errorFunc
+        });
+
+        function successFunc(data, status) {
+
+            for (var iAnswer = 0; iAnswer < ChapterQuestionLength; iAnswer++) {
+                $("#Option_A_" + (iAnswer + 1)).attr("readonly", "true");
+                $("#Option_B_" + (iAnswer + 1)).attr("readonly", "true");
+                $("#Option_C_" + (iAnswer + 1)).attr("readonly", "true");
+                $("#Option_D_" + (iAnswer + 1)).attr("readonly", "true");
+                $("#divViewAnswer_" + (iAnswer + 1)).css("display", "block");
+            }
+            //var URL=@Url.Action("Result", "Subjects");
+            window.location = "/Subjects/Result"
+        }
+        function errorFunc() {
+            alert('error');
+        }
+    }
+</script>
+
+
+<div class="container">
+    <div class="progress" style="border-radius:15px; height:25px;">
+        <div id="DynamicProgress" title="0" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="col-md-12" id="divBindQuestions">
+    </div>
+
+</div>
+

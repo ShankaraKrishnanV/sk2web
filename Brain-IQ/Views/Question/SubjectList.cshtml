@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Subject List";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="col-md-11" style="margin-top:-20px">
+    <h2>Subject List</h2>
+</div>
+<div class="col-md-1">
+    <button type="button" class="btn btn-primary">ADD</button>
+</div>
+<table id="t01">
+    <thead>
+        <tr>
+            <th>Subject ID</th>
+            <th>Subject</th>
+            <th>Select</th>
+        </tr>
+    </thead>
+
+    @foreach (var item in ViewBag.getSubject)
+    {
+        <tr>
+            <td>@item.SubjectId</td>
+          
+            <td>@item.Subject</td>
+           
+            <td>
+                <a href="@Url.Action("ChapterList", "Question", new { SubjectId = @item.SubjectId})">
+                    <input type="submit" value='Select' />
+                </a>
+            </td>
+        </tr>
+    }
+
+</table>
+<link href="~/Content/DevCSS/tableAllign.css" rel="stylesheet" />
+
