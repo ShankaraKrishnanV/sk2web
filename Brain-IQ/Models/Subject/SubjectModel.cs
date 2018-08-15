@@ -31,7 +31,7 @@ namespace Brain_IQ.Models.Subject
         /// get or set the Subject
         /// </summary>
         public string Subject { get; set; }
-        
+
         /// <summary>
         /// get or set the Description
         /// </summary>
@@ -92,7 +92,7 @@ namespace Brain_IQ.Models.Subject
         public string TimeFinished { get; set; }
 
         public string LoginUserID { get; set; }
-        
+
         public int ExamID { get; set; }
 
         public string ExamName { get; set; }
@@ -108,4 +108,19 @@ namespace Brain_IQ.Models.Subject
         #endregion  
 
     }
+
+    public class SettingsModels
+    {
+
+        public int ID { get; set; }
+
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        public string CreatedOn { get; set; }
+
+        public bool Active { get; set; }
+    }
+
 }

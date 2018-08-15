@@ -24,6 +24,93 @@ namespace Brain_IQ.Controllers.Settings
             return View();
         }
 
+        //DeleteAjaxStandrad
+        public ActionResult DeleteAwarness(int ID)
+        {
+            try
+            {
+                List<SubjectModel> listsubject = new List<SubjectModel>();
+                HttpClient httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(appKey.GetapiURL());
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var response = httpClient.GetAsync("settings/deleteAwarness?ID=" + ID).Result;
+                if (response.IsSuccessStatusCode)
+                    return Json("true", JsonRequestBehavior.AllowGet);
+                else
+                    return Json("false", JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                string error = ex.ToString().Trim();
+                return RedirectToAction("logins", "logins");
+            }
+        }
+
+        //InserAjaxStandrad
+        public ActionResult SaveAwarness(string ID, string Title, string Description, string Active)
+        {
+            try
+            {
+                List<SettingsModels> lst = new List<SettingsModels>();
+                HttpClient httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(appKey.GetapiURL());
+                httpClient.DefaultRequestHeaders.Accept.Add(
+                   new MediaTypeWithQualityHeaderValue("application/json"));
+                var response = httpClient.GetAsync("settings/insertAwarness?ID=" + ID + "&Title=" + Title + "&Description=" + Description + "&Active=" + Active).Result;
+                if (response.IsSuccessStatusCode)
+                    return Json("true", JsonRequestBehavior.AllowGet);
+                else
+                    return Json("false", JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                string error = ex.ToString().Trim();
+                return RedirectToAction("logins", "logins");
+            }
+        }
+
+        public ActionResult InsertAwarness()
+        {
+            try
+            {
+                ViewBag.awarnessList = this.GetAwarnessList();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                string error = ex.ToString().Trim();
+                return RedirectToAction("logins", "logins");
+            }
+        }
+        private List<SettingsModels> GetAwarnessList()
+        {
+            List<SettingsModels> awarnessList = new List<SettingsModels>();
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(appKey.GetapiURL());
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var response = httpClient.GetAsync("settings/GetAwarnessList").Result;
+            if (response.IsSuccessStatusCode)
+                awarnessList = JsonConvert.DeserializeObject<List<SettingsModels>>(response.Content.ReadAsStringAsync().Result);
+            return awarnessList;
+        }
+
+        public ActionResult Awarness()
+        {
+            try
+            {
+                ViewBag.awarnessList = this.GetAwarnessList();
+                return View();
+
+            }
+            catch (Exception ex)
+            {
+                string error = ex.ToString().Trim();
+                return RedirectToAction("logins", "logins");
+            }
+        }
+
         /// <summary>
         /// Get standarad list
         /// </summary>

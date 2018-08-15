@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Awarness";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+<script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $("#ContentTitle").text("General Awarness");
+    });
+</script>
+@{ int iCount = 1;}
+@foreach (var iRow in ViewBag.awarnessList)
+{
+    <h4><b>@iCount.  @iRow.Title</b></h4>
+    <p>@iRow.Description</p>
+    <p><i>Created on: @iRow.CreatedOn</i></p>
+    iCount++;
+}
+
