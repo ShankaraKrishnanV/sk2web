@@ -808,6 +808,8 @@
     <Content Include="Views\Staff\generate.cshtml" />
     <Content Include="Views\Question\createquestionpaper.cshtml" />
     <Content Include="Views\Subjects\Exams.cshtml" />
+    <Content Include="Views\Settings\Awarness.cshtml" />
+    <Content Include="Views\Settings\InsertAwarness.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

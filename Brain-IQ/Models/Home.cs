@@ -61,6 +61,8 @@ namespace BrainIQ.Models
 
         public int StandardId { get; set; }
 
+        public DateTime expire_on { get; set; }
+
         #endregion
 
 

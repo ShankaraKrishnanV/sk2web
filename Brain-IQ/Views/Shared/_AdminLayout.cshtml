@@ -566,7 +566,33 @@
     <script src="~/Scripts/Dev/jquery-1.12.4.js"></script>
     @*<script src="~/Scripts/Dev/jquery.dataTables.min.js"></script>*@
 
+    <script type="text/javascript">
+        /* Disable copy, paste */
+        $('body').bind('copy paste', function (e) {
+            e.preventDefault(); return false;
+        });
+        /* Disable f12 key in application */
+        $(document).keydown(function (event) {
+            if (event.keyCode == 123) { // Prevent F12
+                return false;
+            } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) { // Prevent Ctrl+Shift+I
+                return false;
+            }
+        });
+        /* Disable right click key in application */
 
+            $(document)[0].oncontextmenu = function () { return false; }
+
+            $(document).mousedown(function (e) {
+                if (e.button == 2) {
+                    alert('Sorry, this functionality is disabled!');
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+    </script>
 </body>
 <!-- Mirrored from next-themes.com/mtek/code/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Apr 2017 06:16:36 GMT -->
 </html>

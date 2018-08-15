@@ -55,6 +55,11 @@ namespace Brain_IQ.Controllers
                         this.Session["LoginEmailID"] = string.Empty;
 
                     this.Session["Session_StandardID"] = item.StandardId;
+                    int DateDifference = (item.expire_on - Convert.ToDateTime("7/22/2018")).Days;
+                    if (DateDifference < 10)
+                    {
+                        this.Session["expire_on"] = DateDifference;
+                    }
                 }
 
                 if (listHome.Count > 0)
